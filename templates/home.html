@@ -8,11 +8,11 @@
             <p style="color:gray;" class="lead">
                 Events? Hap In!
             </p>
-            <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptate iusto maiores delectus nam labore, repudiandae, incidunt, earum velit possimus facere quod quia itaque. Asperiores eius optio, expedita quos doloremque fuga?</p>
+            <p> Know what's happening out there! Join the FUN! </p>
             <br>
             {% if session.logged_in == NULL %}
-                <a href="/signup" class="btn btn-primary btn-xl"> Signup </a>
-                <a href="/login" class="btn btn-success btn-xl"> Login </a>
+                <a href="{{ url_for('signup') }}" class="btn btn-outline-primary btn-xl"> Sign Up </a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-success btn-xl"> Login </a>
             {% endif %}
         </div>
 {% endblock content %}
