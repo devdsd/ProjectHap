@@ -1,13 +1,13 @@
 {% extends 'layouts.html' %}
 
 {% block content %}
-	<br>
 	<div class="jumbotron">
 	<div class="content-section">
 		<form method="POST" action="">
 			{{ form.hidden_tag() }}
 			<fieldset class="form-group">
 				<legend class="border-bottom mb-4"> Join Today</legend>
+				
 				<div class="form-group">
 					{{ form.firstname.label(class="form-control-label") }}
 

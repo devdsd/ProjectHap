@@ -2,13 +2,14 @@
 
 {% block content %}
         <!-- <h2> Home Page! </h2> -->
-        <br>
         <div class="jumbotron text-center">
             <h1> Hap </h1>
             <p style="color:gray;" class="lead">
                 Events? Hap In!
             </p>
-            <p> Know what's happening out there! Join the FUN! </p>
+            <p> Know what's happening out there, Join the FUN!
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Est illum, quos, sint nobis, a dignissimos voluptatibus sit officiis ea excepturi expedita laboriosam deserunt fuga quas quibusdam provident soluta atque assumenda!
+            </p>
             <br>
             {% if session.logged_in == NULL %}
                 <a href="{{ url_for('signup') }}" class="btn btn-outline-primary btn-xl"> Sign Up </a>
