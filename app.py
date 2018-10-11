@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, request, flash
+from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
@@ -48,14 +48,16 @@ def about():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignupForm()
-
-    return render_template('signup.html', title='Signup', form=form)
+    if form.validate_on_submit():
+        flash('Account create successfully!', 'success')
+        return redirect(url_for('home'))
+    return render_template('signup.html', title='Sign Up', form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
 
-    return render_template('login.html', title='Login', form=form)
+    return render_template('login.html', title='Log In', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
