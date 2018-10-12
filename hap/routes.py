@@ -15,7 +15,7 @@ def about():
 
 @app.route('/createevent', methods=['GET', 'POST'])
 def createevent():
-    form = CreateEvent()
+    form = CreateEventForm()
     if form.validate_on_submit():
         flash('Event Created successfully', 'success')
         return redirect(url_for('home'))
