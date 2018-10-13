@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+# from hap import Users
 
 class SignupForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
@@ -12,15 +13,15 @@ class SignupForm(FlaskForm):
 
     submit = SubmitField('Sign Up')
 
-    # def validate_username(self, username):
-	# 	user = User.query.filter_by(username=username.data).first()
-	# 	if user:
-	# 		raise ValidationError('That username is already taken. Please choose different one!')
+    def validate_username(self, username):
+		user = Users.query.filter_by(username=username.data).first()
+		if user:
+			raise ValidationError('That username already exists. Please choose different one!')
 
-    # def validate_email(self, email):
-	# 	user = User.query.filter_by(email=email.data).first()
-	# 	if user:
-	# 		raise ValidationError('That email is already taken. Please choose different one!')
+    def validate_email(self, email):
+		user = Users.query.filter_by(email=email.data).first()
+		if user:
+			raise ValidationError('That email is already exists. Please choose different one!')
 
 class LoginForm(FlaskForm):
 	email = StringField('Email', validators=[DataRequired(), Email()])
@@ -31,8 +32,7 @@ class LoginForm(FlaskForm):
 
 
 class CreateEventForm(FlaskForm):
-    eventName = StringField('Event Name', 
-        validators=[DataRequired(), Length(min=2, max =50)])
+    eventName = StringField('Event Name', validators=[DataRequired(), Length(min=2, max =50)])
     location = StringField('Location', validators=[DataRequired()])
     date = StringField('Date', validators=[DataRequired()])
     category = StringField('Category', validators=[DataRequired()])
