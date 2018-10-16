@@ -1,7 +1,8 @@
 from flask import render_template, url_for, flash, redirect, request
-from hap import app, db, bcrypt
+from hap import app, bcrypt
 from hap.forms import SignupForm, LoginForm, CreateEventForm
-# from hap.models import Users, ug ang ubang mga model
+from hap import models
+from hap.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route('/')
@@ -34,8 +35,10 @@ def signup():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         # User registration 
-        # db.session.add(user)
-        # db.session.commit()
+        user = Users(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, username=form.username.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+
         flash('Account successfully created! You can now log in', 'success')
         return redirect(url_for('login'))
     return render_template('signup.html', title='Sign Up', form=form)
@@ -53,8 +56,11 @@ def login():
         user_email = Users.query.filter_by(email=form.email.data).first()
         if (user_username or user_email) and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
             return redirect(url_for('home'))
-        flash('Login Unsuccessful! Please check username/email and password', 'danger')
+        else:
+            flash('Login Unsuccessful! Please check username/email and password', 'danger')
+            
     return render_template('login.html', title='Log In', form=form)
 
 @app.route('/logout')
