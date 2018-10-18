@@ -52,15 +52,15 @@ def login():
     
     form = LoginForm()
     if form.validate_on_submit():
-        user_username = Users.query.filter_by(username=form.username.data).first()
-        user_email = Users.query.filter_by(email=form.email.data).first()
-        if (user_username or user_email) and bcrypt.check_password_hash(user.password, form.password.data):
+        user = Users.query.filter_by(username=form.username.data, email=form.email.data).first()
+        # user_email = Users.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
+            # return redirect(next_page) if next_page else redirect(url_for('home'))
             return redirect(url_for('home'))
         else:
             flash('Login Unsuccessful! Please check username/email and password', 'danger')
-            
     return render_template('login.html', title='Log In', form=form)
 
 @app.route('/logout')
