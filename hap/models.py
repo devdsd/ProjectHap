@@ -6,6 +6,7 @@ from flask_login import UserMixin
 def load_user(user_id):
     return Users.query.get(int(user_id))
 
+
 review_rel_table = db.Table('review_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('event_id', db.Integer, db.ForeignKey('events.id')),
