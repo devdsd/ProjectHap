@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
+from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
@@ -7,7 +8,8 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '2BB80D537B1DA3E38BD30361AA855686BDE0EACD7162FEF6A25FE97BF527A25B'
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/hap'
+db = SQLAlchemy(app)
 
 class SignupForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
