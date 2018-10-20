@@ -20,10 +20,17 @@ def about():
 
 
 @app.route('/createevent', methods=['GET', 'POST'])
+@login_required
 def createevent():
     form = CreateEventForm()
     if form.validate_on_submit():
+
+        event = Events(eventName=form.eventName.data, eventDate=form.eventDate.data, eventDescription=form.eventDescription.data, location=form.location.data,  fee=form.fee.data, user_id=current_user.id)
+        db.session.add(event)
+        db.session.commit()
+
         flash('Event Created successfully', 'success')
+        
         return redirect(url_for('home'))
     return render_template('createevent.html', title='Create Event', form=form)
 
@@ -55,15 +62,15 @@ def login():
     
     form = LoginForm()
     if form.validate_on_submit():
-        user = Users.query.filter_by(email=form.username.data).first()
+        user = Users.query.filter_by(email=form.email.data).first()
         # user_email = Users.query.filter_by(email=form.email.data).first()
-        if (user or email) and bcrypt.check_password_hash(user.password, form.password.data):
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('account'))
+            # return redirect(url_for('home'))
         else:
             flash('Login Unsuccessful! Please check username/email and password', 'danger')
-            
     return render_template('login.html', title='Log In', form=form)
 
 @app.route('/logout')

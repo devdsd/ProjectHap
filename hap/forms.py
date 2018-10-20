@@ -2,7 +2,9 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms.fields.html5 import DateField
 from hap.models import Users
 
 class SignupForm(FlaskForm):
@@ -27,9 +29,10 @@ class SignupForm(FlaskForm):
 
 class LoginForm(FlaskForm):
   email = StringField('Email', validators=[DataRequired(), Email()])
-  username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+  # username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
   password = PasswordField('Password', validators=[DataRequired()])
   remember = BooleanField('Remember Me')
+  
   submit = SubmitField('Login')
 
 	
@@ -58,3 +61,8 @@ class UpdateAccountForm(FlaskForm):
           user = User.query.filter_by(email=email.data).first()
           if user:
               raise ValidationError('That email is Taken.')
+      eventDescription = TextAreaField('Event Description', validators=[DataRequired()])
+      eventDate = DateField('Event Date', format='%Y-%m-%d')
+      fee = IntegerField('Fee')
+      location = StringField('Location', validators=[DataRequired(), Length(min=2, max =50)])
+      submit = SubmitField('Submit')
