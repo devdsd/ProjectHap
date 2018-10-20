@@ -44,6 +44,7 @@ class Users(db.Model, UserMixin):
     lastName = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(20), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), nullable=False, default = 'default-image.png')
     password = db.Column(db.String(60), nullable=False)
     creates = db.relationship('Events', backref='host', lazy=True)
     review_relationship = db.relationship('Events', secondary=review_rel_table, backref=db.backref('reviewrel', lazy=True))
