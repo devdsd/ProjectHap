@@ -23,6 +23,21 @@
 
 				</div>
 				<div class="form-group">
+					{{ form.eventDescription.label(class="form-control-label") }}
+
+					{% if form.eventDescription.errors %}
+						{{ form.eventDescription(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.eventDescription.errors %}
+								<span> {{ error }} </span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.eventDescription(class="form-control form-control-lg") }}
+					{% endif %}
+
+				</div>
+				<div class="form-group">
 					{{ form.location.label(class="form-control-label") }}
 
 					{% if form.location.errors %}
@@ -35,48 +50,34 @@
 					{% else %}
 						{{ form.location(class="form-control form-control-lg") }}
 					{% endif %}
+				</div>				
+				<div class="form-group">
+					{{ form.eventDate.label(class="form-control-label") }}
+
+					{% if form.eventDate.errors %}
+						{{ form.eventDate(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for error in form.eventDate.errors %}
+								<span> {{ error }} </span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.eventDate(class="form-control form-control-lg") }}
+					{% endif %}
 
 				</div>
 				<div class="form-group">
-					{{ form.date.label(class="form-control-label") }}
+					{{ form.fee.label(class="form-control-label") }}
 
-					{% if form.date.errors %}
-						{{ form.date(class="form-control form-control-lg is-invalid") }}
+					{% if form.fee.errors %}
+						{{ form.fee(class="form-control form-control-lg is-invalid") }}
 						<div class="invalid-feedback">
-							{% for error in form.date.errors %}
+							{% for error in form.fee.errors %}
 								<span> {{ error }} </span>
 							{% endfor %}
 						</div>
 					{% else %}
-						{{ form.date(class="form-control form-control-lg") }}
-					{% endif %}
-				</div>
-					<div class="form-group">
-					{{ form.category.label(class="form-control-label") }}
-
-					{% if form.category.errors %}
-						{{ form.category(class="form-control form-control-lg is-invalid") }}
-						<div class="invalid-feedback">
-							{% for error in form.category.errors %}
-								<span> {{ error }} </span>
-							{% endfor %}
-						</div>
-					{% else %}
-						{{ form.category(class="form-control form-control-lg") }}
-					{% endif %}
-				</div>
-				<div class="form-group">
-					{{ form.registrationFee.label(class="form-control-label") }}
-
-					{% if form.registrationFee.errors %}
-						{{ form.registrationFee(class="form-control form-control-lg is-invalid") }}
-						<div class="invalid-feedback">
-							{% for error in form.registrationFee.errors %}
-								<span> {{ error }} </span>
-							{% endfor %}
-						</div>
-					{% else %}
-						{{ form.registrationFee(class="form-control form-control-lg") }}
+						{{ form.fee(class="form-control form-control-lg") }}
 					{% endif %}
 				</div>				
 			</fieldset>
@@ -84,3 +85,4 @@
 					{{ form.submit(class="btn btn-outline-info") }}
     </div>
 {% endblock content %}
+
