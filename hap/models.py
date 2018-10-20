@@ -25,6 +25,15 @@ join_rel_table = db.Table('join_rel_table',
 )
 
 
+userhasinterest_rel_table = db.Table('userhasinterest_rel_table',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'))
+)
+
+eventhascategory_rel_table = db.Table('eventhascategory_rel_table',
+    db.Column('event_id', db.Integer, db.ForeignKey('events.id')),
+    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'))
+)
 
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,8 +43,10 @@ class Users(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     creates = db.relationship('Events', backref='host', lazy=True)
+    image_id = db.Column(db.Integer, db.ForeignKey('images.id'), nullable=False)
     review_relationship = db.relationship('Events', secondary=review_rel_table, backref=db.backref('reviewrel', lazy=True))
     rate_relationship = db.relationship('Events', secondary=rate_rel_table, backref=db.backref('raterel', lazy=True))
+    userhasinterest_relationship = db.relationship('Categories', secondary=userhasinterest_rel_table, backref=db.backref('userhasinterest', lazy=True))
 
     def __repr__(self):
         return "Users({}, {}, {}, {})".format(self.firstName, self.lastName, self.email, self.username)
@@ -49,8 +60,26 @@ class Events(db.Model):
     location = db.Column(db.Text, nullable=False)
     fee = db.Column(db.Integer, default="0")
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    image_id = db.Column(db.Integer, db.ForeignKey('images.id'), nullable=False)
+    eventhascategory_relationship = db.relationship('Categories', secondary=eventhascategory_rel_table, backref=db.backref('eventhascategory', lazy=True))
 
     def __repr__(self):
         return "Events({}, {}, {}, {})".format(self.eventName, self.eventDate, self.eventDescription, self.fee)
     
 
+class Categories(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    categoryName = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return "Categories({})".format(self.categoryName)
+
+
+class Images(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    profile_pic = db.relationship('Users', backref='profilepicture', lazy=True)
+    event_image = db.relationship('Events', backref='eventimage', lazy=True)
+
+    def __repr__(self):
+        return "Images({})".format(self.image_file)
