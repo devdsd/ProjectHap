@@ -11,8 +11,10 @@
         <title> Hap </title>
     {% endif %}
 
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/hap-logo.ico') }}"
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/hap-logo.ico') }}">
 
 </head>
 <body>
@@ -44,7 +46,7 @@
         </nav>
         </header>
 
-        <div class="container">
+        <div style="margin-top: 20px;" class="container">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
