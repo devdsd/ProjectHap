@@ -17,6 +17,7 @@ def about():
 
 
 @app.route('/createevent', methods=['GET', 'POST'])
+@login_required
 def createevent():
     form = CreateEventForm()
     if form.validate_on_submit():
