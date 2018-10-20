@@ -42,7 +42,7 @@ def signup():
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         # User registration 
-        user = Users(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, username=form.username.data, password=hashed_password)
+        user = Users(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, username=form.username.data, password=hashed_password, image_file=image_file)
         db.session.add(user)
         db.session.commit()
 
@@ -78,4 +78,5 @@ def logout():
 @app.route('/account')
 @login_required
 def account():
-    return render_template('account.html', title = 'Account')
+    image_file = url_for('static', filename='images/' + current_user.image_file) # static/images/default.jpg
+    return render_template('account.html', title = 'Account', image_file=image_file)
