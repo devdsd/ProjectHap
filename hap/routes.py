@@ -20,7 +20,13 @@ def about():
 def createevent():
     form = CreateEventForm()
     if form.validate_on_submit():
+
+        event = Events(eventName=form.eventName.data, eventDate=form.eventDate.data, eventDescription=form.eventDescription.data, location=form.location.data,  fee=form.fee.data, user_id=current_user.id)
+        db.session.add(event)
+        db.session.commit()
+
         flash('Event Created successfully', 'success')
+        
         return redirect(url_for('home'))
     return render_template('createevent.html', title='Create Event', form=form)
 

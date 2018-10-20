@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms.fields.html5 import DateField
 from hap.models import Users
 
 class SignupForm(FlaskForm):
@@ -35,8 +36,8 @@ class LoginForm(FlaskForm):
 
 class CreateEventForm(FlaskForm):
     eventName = StringField('Event Name', validators=[DataRequired(), Length(min=2, max =50)])
-    location = StringField('Location', validators=[DataRequired()])
-    date = StringField('Date', validators=[DataRequired()])
-    category = StringField('Category', validators=[DataRequired()])
-    registrationFee = StringField('Fee', validators=[DataRequired()])
+    eventDescription = TextAreaField('Event Description', validators=[DataRequired()])
+    eventDate = DateField('Event Date', format='%Y-%m-%d')
+    fee = IntegerField('Fee')
+    location = StringField('Location', validators=[DataRequired(), Length(min=2, max =50)])
     submit = SubmitField('Submit')
