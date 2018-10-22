@@ -41,10 +41,9 @@ class Users(db.Model, UserMixin):
     lastName = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(20), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default = 'default-image.png')
     password = db.Column(db.String(60), nullable=False)
     creates = db.relationship('Events', backref='host', lazy=True)
-    image_id = db.Column(db.Integer, db.ForeignKey('images.id'), nullable=False)
+    image_file = db.Column(db.String(50), nullable=False, default='default.jpg')
     review_relationship = db.relationship('Events', secondary=review_rel_table, backref=db.backref('reviewrel', lazy=True))
     rate_relationship = db.relationship('Events', secondary=rate_rel_table, backref=db.backref('raterel', lazy=True))
     userhasinterest_relationship = db.relationship('Categories', secondary=userhasinterest_rel_table, backref=db.backref('userhasinterest', lazy=True))
@@ -61,7 +60,7 @@ class Events(db.Model):
     location = db.Column(db.Text, nullable=False)
     fee = db.Column(db.Integer, default="0")
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    image_id = db.Column(db.Integer, db.ForeignKey('images.id'), nullable=False)
+    image_file = db.Column(db.String(50), nullable=False, default='default.jpg')
     eventhascategory_relationship = db.relationship('Categories', secondary=eventhascategory_rel_table, backref=db.backref('eventhascategory', lazy=True))
 
     def __repr__(self):
@@ -76,11 +75,11 @@ class Categories(db.Model):
         return "Categories({})".format(self.categoryName)
 
 
-class Images(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    profile_pic = db.relationship('Users', backref='profilepicture', lazy=True)
-    event_image = db.relationship('Events', backref='eventimage', lazy=True)
+# class Images(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+#     profile_pic = db.relationship('Users', backref='profilepicture', lazy=True)
+#     event_image = db.relationship('Events', backref='eventimage', lazy=True)
 
-    def __repr__(self):
-        return "Images({})".format(self.image_file)
+#     def __repr__(self):
+#         return "Images({})".format(self.image_file)
