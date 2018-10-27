@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
+from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from wtforms.fields.html5 import DateField
-from hap.models import Users
+from hap.models import *
 
 class SignupForm(FlaskForm):
     firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
@@ -32,7 +34,6 @@ class LoginForm(FlaskForm):
   
   submit = SubmitField('Login')
 
-	
 
 class CreateEventForm(FlaskForm):
     eventName = StringField('Event Name', validators=[DataRequired(), Length(min=2, max =50)])
@@ -41,3 +42,25 @@ class CreateEventForm(FlaskForm):
     fee = IntegerField('Fee')
     location = StringField('Location', validators=[DataRequired(), Length(min=2, max =50)])
     submit = SubmitField('Submit')
+
+
+class UpdateAccountForm(FlaskForm):
+    firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
+    lastName = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=50)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+
+    submit = SubmitField('Update')
+
+    def validate_username(self, username):
+      if username.data != current_user.username:
+        user = Users.query.filter_by(username=username.data).first()
+        if user:
+          raise ValidationError('That username already exists. Please choose different one!')
+
+    def validate_email(self, email):
+      if email.data != current_user.email:
+        user = Users.query.filter_by(email=email.data).first()
+        if user:
+          raise ValidationError('That email is already exists. Please choose different one!')
