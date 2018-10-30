@@ -1,19 +1,104 @@
-{% extends 'layouts.html' %}
-
-{% block content %}
-        <!-- <h2> Home Page! </h2> -->
-        <div class="jumbotron text-center">
-            <img style="width:90px" src="{{ url_for('static', filename='images/hap-logo-with-nameplate.svg') }}">
-            <p style="color:gray;" class="lead">
-                Events? Hap In!
-            </p>
-            <h4>
-                Make it Happen. HAP in!
-            </h4>
-            <br>
-            {% if session.logged_in == NULL %}
-                <a href="{{ url_for('signup') }}" class="btn btn-outline-primary btn-xl"> Sign Up </a>
-                <a href="{{ url_for('login') }}" class="btn btn-outline-success btn-xl"> Login </a>
-            {% endif %}
+{% extends "layouts.html" %}
+{% block navbarComponents %}
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="{{ url_for("home") }}">
+        <img src="{{ url_for("static", filename="assets/hap-nameplate.svg") }}" style="width:75px;">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+            </li>
+            <li class="nav-item">
+            </li>
+            <li class="nav-item">
+            </li>
+        </ul>
+        <div class="dropdown">
+            <button style="color:white;" class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                LOG IN
+            </button>
+            <div class="dropdown-menu">
+                <form class="px-4 py-3">
+                    <div class="form-group">
+                        <label for="exampleDropdownFormEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleDropdownFormPassword1">Password</label>
+                        <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="dropdownCheck">
+                        <label class="form-check-label" for="dropdownCheck">
+                            Remember me
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-warning" style="color:white;">Sign in</button>
+                </form>
+                <div class="dropdown-divider"></div>
+                <a id="navbar-signup" class="dropdown-item" href="{{ url_for("signup") }}">New around here? Sign up</a>
+                <a id="navbar-forgotPass" class="dropdown-item" href="#">Forgot password?</a>
+            </div>
         </div>
+    </div>
+{% endblock navbarComponents %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-sm" id="crossfade">
+                <svg version="1.1" id="layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    viewBox="0 0 423 330.2" style="enable-background:new 0 0 423 330.2;" xml:space="preserve">
+                    <g id="XMLID_1_">
+                        <defs>
+                            <path id="XMLID_6_" d="M278.8,128.4c0.4-5.7-1.8-11,0.5-21.5c2.1-9.5,6.5-16.6,10-21.3c-2.8-2.5-7.5-6.1-13.9-9.1
+                            c-21.9-10.2-38.1-0.7-50.9-12.3c-1-0.9-8.3-7.7-6.9-14.7c1.5-7,11.5-12.6,25.3-12.9c22.7-0.5,39.4,10,41.2,11.4
+                            c11.1,8.7,16.1,19.4,18.2,25c1.6-1,3.1-1.9,4.7-2.9c-2.5-5.8-9.1-18.9-23.6-28c-11.4-7.2-22.5-8.7-27.1-9.2
+                            c-6.7-0.8-12.4-0.5-16.5-0.1c-0.1-1.9-0.2-7.5,3.6-11.5c2.1-2.2,5-3.6,9.6-4.1c31.1-2.8,47.7,14.1,47.7,14.1
+                            c13,13.3,14.3,29.8,14.5,34.6c1.8-0.5,4.5-1.1,7.7-1.4c10.9-0.9,19.4,2.9,23.7,4.9c12.9,5.9,20.8,17.2,36.5,39.8
+                            c4,5.7,6.5,9.8,5.8,14.8c-1.4,10-14.5,15.8-15.7,16.4c-4.1,1.8-7.5,2.2-9.2,2.4c-7,0.9-19.5,2.1-37.9,2.6
+                            c3.3,10.4,7.3,26.8,6.9,46.8c-0.9,39-18.2,66.6-6.2,77.6c6.5,5.9,15.1,1.3,25,10.1c6.6,5.9,9.2,13.8,10.4,19.3
+                            c-13.1,0-26.3,0-39.4,0c-0.7-3.8-3.9-19.3-18.3-30c-10-7.5-20.4-8.8-24.9-9.2c0.6-0.6,9.5-9.4,7.1-21.8
+                            c-2-10.3-10.4-15.2-11.6-15.9c-2.1,0.4-4.2,0.8-6.2,1.2c2.5,1.3,8.2,4.8,10.5,11.2c3.5,9.7-1.8,22.3-13.7,29.7
+                            c7-0.1,16.4,0.8,26.2,5.3c5.5,2.5,12,5.5,16.9,12.5c4.5,6.6,5.4,13.3,5.6,16.9H49.1c-14.4-4.7-18.8-12-20.3-15.6
+                            c-8.8-20,15.3-53.4,41.5-59.7c27.6-6.6,63.1,15.4,77,56.7c0.4-10.5,2.4-27,10.4-45c15.9-35.7,46.4-56.1,58-63.6
+                            C248.3,150.4,277.5,146.1,278.8,128.4z"/>
+                        </defs>
+                        <use xlink:href="#XMLID_6_"  style="overflow:visible;fill:#FFC000;"/>
+                        <clipPath id="XMLID_19_">
+                            <use xlink:href="#XMLID_6_"  style="overflow:visible;"/>
+                        </clipPath>
+                        <g transform="matrix(1 0 0 1 0 0)" style="clip-path:url(#XMLID_19_);">
+                            <image style="overflow:visible;" width="5000" height="3513" id="XMLID_2_" xlink:href="{{ url_for("static", filename="assets/concert.jpg") }}"  transform="matrix(8.318575e-002 0 0 8.318585e-002 18.7287 13.8493)">
+                            </image>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="col-sm">
+                <div class="container-fluid">
+                    <div class="row justify-content-md-center">
+                        <div class="col-md-auto">
+                            <div class="jumbotron jumbotron-fluid" style="text-align:center;background:transparent;">
+                                <div class="container-fluid">
+                                    <p class="h4"><strong>Make it happen. Hop in!</strong></p>
+                                </div>
+                                <div style="display:flex;flex-direction:column;">
+                                        <a href="{{ url_for("signup") }}"><button id="homeContent-signup" type="button" class="btn btn-warning">SIGN UP</button></a>
+                                        <a href="{{ url_for("login") }}"><button id="homeContent-login" type="button" class="btn btn-outline-warning">LOG IN</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar fixed-bottom navbar-light bg-light" style="border-top:1px lightgray solid;">
+        <div class="container" style="margin:0 auto;">
+            <a id="home-about" class="navbar-brand" class="font-weight-light" href="{{ url_for("about") }}">About</a>
+            <span class="navbar-brand" class="font-weight-light" style="color:gray;font-size:15px;">2018 Hap</span>
+        </div>
+    </nav>
 {% endblock content %}

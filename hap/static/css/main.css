@@ -1,0 +1,68 @@
+#navbar {
+    width:80%;
+    padding-top:8px;
+    margin:0 auto;
+    display:flex;
+    justify-content:space-between;
+}
+#navbar-nameplate {
+    order:1;
+    top:-3px;
+}
+#navbar-nameplate img {
+    float:left;
+    width:70px;
+}
+#navbar-components {
+    order:2;
+    margin-top:8px;
+}
+#navbar-signup:hover {
+    background-color:#FFC000;
+    color:white;
+}
+#navbar-forgotPass:hover {
+    background-color:#FFC000;
+    color:white;
+}
+#homeContent-commBlock {
+    width:305px;
+    height:350px;
+}
+#homeContent-signup {
+    margin-top:10px;
+    width:88%;
+    color:white;
+}
+#homeContent-login {
+    margin-top:10px;
+    width:88%;
+    border:1px #FFC000 solid;
+    color:black;
+}
+#homeContent-login:hover {
+    color:white;
+}
+#home-about {
+    color:gray;
+    font-size:15px;
+}
+#home-about:hover {
+    text-decoration:underline;
+}
+#login-form {
+    border-radius:10px;
+    width:800px;
+    height:auto;
+    border:1px lightgray solid;
+    margin:100px auto 0 auto;
+    padding:50px;
+}
+#signup-form {
+    border-radius:10px;
+    width:800px;
+    height:auto;
+    border:1px lightgray solid;
+    margin:100px auto 0 auto;
+    padding:50px;
+}
