@@ -10,7 +10,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html', title='Home Page')
+    return render_template('home.html')
 
 
 @app.route('/about')
@@ -78,7 +78,7 @@ def logout():
     return redirect(url_for('home'))
 
 def save_picture(form_picture):
-    random_hex = binascii.b2a_hex(os.urandom(15))
+    random_hex = binascii.b2a_hex(os.random(15))
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path,'static/profile_pics', picture_fn)

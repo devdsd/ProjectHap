@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
     {% if title %}
-        <title> {{title}} | Hap </title>
+        <title> Hap | {{title}} </title>
     {% else %}
-        <title> Hap </title>
+        <title> Welcome to Hap! </title>
     {% endif %}
 
     
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/hap-logo.ico') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/bootstrap.min.css") }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/hap-logo.ico') }}">
 
 </head>
 <body>
