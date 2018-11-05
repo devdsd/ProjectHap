@@ -1,6 +1,19 @@
 {% extends 'layouts.html' %}
 
 {% block content %}
+
+    <!-- <style>
+    #createdevents {
+        float: left;
+    }
+    #joinedevents {
+        float: right;
+    } 
+    #accountinfo {
+        float: bottom;
+    }    
+    </style> -->
+
     <div class="content-section">
         <div class="media">
         <img class="rounded-circle account-img" src="{{ image_file }}">
@@ -10,10 +23,23 @@
         </div>
         </div>
         <!-- FORM HERE -->
+        <div class="content-section" id="createdevents">
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4"> My Events </legend>
+            </fieldset>
+        </div>
+
+        <div class="content-section" id="joinedevents">
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4"> Joined Events </legend>
+            </fieldset>
+        </div>
+
         <div class="content-section">
             <form method="POST" action="" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
-                <fieldset class="form-group">
+
+                <fieldset class="form-group" id="accountinfo">
                     <legend class="border-bottom mb-4"> Account Info </legend>
                     
                     <div class="form-group">
