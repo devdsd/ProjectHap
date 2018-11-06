@@ -12,7 +12,7 @@
             {% if current_user.is_authenticated %}
                 <div class="dropdown">
                     <button id="gear-logo" class="btn btn-outline-warning" type="button" data-toggle="dropdown">
-                        <div style="width:25px;">
+                        <div style="width:25px;margin-bottom:-5px;">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                 viewBox="150 -150 500 500" style="enable-background:new 150 -150 500 500;" xml:space="preserve">
                                 <style type="text/css">
@@ -100,7 +100,7 @@
                                     <div class="row">
                                         <div class="col-md-auto">
                                             <button id="plus-logo" type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#createEventModal">
-                                                <div style="width:25px;">
+                                                <div style="width:25px;margin-bottom:-5px;">
                                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                                         viewBox="119 -119.5 438.5 438.5" style="enable-background:new 119 -119.5 438.5 438.5;" xml:space="preserve">
                                                         <style type="text/css">
@@ -277,8 +277,8 @@
                                         </div>
                                         <div class="container-fluid">
                                             <div class="row">
-                                                <div class="col">
-                                                    <span class="font-weight-normal" style"font-size:7px;">{{ event.eventDate.strftime("(%a) %b %d, %Y") }}</span>
+                                                <div class="col" style="color:red;font-size:14px;">
+                                                    <span class="font-weight-normal">{{ event.eventDate.strftime("(%a) %b %d, %Y") }}</span>
                                                 </div>
                                                 <div class="col">
                                                 </div>
