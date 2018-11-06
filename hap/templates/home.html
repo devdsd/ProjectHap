@@ -178,44 +178,52 @@
                                                                                 {{ formTwo.eventDescription(class="form-control form-control-lg", placeholder="Event description") }}
                                                                             {% endif %}
                                                                         </div>
-                                                                        <div class="form-group">
-                                                                            <label>Event Date</label>
-                                                                            {% if formTwo.eventDate.errors %}
-                                                                                {{ formTwo.eventDate(class="form-control form-control-lg is-invalid") }}
-                                                                                <div class="invalid-feedback">
-                                                                                    {% for error in formTwo.eventDate.errors %}
-                                                                                        <span> {{ error }} </span>
-                                                                                    {% endfor %}
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <div class="form-group">
+                                                                                    <label>Event Date</label>
+                                                                                    {% if formTwo.eventDate.errors %}
+                                                                                        {{ formTwo.eventDate(class="form-control form-control-lg is-invalid") }}
+                                                                                        <div class="invalid-feedback">
+                                                                                            {% for error in formTwo.eventDate.errors %}
+                                                                                                <span> {{ error }} </span>
+                                                                                            {% endfor %}
+                                                                                        </div>
+                                                                                    {% else %}
+                                                                                        {{ formTwo.eventDate(class="form-control form-control-lg") }}
+                                                                                    {% endif %}
                                                                                 </div>
-                                                                            {% else %}
-                                                                                {{ formTwo.eventDate(class="form-control form-control-lg") }}
-                                                                            {% endif %}
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Event Start Time</label>
-                                                                            {% if formTwo.startTime.errors %}
-                                                                                {{ formTwo.startTime(class="form-control form-control-lg is-invalid") }}
-                                                                                <div class="invalid-feedback">
-                                                                                    {% for error in formTwo.startTime.errors %}
-                                                                                        <span> {{ error }} </span>
-                                                                                    {% endfor %}
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-group">
+                                                                                    <label>Event Start Time</label>
+                                                                                    {% if formTwo.startTime.errors %}
+                                                                                        {{ formTwo.startTime(class="form-control form-control-lg is-invalid") }}
+                                                                                        <div class="invalid-feedback">
+                                                                                            {% for error in formTwo.startTime.errors %}
+                                                                                                <span> {{ error }} </span>
+                                                                                            {% endfor %}
+                                                                                        </div>
+                                                                                    {% else %}
+                                                                                        {{ formTwo.startTime(class="form-control form-control-lg") }}
+                                                                                    {% endif %}
                                                                                 </div>
-                                                                            {% else %}
-                                                                                {{ formTwo.startTime(class="form-control form-control-lg") }}
-                                                                            {% endif %}
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Event End Time</label>
-                                                                            {% if formTwo.endTime.errors %}
-                                                                                {{ formTwo.endTime(class="form-control form-control-lg is-invalid") }}
-                                                                                <div class="invalid-feedback">
-                                                                                    {% for error in formTwo.endTime.errors %}
-                                                                                        <span> {{ error }} </span>
-                                                                                    {% endfor %}
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-group">
+                                                                                    <label>Event End Time</label>
+                                                                                    {% if formTwo.endTime.errors %}
+                                                                                        {{ formTwo.endTime(class="form-control form-control-lg is-invalid") }}
+                                                                                        <div class="invalid-feedback">
+                                                                                            {% for error in formTwo.endTime.errors %}
+                                                                                                <span> {{ error }} </span>
+                                                                                            {% endfor %}
+                                                                                        </div>
+                                                                                    {% else %}
+                                                                                        {{ formTwo.endTime(class="form-control form-control-lg") }}
+                                                                                    {% endif %}
                                                                                 </div>
-                                                                            {% else %}
-                                                                                {{ formTwo.endTime(class="form-control form-control-lg") }}
-                                                                            {% endif %}
+                                                                            </div>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label>Event Fee</label>
