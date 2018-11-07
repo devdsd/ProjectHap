@@ -56,6 +56,8 @@ class Events(db.Model):
     eventName = db.Column(db.String(100), nullable=False)
     dateCreated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     eventDate = db.Column(db.DateTime, nullable=False)
+    eventStartTime = db.Column(db.Time)
+    eventEndTime = db.Column(db.Time)
     eventDescription = db.Column(db.Text, nullable=True)
     location = db.Column(db.Text, nullable=False)
     fee = db.Column(db.Integer, default="0")
@@ -64,7 +66,7 @@ class Events(db.Model):
     eventhascategory_relationship = db.relationship('Categories', secondary=eventhascategory_rel_table, backref=db.backref('eventhascategory', lazy=True))
 
     def __repr__(self):
-        return "Events({}, {}, {}, {})".format(self.eventName, self.eventDate, self.eventDescription, self.fee)
+        return "Events({}, {}, {}, {}, {}, {}, {})".format(self.eventName, self.location, self.eventDate, self.eventStartTime, self.eventEndTime, self.eventDescription, self.fee)
     
 
 class Categories(db.Model):
