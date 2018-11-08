@@ -42,6 +42,36 @@
                     <a class="profile-ids" href="{{ url_for("account") }}"><h3 class="account-heading">{{ current_user.firstName }} {{ current_user.lastName }}</h3></a>
                     <a class="profile-ids" href="{{ url_for("account") }}"><p class="text-secondary">{{ current_user.username }}</p></a>
                 </div>
-            </div>
+            </div> 
         </div>
+            {% for event in events %}
+            <div class="homeFeed-eventCard">
+                <div style="margin:10px;">
+                    <a href="{{ url_for("event", event_id=event.id) }}" class="eventCard-eventName"><h5>{{ event.eventName }}</h5></a>
+                </div>
+                <div class="eventCard-eventBanner">
+                    <img src="{{ url_for("static", filename="images/" + event.image_file) }}">
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col" style="color:red;font-size:14px;">
+                            <span class="font-weight-normal">{{ event.eventDate.strftime("(%a) %b %d, %Y") }}</span>
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="col">
+                            
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="w-100"></div>
+                        <div class="col">
+                            <span class="font-weight-normal">{{ event.location }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {% endfor %}
     {% endblock content %}

@@ -36,6 +36,16 @@ class LoginForm(FlaskForm):
   submit = SubmitField('LOG IN')
 
 	
+class UpdateEventForm(FlaskForm):
+    eventName = StringField('Event Name', validators=[DataRequired(), Length(min=2, max =50)])
+    eventDescription = TextAreaField('Event Description', validators=[DataRequired()])
+    eventDate = DateField('Event Date', format='%Y-%m-%d')
+    startTime = TimeField("Event Start Time", validators=[DataRequired()])
+    endTime = TimeField("Event End Time", validators=[DataRequired()])
+    imageFile = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"])])
+    fee = IntegerField("Fee", validators=[DataRequired(), NumberRange(max=1000000)])
+    location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
+    submit = SubmitField('UPDATE')
 
 class CreateEventForm(FlaskForm):
     eventName = StringField('Event Name', validators=[DataRequired(), Length(min=2, max =50)])

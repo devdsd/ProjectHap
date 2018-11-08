@@ -1,8 +1,8 @@
 import os, binascii
 from PIL import Image
 from hap import app, db, bcrypt
-from flask import render_template, url_for, flash, redirect, request
-from hap.forms import SignupForm, LoginForm, CreateEventForm, UpdateAccountForm
+from flask import render_template, url_for, flash, redirect, request, abort
+from hap.forms import SignupForm, LoginForm, CreateEventForm, UpdateAccountForm, UpdateEventForm
 # from hap import models
 from hap.models import *
 from flask_login import login_user, current_user, logout_user, login_required
@@ -107,10 +107,10 @@ def logout():
 
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
-def account():
-
+def account():   
     profilePic = url_for("static", filename="images/" + current_user.image_file)
-    return render_template("account.html", title="Account", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic)
+    events = Events.query.all()
+    return render_template("account.html", title="Account", events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic)
 
 @app.route("/settings", methods=["GET", "POST"])
 @login_required
@@ -143,5 +143,49 @@ def settings():
 @login_required
 def event(event_id):
     event = Events.query.get_or_404(event_id)
-    
     return render_template("event.html", title=event.eventName, event=event, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+
+@app.route("/event/<int:event_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_event(event_id):
+    form = UpdateEventForm()
+    event = Events.query.get_or_404(event_id)
+    if event.host != current_user:
+        abort(403)
+    if form.validate_on_submit():
+        if form.imageFile.data:
+            imageFile = save_picture(form.imageFile.data)
+            event.image_file = imageFile
+        event.eventName = form.eventName.data
+        event.eventDescription = form.eventDescription.data
+        event.eventDate = form.eventDate.data
+        event.eventStartTime = form.startTime.data
+        event.eventEndTime = form.endTime.data
+        event.fee = form.fee.data
+        event.location = form.location.data  
+        db.session.commit()
+        flash("You Event has been updated.", "success")
+        return redirect(url_for('event', event_id=event.id))
+
+    elif request.method == "GET":
+        form.eventName.data = event.eventName
+        form.eventDescription.data = event.eventDescription
+        form.eventDate.data = event.eventDate
+        form.startTime.data = event.eventStartTime
+        form.endTime.data = event.eventEndTime
+        form.fee.data = event.fee
+        form.location.data = event.location
+
+    return render_template("update.html", title="Update Event", form=form, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+
+@app.route("/event/<int:event_id>/delete", methods=['GET','POST'])
+@login_required
+def delete_event(event_id):
+    event = Events.query.get_or_404(event_id)
+    if event.host != current_user:
+        abort(403)
+    db.session.delete(event)
+    db.session.commit()
+    flash("You Event has been deleted", "success")
+    return redirect(url_for('home'))
+    
