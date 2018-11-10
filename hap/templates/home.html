@@ -286,7 +286,7 @@
                                                             <a href="{{ url_for("update_event", event_id=event.id) }}" id="feed-updateBtn" class="btn btn-outline-warning">UPDATE</a>
                                                         </div>
                                                         <div class="col-md-auto">
-                                                            <a href="#" class="btn btn-warning" style="color:white;">DELETE</a>
+                                                            <a href="{{ url_for("delete_event", event_id=event.id) }}" class="btn btn-warning" style="color:white;">DELETE</a>
                                                         </div>
                                                     </div>
                                                 {% else %}
