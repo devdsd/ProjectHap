@@ -130,9 +130,9 @@
                                                             <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
-                                                        <div class="modal-body">
+                                                        <div class="modal-body" style="font-size:13.5px;">
                                                             <div class="container-fluid">
-                                                                <form method="POST" action="" enctype="multipart/form-data">
+                                                                <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
                                                                     {{ formTwo.hidden_tag() }}
                                                                     <fieldset class="form-group">
                                                                         <div class="container-fluid">
@@ -225,31 +225,37 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="form-group">
-                                                                            <label>Event Fee</label>
-                                                                            {% if formTwo.fee.errors %}
-                                                                                {{ formTwo.fee(class="form-control form-control-lg is-invalid", placeholder="") }}
-                                                                                <div class="invalid-feedback">
-                                                                                    {% for error in formTwo.fee.errors %}
-                                                                                        <span> {{ error }} </span>
-                                                                                    {% endfor %}
+                                                                        <div class="row">
+                                                                            <div class="col-md-auto" id="createEvent-fee">
+                                                                                <div class="form-group">
+                                                                                    <label>Event Fee</label>
+                                                                                    {% if formTwo.fee.errors %}
+                                                                                        {{ formTwo.fee(class="form-control form-control-lg is-invalid", placeholder="") }}
+                                                                                        <div class="invalid-feedback">
+                                                                                            {% for error in formTwo.fee.errors %}
+                                                                                                <span> {{ error }} </span>
+                                                                                            {% endfor %}
+                                                                                        </div>
+                                                                                    {% else %}
+                                                                                        {{ formTwo.fee(class="form-control form-control-lg", placeholder="") }}
+                                                                                    {% endif %}
                                                                                 </div>
-                                                                            {% else %}
-                                                                                {{ formTwo.fee(class="form-control form-control-lg", placeholder="") }}
-                                                                            {% endif %}
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Event Location</label>
-                                                                            {% if formTwo.location.errors %}
-                                                                                {{ formTwo.location(class="form-control form-control-lg is-invalid", placeholder="") }}
-                                                                                <div class="invalid-feedback">
-                                                                                    {% for error in formTwo.location.errors %}
-                                                                                        <span> {{ error }} </span>
-                                                                                    {% endfor %}
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <div class="form-group">
+                                                                                    <label>Event Location</label>
+                                                                                    {% if formTwo.location.errors %}
+                                                                                        {{ formTwo.location(class="form-control form-control-lg is-invalid", placeholder="") }}
+                                                                                        <div class="invalid-feedback">
+                                                                                            {% for error in formTwo.location.errors %}
+                                                                                                <span> {{ error }} </span>
+                                                                                            {% endfor %}
+                                                                                        </div>
+                                                                                    {% else %}
+                                                                                        {{ formTwo.location(class="form-control form-control-lg", placeholder="") }}
+                                                                                    {% endif %}
                                                                                 </div>
-                                                                            {% else %}
-                                                                                {{ formTwo.location(class="form-control form-control-lg", placeholder="") }}
-                                                                            {% endif %}
+                                                                            </div>
                                                                         </div>
                                                                     </fieldset>
                                                                     <div class="modal-footer">
@@ -267,35 +273,33 @@
                                         </div>
                                     </div>
                                 </div>
-                                {% for event in events %}
-                                    <div class="homeFeed-eventCard">
-                                        <div style="margin:10px;">
-                                            <a href="{{ url_for("event", event_id=event.id) }}" class="eventCard-eventName"><h5>{{ event.eventName }}</h5></a>
-                                        </div>
-                                        <div class="eventCard-eventBanner">
-                                            <img src="{{ url_for("static", filename="images/" + event.image_file) }}">
-                                        </div>
-                                        <div class="container-fluid">
-                                            <div class="row">
-                                                <div class="col" style="color:red;font-size:14px;">
-                                                    <span class="font-weight-normal">{{ event.eventDate.strftime("(%a) %b %d, %Y") }}</span>
-                                                </div>
-                                                <div class="col">
-                                                </div>
-                                                <div class="w-100"></div>
-                                                <div class="col">
-                                                    
-                                                </div>
-                                                <div class="col">
-                                                </div>
-                                                <div class="w-100"></div>
-                                                <div class="col">
-                                                    <span class="font-weight-normal">{{ event.location }}</span>
-                                                </div>
+                                <div style="width:100%;height:100%;padding:0 10px;">
+                                    {% for event in events %}
+                                        <div class="card" style="width:35rem;margin-top:5px;">
+                                            <img class="card-img-top" src="{{ url_for("static", filename="images/" + event.image_file) }}" alt="Card image cap" style="height:200px;object-fit:cover;">
+                                            <div class="card-body" style="background-color:Snow;">
+                                                <a href="{{ url_for("event", event_id=event.id) }}" style="color:black;"><h5 class="card-title">{{ event.eventName }}</h5></a>
+                                                <p class="card-text" style="color:red;">{{ event.eventDate.strftime("(%a) %b %d, %Y") }}</p>
+                                                {% if event.user_id == current_user.id %}
+                                                    <div class="row justify-content-end">
+                                                        <div class="col-md-auto">
+                                                            <a href="{{ url_for("update_event", event_id=event.id) }}" id="feed-updateBtn" class="btn btn-outline-warning">UPDATE</a>
+                                                        </div>
+                                                        <div class="col-md-auto">
+                                                            <a href="#" class="btn btn-warning" style="color:white;">DELETE</a>
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="row justify-content-end">
+                                                        <div class="col-md-auto">
+                                                            <a href="#" class="btn btn-warning">JOIN</a>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
                                             </div>
                                         </div>
-                                    </div>
-                                {% endfor %}
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                         <div class="col">

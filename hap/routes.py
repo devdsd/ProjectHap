@@ -13,7 +13,7 @@ def save_picture(form_picture):
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path,'static/images', picture_fn)
     
-    output_size=(400,400)
+    output_size=(1000,1000)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
     i.save(picture_path)
@@ -105,12 +105,61 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/account', methods=['GET', 'POST'])
+@app.route('/<username>', methods=['GET', 'POST'])
 @login_required
-def account():   
-    profilePic = url_for("static", filename="images/" + current_user.image_file)
-    events = Events.query.all()
-    return render_template("account.html", title="Account", events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic)
+def account(username):
+    if username == current_user.username:
+        user = current_user
+        profilePic = url_for("static", filename="images/" + current_user.image_file)
+        events = Events.query.filter_by(user_id=current_user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+    else:
+        user = Users.query.filter_by(username=username).first()
+        profilePic = url_for("static", filename="images/" + user.image_file)
+        events = Events.query.filter_by(user_id=user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+
+# @app.route('/account', methods=['GET', 'POST'])
+# @login_required
+# def account():   
+#     profilePic = url_for("static", filename="images/" + current_user.image_file)
+#     events = Events.query.filter_by(user_id=current_user.id).all()
+#     myEventsCount = Events.query.filter_by(user_id=current_user.id).count()
+#     return render_template("account.html", title="Account", events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, myEventsCount=myEventsCount, navbarMyEventsUnderline="underline")
+
+@app.route("/<username>/myevents")
+@login_required
+def my_events(username):
+    if username == current_user.username:
+        user = current_user
+        profilePic = url_for("static", filename="images/" + current_user.image_file)
+        events = Events.query.filter_by(user_id=current_user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+    else:
+        user = Users.query.filter_by(username=username).first()
+        profilePic = url_for("static", filename="images/" + user.image_file)
+        events = Events.query.filter_by(user_id=user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+
+@app.route("/<username>/joinedevents")
+@login_required
+def joined_events(username):
+    if username == current_user.username:
+        user = current_user
+        profilePic = url_for("static", filename="images/" + current_user.image_file)
+        events = Events.query.filter_by(user_id=current_user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarJoinedEventsUnderline="underline")
+    else:
+        user = Users.query.filter_by(username=username).first()
+        profilePic = url_for("static", filename="images/" + user.image_file)
+        events = Events.query.filter_by(user_id=user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarJoinedEventsUnderline="underline")
 
 @app.route("/settings", methods=["GET", "POST"])
 @login_required

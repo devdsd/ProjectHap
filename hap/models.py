@@ -43,7 +43,7 @@ class Users(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     creates = db.relationship('Events', backref='host', lazy=True)
-    image_file = db.Column(db.String(50), nullable=False, default='default.jpg')
+    image_file = db.Column(db.String(50), nullable=False, default='default-profPic.jpg')
     review_relationship = db.relationship('Events', secondary=review_rel_table, backref=db.backref('reviewrel', lazy=True))
     rate_relationship = db.relationship('Events', secondary=rate_rel_table, backref=db.backref('raterel', lazy=True))
     userhasinterest_relationship = db.relationship('Categories', secondary=userhasinterest_rel_table, backref=db.backref('userhasinterest', lazy=True))
@@ -62,7 +62,7 @@ class Events(db.Model):
     location = db.Column(db.Text, nullable=False)
     fee = db.Column(db.Integer, default="0")
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    image_file = db.Column(db.String(50), nullable=False, default='default.jpg')
+    image_file = db.Column(db.String(50), nullable=False)
     eventhascategory_relationship = db.relationship('Categories', secondary=eventhascategory_rel_table, backref=db.backref('eventhascategory', lazy=True))
 
     def __repr__(self):

@@ -112,20 +112,52 @@ body {
 }
 #home-feed {
     height:auto;
-    border:1px lightgray solid;
 }
 #home-rightBox {
     margin-right:20px;
     height:200px;
     border:1px lightgray solid;
 }
-#profile-container {
+#createEvent-fee input {
+    width:150px;
+}
+#profile-header {
     height:auto;
-    width:1200px;
+    width:1000px;
     margin:100px auto 0 auto;
 }
-#create-panel {
+#profile-body {
+    height:400px;
+    width:920px;
+    margin:5px auto 0 auto;
+}
+#profileBody-navbar {
+    width:948px;
+    height:35px;
+    font-size:18px;
+    font-weight:bold;
     border-bottom:1px lightgray solid;
+}
+.bodyNavbar-container {
+    float:left;
+    margin:5px 40px 0 0;
+}
+.bodyNavbar-elements {
+    color:black;
+}
+.bodyNavbar-elements:hover {
+    color:black;
+    text-decoration:underline;
+}
+#profileBody-content {
+    height:365px;
+    width:948px;
+    padding-top:5px;
+}
+#create-panel {
+    border-color: lightgray;
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
     height:100px;
 }
 #plus-logo {
@@ -155,20 +187,6 @@ body {
     margin:100px auto 0 auto;
     border:1px lightgray solid;
 }
-.homeFeed-eventCard {
-    height:380px;
-    margin:15px;
-    border:1px lightgray solid;
-    border-radius:5px;
-}
-.eventCard-eventBanner {
-    height:270px;
-    overflow:hidden;
-}
-.eventCard-eventName {
-    color:black;
-}
-.eventCard-eventName:hover {
-    text-decoration:underline;
-    color:black;
+#feed-updateBtn:hover {
+    color:white;
 }
