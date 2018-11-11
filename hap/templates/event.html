@@ -38,16 +38,21 @@
         </div>
     {% endblock navbarRightComponent %}
     {% block content %}
-        <div id="event-info" class="container">
-            <div class="container-fluid">
-                <div class="container-fluid" style="height:150px;background:yellow;">
-                    <img src="{{ url_for("static", filename="images/" + event.image_file) }}" style="border:1px lightgray solid;width:120px;">
+        <div id="event-header" class="container">
+            <div class="row">
+                <div class="col">
+                    <img class="card-img-top" src="{{ url_for("static", filename="images/" + event.image_file) }}" alt="Card image cap" style="height:250px;object-fit:cover;">
                 </div>
-                <h1>{{ event.eventName }}</h1>
-                <p>By {{ (event.host.firstName) }} {{ event.host.lastName }} on {{ event.dateCreated.strftime("%Y-%m-%d") }}</p>
-                <p>{{ event.eventDescription }}</p>
-                <small>{{ event.fee }}</small>
-                <small>{{ event.location }}</small>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="container-fluid">
+                        <h1>{{ event.eventName }}</h1>
+                        <p>By {{ (event.host.firstName) }} {{ event.host.lastName }} on {{ event.dateCreated.strftime("%Y-%m-%d") }}</p>
+                        <p>{{ event.eventDescription }}</p>
+                        <small>{{ event.fee }}</small>
+                        <small>{{ event.location }}</small>
+                    </div>
+                </div>
             </div>
         </div>
     {% endblock content %}

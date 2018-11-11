@@ -124,6 +124,11 @@ body {
 #profile-header {
     height:auto;
     width:1000px;
+    margin:75px auto 0 auto;
+}
+#event-header {
+    height:auto;
+    width:1000px;
     margin:100px auto 0 auto;
 }
 #profile-body {
@@ -146,8 +151,7 @@ body {
     color:black;
 }
 .bodyNavbar-elements:hover {
-    color:black;
-    text-decoration:underline;
+    text-decoration:none;
 }
 #profileBody-content {
     height:365px;
@@ -189,4 +193,13 @@ body {
 }
 #feed-updateBtn:hover {
     color:white;
+}
+#homeDeleteEvent-closeModalBtn:hover {
+    color:white;
+}
+#accountdeleteEvent-CloseModalBtn:hover {
+    color:white;
+}
+#createEvent-modalContent {
+    font-size:13.5px;
 }

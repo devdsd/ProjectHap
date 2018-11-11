@@ -33,7 +33,7 @@ class LoginForm(FlaskForm):
   password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=50)])
   remember = BooleanField('Remember Password')
   
-  submit = SubmitField('LOG IN')
+  submit = SubmitField('Log in')
 
 	
 class UpdateEventForm(FlaskForm):
@@ -45,7 +45,7 @@ class UpdateEventForm(FlaskForm):
     imageFile = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"])])
     fee = IntegerField("Fee", validators=[DataRequired(), NumberRange(max=1000000)])
     location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
-    submit = SubmitField('UPDATE')
+    submit = SubmitField('Update')
 
 class CreateEventForm(FlaskForm):
     eventName = StringField('Event Name', validators=[DataRequired(), Length(min=2, max =50)])
@@ -56,7 +56,7 @@ class CreateEventForm(FlaskForm):
     imageFile = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"])])
     fee = IntegerField("Fee", validators=[DataRequired(), NumberRange(max=1000000)])
     location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
-    submit = SubmitField('CREATE EVENT')
+    submit = SubmitField('Post')
 
 class UpdateAccountForm(FlaskForm):
       firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
@@ -64,7 +64,7 @@ class UpdateAccountForm(FlaskForm):
       username = StringField('Username', validators=[DataRequired(),Length(min=2, max=20)])
       email = StringField('Email', validators=[DataRequired(), Email()])
       picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
-      submit = SubmitField('UPDATE')
+      submit = SubmitField('Update')
 
       # def validate_firstName(self, firstName):
       #   if firstName.data != current_user.firstName:
