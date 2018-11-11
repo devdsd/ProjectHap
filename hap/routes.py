@@ -1,8 +1,8 @@
 import os, binascii
 from PIL import Image
 from hap import app, db, bcrypt
-from flask import render_template, url_for, flash, redirect, request
-from hap.forms import SignupForm, LoginForm, CreateEventForm, UpdateAccountForm
+from flask import render_template, url_for, flash, redirect, request, abort
+from hap.forms import SignupForm, LoginForm, CreateEventForm, UpdateAccountForm, UpdateEventForm
 # from hap import models
 from hap.models import *
 from flask_login import login_user, current_user, logout_user, login_required
@@ -13,7 +13,7 @@ def save_picture(form_picture):
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path,'static/images', picture_fn)
     
-    output_size=(400,400)
+    output_size=(1000,1000)
     i = Image.open(form_picture)
     i.thumbnail(output_size)
     i.save(picture_path)
@@ -112,12 +112,61 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/account', methods=['GET', 'POST'])
+@app.route('/<username>', methods=['GET', 'POST'])
 @login_required
-def account():
-    
-    profilePic = url_for("static", filename="images/" + current_user.image_file)
-    return render_template("account.html", title="Account", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic)
+def account(username):
+    if username == current_user.username:
+        user = current_user
+        profilePic = url_for("static", filename="images/" + current_user.image_file)
+        events = Events.query.filter_by(user_id=current_user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+    else:
+        user = Users.query.filter_by(username=username).first()
+        profilePic = url_for("static", filename="images/" + user.image_file)
+        events = Events.query.filter_by(user_id=user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+
+# @app.route('/account', methods=['GET', 'POST'])
+# @login_required
+# def account():   
+#     profilePic = url_for("static", filename="images/" + current_user.image_file)
+#     events = Events.query.filter_by(user_id=current_user.id).all()
+#     myEventsCount = Events.query.filter_by(user_id=current_user.id).count()
+#     return render_template("account.html", title="Account", events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, myEventsCount=myEventsCount, navbarMyEventsUnderline="underline")
+
+@app.route("/<username>/myevents")
+@login_required
+def my_events(username):
+    if username == current_user.username:
+        user = current_user
+        profilePic = url_for("static", filename="images/" + current_user.image_file)
+        events = Events.query.filter_by(user_id=current_user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+    else:
+        user = Users.query.filter_by(username=username).first()
+        profilePic = url_for("static", filename="images/" + user.image_file)
+        events = Events.query.filter_by(user_id=user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+
+@app.route("/<username>/joinedevents")
+@login_required
+def joined_events(username):
+    if username == current_user.username:
+        user = current_user
+        profilePic = url_for("static", filename="images/" + current_user.image_file)
+        events = Events.query.filter_by(user_id=current_user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarJoinedEventsUnderline="underline")
+    else:
+        user = Users.query.filter_by(username=username).first()
+        profilePic = url_for("static", filename="images/" + user.image_file)
+        events = Events.query.filter_by(user_id=user.id).all()
+        createdEventsCount = Events.query.filter_by(user_id=user.id).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarJoinedEventsUnderline="underline")
 
 @app.route("/settings", methods=["GET", "POST"])
 @login_required
@@ -150,12 +199,48 @@ def settings():
 @login_required
 def event(event_id):
     event = Events.query.get_or_404(event_id)
-    
     return render_template("event.html", title=event.eventName, event=event, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
 
+@app.route("/event/<int:event_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_event(event_id):
+    form = UpdateEventForm()
+    event = Events.query.get_or_404(event_id)
+    if event.host != current_user:
+        abort(403)
+    if form.validate_on_submit():
+        if form.imageFile.data:
+            imageFile = save_picture(form.imageFile.data)
+            event.image_file = imageFile
+        event.eventName = form.eventName.data
+        event.eventDescription = form.eventDescription.data
+        event.eventDate = form.eventDate.data
+        event.eventStartTime = form.startTime.data
+        event.eventEndTime = form.endTime.data
+        event.fee = form.fee.data
+        event.location = form.location.data  
+        db.session.commit()
+        flash("You Event has been updated.", "success")
+        return redirect(url_for('event', event_id=event.id))
 
-# Noted Problems: 
-#     > After creating account >> it must go to login page first to login not automatically login after creating the account
-#     > Account.html >> form is not defined
-#     > 
+    elif request.method == "GET":
+        form.eventName.data = event.eventName
+        form.eventDescription.data = event.eventDescription
+        form.eventDate.data = event.eventDate
+        form.startTime.data = event.eventStartTime
+        form.endTime.data = event.eventEndTime
+        form.fee.data = event.fee
+        form.location.data = event.location
 
+    return render_template("update.html", title="Update Event", form=form, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+
+@app.route("/event/<int:event_id>/delete", methods=['GET','POST'])
+@login_required
+def delete_event(event_id):
+    event = Events.query.get_or_404(event_id)
+    if event.host != current_user:
+        abort(403)
+    db.session.delete(event)
+    db.session.commit()
+    flash("You Event has been deleted", "success")
+    return redirect(url_for('home'))

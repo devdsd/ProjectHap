@@ -37,7 +37,7 @@
                         </li>
                         <li class="nav-item">
                             {% if current_user.is_authenticated %}
-                                <a class="nav-link" href="{{ url_for("account") }}"><img src="{{ url_for("static", filename="assets/profile-logo.svg") }}" style="width:28px;margin:0 11.5px;padding-bottom:5px;border-bottom:2px {{ profileNavbarLogoBorderBottom }} solid;"></a>
+                                <a class="nav-link" href="{{ url_for("account", username=current_user.username) }}"><img src="{{ url_for("static", filename="assets/profile-logo.svg") }}" style="width:28px;margin:0 11.5px;padding-bottom:5px;border-bottom:2px {{ profileNavbarLogoBorderBottom }} solid;"></a>
                             {% endif %}
                         </li>
                     </ul>
