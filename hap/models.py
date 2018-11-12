@@ -60,7 +60,7 @@ class Events(db.Model):
     eventEndTime = db.Column(db.Time)
     eventDescription = db.Column(db.Text, nullable=True)
     location = db.Column(db.Text, nullable=False)
-    fee = db.Column(db.Integer, default="0")
+    fee = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     image_file = db.Column(db.String(50), nullable=False)
     eventhascategory_relationship = db.relationship('Categories', secondary=eventhascategory_rel_table, backref=db.backref('eventhascategory', lazy=True))

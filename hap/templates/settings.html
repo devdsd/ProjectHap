@@ -28,7 +28,7 @@
                 </div>
             </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a id="navbar-myEvents" class="dropdown-item" href="#">My Events</a>
+                <a id="navbar-myEvents" class="dropdown-item" href=" {{ url_for("my_events", username=current_user.username) }}>My Events</a>
                 <a id="navbar-settings" class="dropdown-item" href="{{ url_for("settings") }}">Settings</a>
                 <a id="navbar-logout" class="dropdown-item" href="{{ url_for("logout") }}">Log Out</a>
             </div>

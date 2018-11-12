@@ -43,10 +43,10 @@ class UpdateEventForm(FlaskForm):
     startTime = TimeField("Event Start Time", validators=[DataRequired()])
     endTime = TimeField("Event End Time", validators=[DataRequired()])
     imageFile = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"])])
-    fee = IntegerField("Fee", validators=[DataRequired(), NumberRange(max=1000000)])
+    fee = IntegerField("Fee", validators=[NumberRange(max=1000000)])
     location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
     submit = SubmitField('Update')
-    
+
 
 class CreateEventForm(FlaskForm):
     eventName = StringField('Event Name', validators=[DataRequired(), Length(min=2, max =50)])
@@ -55,7 +55,7 @@ class CreateEventForm(FlaskForm):
     startTime = TimeField("Event Start Time", validators=[DataRequired()])
     endTime = TimeField("Event End Time", validators=[DataRequired()])
     imageFile = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"])])
-    fee = IntegerField("Fee", validators=[DataRequired(), NumberRange(max=1000000)])
+    fee = IntegerField("Fee", validators=[NumberRange(max=1000000)])
     location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
     submit = SubmitField('Post')
 

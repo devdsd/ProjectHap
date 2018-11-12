@@ -31,7 +31,7 @@
                 </div>
             </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a id="navbar-myEvents" class="dropdown-item" href="#">My Events</a>
+                <a id="navbar-myEvents" class="dropdown-item" href=" {{ url_for("my_events", username=current_user.username) }} ">My Events</a>
                 <a id="navbar-settings" class="dropdown-item" href="{{ url_for("settings") }}">Settings</a>
                 <a id="navbar-logout" class="dropdown-item" href="{{ url_for("logout") }}">Log Out</a>
             </div>
@@ -43,7 +43,7 @@
             <div class="row">
                 <div class="col">
                     <div class="media">
-                        <img src="{{ images }}" style="border:1px lightgray solid;width:120px;margin:25px;">
+                        <img src="{{ profilePic }}" style="border:1px lightgray solid;width:120px;margin:25px;">
                         <div class="media-body" style="margin:25px;">
                             <a class="profile-ids" href="{{ url_for("account", username=user.username) }}"><h3 class="account-heading">{{ user.firstName }} {{ user.lastName }}</h3></a>
                             <a class="profile-ids" href="{{ url_for("account", username=user.username) }}"><p class="text-secondary">{{ user.username }}</p></a>
@@ -68,7 +68,7 @@
                     <a href="{{ url_for("my_events", username=user.username) }}" class="bodyNavbar-elements" style="text-decoration:{{ navbarCreatedEventsUnderline }}">Created Events</a>
                 </div>
                 <div class="bodyNavbar-container">
-                    <a href="{{ url_for("joined_events", username=user.username) }}" class="bodyNavbar-elements" style="text-decoration:{{ navbarJoinedEventsUnderline }}">Joined Events</a>
+                    <!-- <a href="{{ url_for("joined_events", username=user.username) }}" class="bodyNavbar-elements" style="text-decoration:{{ navbarJoinedEventsUnderline }}">Joined Events</a> -->
                 </div>
             </div>
             <div id="profileBody-content">

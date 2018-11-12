@@ -186,7 +186,8 @@ def settings():
 
         flash("You profile has been updated.", "success")
         
-        return redirect(url_for("account"))
+        return redirect(url_for("account", username=current_user.username))
+
     elif request.method == "GET":
         form.firstName.data = current_user.firstName;
         form.lastName.data = current_user.lastName;
