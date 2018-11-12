@@ -49,8 +49,8 @@
                         <h1>{{ event.eventName }}</h1>
                         <p>By {{ (event.host.firstName) }} {{ event.host.lastName }} on {{ event.dateCreated.strftime("%Y-%m-%d") }}</p>
                         <p>{{ event.eventDescription }}</p>
-                        <small>{{ event.fee }}</small>
-                        <small>{{ event.location }}</small>
+                        <small> <strong> Admission Fee: </strong> {{ event.fee }}</small> <br>
+                        <small> <strong> Location: </strong> {{ event.location }}</small>
                     </div>
                     {% if event.user_id == current_user.id %}
                         <div class="row justify-content-end">
