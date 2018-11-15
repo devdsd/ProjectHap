@@ -177,7 +177,7 @@ def settings():
             
         db.session.commit()
 
-        flash("You profile has been updated.", "success")
+        flash("Your profile has been updated.", "success")
         
         return redirect(url_for("account", username=current_user.username))
 
@@ -214,7 +214,7 @@ def update_event(event_id):
         event.fee = form.fee.data
         event.location = form.location.data  
         db.session.commit()
-        flash("You Event has been updated.", "success")
+        flash("Your Event has been updated.", "success")
         return redirect(url_for('event', event_id=event.id))
 
     elif request.method == "GET":
@@ -236,5 +236,5 @@ def delete_event(event_id):
         abort(403)
     db.session.delete(event)
     db.session.commit()
-    flash("You Event has been deleted", "success")
+    flash("Your Event has been deleted", "success")
     return redirect(url_for('home'))
