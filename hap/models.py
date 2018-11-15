@@ -75,13 +75,3 @@ class Categories(db.Model):
 
     def __repr__(self):
         return "Categories({})".format(self.categoryName)
-
-
-# class Images(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-#     profile_pic = db.relationship('Users', backref='profilepicture', lazy=True)
-#     event_image = db.relationship('Events', backref='eventimage', lazy=True)
-
-#     def __repr__(self):
-#         return "Images({})".format(self.image_file)

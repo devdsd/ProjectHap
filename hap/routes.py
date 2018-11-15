@@ -25,7 +25,7 @@ def save_picture(form_picture):
 def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
-        events = Events.query.all()
+        events = Events.query.order_by(Events.dateCreated.desc())
         if formTwo.validate_on_submit():
             picture_file = ""
             if formTwo.imageFile.data:
@@ -128,13 +128,6 @@ def account(username):
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
         return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
 
-# @app.route('/account', methods=['GET', 'POST'])
-# @login_required
-# def account():   
-#     profilePic = url_for("static", filename="images/" + current_user.image_file)
-#     events = Events.query.filter_by(user_id=current_user.id).all()
-#     myEventsCount = Events.query.filter_by(user_id=current_user.id).count()
-#     return render_template("account.html", title="Account", events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, myEventsCount=myEventsCount, navbarMyEventsUnderline="underline")
 
 @app.route("/<username>/myevents")
 @login_required
