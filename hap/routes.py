@@ -118,7 +118,7 @@ def account(username):
     if username == current_user.username:
         user = current_user
         profilePic = url_for("static", filename="images/" + current_user.image_file)
-        events = Events.query.filter_by(user_id=current_user.id).all()
+        events = Events.query.filter_by(user_id=current_user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
         return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
     else:
