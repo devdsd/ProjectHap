@@ -47,13 +47,23 @@ def home():
     form = LoginForm()
 
     if form.validate_on_submit():
-        user = Users.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            next_page = request.args.get("next")
-            return redirect(next_page) if next_page else redirect(url_for("home"))
+        if form.email.data is not None:
+            user = Users.query.filter_by(email=form.email.data).first()
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                next_page = request.args.get("next")
+                return redirect(next_page) if next_page else redirect(url_for("home"))
+            else:
+                flash("Log in unsuccessful.", "danger")
         else:
-            flash("Log in unsuccessful.", "danger")
+            user = Users.query.filter_by(username=form.username.data).first()
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
+                next_page = request.args.get("next")
+                return redirect(next_page) if next_page else redirect(url_for("home"))
+            else:
+                flash("Log in unsuccessful.", "danger")
+
     elif form.email.data or form.password.data:
         return render_template("home.html", form=form, title="Welcome to Hap!", dropdownAppearance="show", ariaExpansionBool="true")
         
@@ -124,9 +134,9 @@ def account(username):
     else:
         user = Users.query.filter_by(username=username).first()
         profilePic = url_for("static", filename="images/" + user.image_file)
-        events = Events.query.filter_by(user_id=user.id).all()
+        events = Events.query.filter_by(user_id=user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
 
 
 @app.route("/<username>/myevents")
@@ -135,15 +145,15 @@ def my_events(username):
     if username == current_user.username:
         user = current_user
         profilePic = url_for("static", filename="images/" + current_user.image_file)
-        events = Events.query.filter_by(user_id=current_user.id).all()
+        events = Events.query.filter_by(user_id=current_user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
         return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
     else:
         user = Users.query.filter_by(username=username).first()
         profilePic = url_for("static", filename="images/" + user.image_file)
-        events = Events.query.filter_by(user_id=user.id).all()
+        events = Events.query.filter_by(user_id=user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, navbarCreatedEventsUnderline="underline")
 
 @app.route("/<username>/joinedevents")
 @login_required

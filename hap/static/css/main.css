@@ -1,12 +1,8 @@
-html {
-    overflow-y: scroll;
-}
+
 body {
     padding:0;
     margin:0;
-}
-.modal-open[style] {
-    padding-right: 0px !important;
+    overflow-y:scroll;
 }
 ::-webkit-input-placeholder {
     font-size:15px;
@@ -204,5 +200,22 @@ body {
     color:white;
 }
 #createEvent-modalContent {
-    font-size:13.5px;
+    font-size:15px;
+    height: 250px;
+    overflow-y: auto;
+    height:500px;
+}
+#homefeed-navbar {
+    position:fixed;
+    z-index:2;
+    padding:0 17%;
+    border-bottom:1px lightgray solid;
+    top:-0.5px;
+    background:white;
+}
+body.modal-open {
+    overflow: hidden;
+}
+body.modal-open #homefeed-navbar {
+    padding:0 17.9% 0 16.82%;
 }

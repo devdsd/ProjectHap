@@ -28,13 +28,24 @@ class SignupForm(FlaskForm):
 			raise ValidationError("Email already used.")
 
 class LoginForm(FlaskForm):
-  email = StringField('Email', validators=[DataRequired(), Email()])
-  # username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+  emailOrUsername = StringField('Email Address', validators=[DataRequired()])
+  email = StringField('Email', validators=[Email()])
+  username = StringField('Username', validators=[Length(min=2, max=20)])
   password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=50)])
   remember = BooleanField('Remember Password')
   
-  submit = SubmitField('Log in')
+  submit = SubmitField('Log In')
 
+  def emailOrUsernameCheck(self, emailOrUsername, email, username):
+    check = 0
+    for x in emailOrUsername.data:
+      if x == "@":
+        raise ValidationError(emailOrUsername.data)
+      
+    if check == 1:
+      email.data = emailOrUsername.data
+    else:
+      username.data = emailOrUsername.data
 
 class UpdateEventForm(FlaskForm):
     eventName = StringField('Event Name', validators=[DataRequired(), Length(min=2, max =50)])

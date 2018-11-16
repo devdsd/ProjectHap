@@ -1,5 +1,4 @@
 {% extends 'layouts.html' %}
-
     {% block navbarAdjust %}
         <div class="container-fluid" style="position:fixed;z-index:2;padding:0 17%;border-bottom:1px lightgray solid;top:-0.5px;background:white;">
     {% endblock navbarAdjust %}
@@ -52,11 +51,8 @@
                 </div>
                 <div class="col">
                     <div class="row justify-content-md-center" style="margin:25px;">
-                        <div class="col-md-auto" style="border-left:1px lightgray solid;">
-                            <span style="font-size:30px;">{{ createdEventsCount }}</span><br><span style="font-size:14px;">Created Events</span>
-                        </div>
                         <div class="col-md-auto" style="border-left:1px lightgray solid;border-right:1px lightgray solid;">
-                            <span style="font-size:30px;">0</span><br><span style="font-size:14px;">Joined Events</span>
+                            <span style="font-size:30px;">{{ createdEventsCount }}</span><br><span style="font-size:14px;">Created Events</span>
                         </div>
                     </div>
                 </div>
@@ -79,46 +75,61 @@
                             {% set count = 1 %}
                             <div class="w-100"></div>
                         {% endif %}
-                        <div class="col-md-auto">
-                            <div class="card" style="width: 18rem;margin:5px 0;">
-                                <img class="card-img-top" src="{{ url_for("static", filename="images/" + event.image_file) }}" alt="Card image cap" style="height:120px;object-fit:cover;">
-                                <div class="card-body">
-                                    <a href="{{ url_for("event", event_id=event.id) }}" style="color:black;"><h5 class="card-title">{{ event.eventName }}</h5></a>
-                                    <p class="card-text" style="color:red;">{{ event.eventDate.strftime("(%a) %b %d, %Y") }}</p>
-                                    <div class="row justify-content-end">
-                                        <div class="col-md-auto">
-                                            <a href="{{ url_for("update_event", event_id=event.id) }}" id="feed-updateBtn" class="btn btn-outline-warning">Update</a>
-                                        </div>
-                                        <div class="col-md-auto">
-                                            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="color:white;">
-                                                Delete
-                                            </button>
-                                            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="deleteModalLabel">Delete Event</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Are you sure you want to delete your event?
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-outline-secondary btn-sm m-1" id="accountdeleteEvent-CloseModalBtn" data-dismiss="modal">Close</button>
-                                                        <form action="{{ url_for("delete_event", event_id=event.id) }}" method="POST" onsubmit="return checkForm(this);">
-                                                            <input name="deleteBtn" class="btn btn-danger btn-sm m-1" type="submit" value="Delete" style="color:white;">
-                                                        </form>
-                                                    </div>
+                            {% if event.user_id == current_user.id %}
+                                <div class="col-md-auto">
+                                    <div class="card" style="width: 18rem;margin:5px 0;">
+                                        <img class="card-img-top" src="{{ url_for("static", filename="images/" + event.image_file) }}" alt="Card image cap" style="height:120px;object-fit:cover;">
+                                        <div class="card-body">
+                                            <a href="{{ url_for("event", event_id=event.id) }}" style="color:black;"><h5 class="card-title">{{ event.eventName }}</h5></a>
+                                            <p class="card-text" style="color:red;">{{ event.eventDate.strftime("(%a) %b %d, %Y") }}</p>
+                                            <div class="row justify-content-end">
+                                                <div class="col-md-auto">
+                                                    <a href="{{ url_for("update_event", event_id=event.id) }}" id="feed-updateBtn" class="btn btn-warning btn-sm m-1">Update</a>
+                                                    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal" style="color:white;">
+                                                        Delete
+                                                    </button>
+                                                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="deleteModalLabel">Delete Event</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Are you sure you want to delete your event?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button id="homeDeleteEvent-closeModalBtn" type="button" class="btn btn-outline-secondary btn-sm m-1" data-dismiss="modal">Close</button>
+                                                                    <form action="{{ url_for("delete_event", event_id=event.id) }}" method="POST" onsubmit="return checkForm(this);">
+                                                                        <input name="deleteBtn" class="btn btn-danger btn-sm m-1" type="submit" value="Delete" style="color:white;">
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            {% else %}
+                                <div class="col-md-auto">
+                                    <div class="card" style="width: 18rem;margin:5px 0;">
+                                        <img class="card-img-top" src="{{ url_for("static", filename="images/" + event.image_file) }}" alt="Card image cap" style="height:120px;object-fit:cover;">
+                                        <div class="card-body">
+                                            <a href="{{ url_for("event", event_id=event.id) }}" style="color:black;"><h5 class="card-title">{{ event.eventName }}</h5></a>
+                                            <p class="card-text" style="color:red;">{{ event.eventDate.strftime("(%a) %b %d, %Y") }}</p>
+                                            <div class="row justify-content-end">
+                                                <div class="col-md-auto">
+                                                    <a href="#" class="btn btn-warning btn-sm m-1" style="color:white;">Join</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
                         {% set count = count + 1 %}
                     {% endfor %}
                 </div>

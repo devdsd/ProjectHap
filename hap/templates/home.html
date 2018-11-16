@@ -1,6 +1,6 @@
 {% extends 'layouts.html' %}
     {% block navbarAdjust %}
-        <div class="container-fluid" style="position:fixed;z-index:2;padding:0 17%;border-bottom:1px lightgray solid;top:-0.5px;background:white;">
+        <div id="homefeed-navbar" class="container-fluid">
     {% endblock navbarAdjust %}
     {% block navbarToggler %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,36 +37,50 @@
                 </div>
             {% else %}
                 <button style="color:white;" class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="{{ ariaExpansionBool }}">
-                    <span id="navbarLogin-label">Log in</span>
+                    <span id="navbarLogin-label">Log In</span>
                 </button>
                 <div class="dropdown-menu {{ dropdownAppearance }}" id="navbar-loginBox">
                     <form class="px-4 py-3" method="POST" action="">
                         {{ form.hidden_tag() }}
                         <fieldset class="form-group">
                             <div class="form-group">
-                                <label>Email address</label>
-                                {% if form.email.errors %}
-                                    {{ form.email(class="form-control form-control-lg is-invalid", placeholder="Email") }}
+                                <label>Email Address/Username</label>
+                                {% if form.emailOrUsername.errors %}
+                                    {{ form.emailOrUsername(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.emailOrUsername.errors %}
+                                            <span> {{ error }} </span>
+                                        {% endfor %}
+                                    </div>
+                                {% elif form.email.errors %}
+                                    {{ form.emailOrUsername(class="form-control form-control-lg is-invalid") }}
                                     <div class="invalid-feedback">
                                         {% for error in form.email.errors %}
                                             <span> {{ error }} </span>
                                         {% endfor %}
                                     </div>
+                                {% elif form.username.errors %}
+                                    {{ form.emailOrUsername(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.username.errors %}
+                                            <span> {{ error }} </span>
+                                        {% endfor %}
+                                    </div>
                                 {% else %}
-                                    {{ form.email(class="form-control form-control-lg", placeholder="Email") }}
+                                    {{ form.emailOrUsername(class="form-control form-control-lg") }}
                                 {% endif %}
                             </div>
                             <div class="form-group">
                                 <label>Password</label>
                                 {% if form.password.errors %}
-                                    {{ form.password(class="form-control form-control-lg is-invalid", placeholder="Password") }}
+                                    {{ form.password(class="form-control form-control-lg is-invalid") }}
                                     <div class="invalid-feedback">
                                         {% for error in form.password.errors %}
                                             <span> {{ error }} </span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ form.password(class="form-control form-control-lg", placeholder="Password") }}
+                                    {{ form.password(class="form-control form-control-lg") }}
                                 {% endif %}
                             </div>
                             <div class="form-check">
@@ -115,7 +129,7 @@
                                                 </div>
                                             </button>
                                             <div class="modal fade" id="createEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                <div class="modal-dialog modal-lg" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <div class="row align-items-center">
@@ -135,11 +149,11 @@
                                                                 <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
                                                                     {{ formTwo.hidden_tag() }}
                                                                     <fieldset class="form-group">
-                                                                        <div class="container-fluid">
+                                                                        <label>Event Banner</label>
+                                                                        <div class="container-fluid" style="border-bottom:1px lightgray solid;border-top:1px lightgray solid;margin:5.5px 0 20px 0;padding:40px 0 40px 0">
                                                                             <div class="row">
                                                                                 <div class="col-md-auto">
                                                                                     <div class="form-group">
-                                                                                        <label>Event Banner</label>
                                                                                         {{ formTwo.imageFile(class="form-control-file") }}
                                                                                         {% if formTwo.imageFile.errors %}
                                                                                             {% for error in formTwo.imageFile.errors %}
@@ -149,6 +163,8 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col">
+                                                                                    <img class="card-img-top" id="eventBanner-preview" style="height:200px;object-fit:cover;background:gray;">
+                                                                                    <script>document.getElementById("eventBanner-preview").src = '{{ url_for("static", filename="images/eventBanner-blankPreview.jpg") }}';</script>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -259,7 +275,7 @@
                                                                         </div>
                                                                     </fieldset>
                                                                     <div class="modal-footer">
-                                                                        <button id="close-createEventModal" type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+                                                                        <button id="close-createEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                                                                         {{ formTwo.submit(class="btn btn-warning", style="color:white;") }}
                                                                     </div>
                                                                 </form>
@@ -344,8 +360,8 @@
                                             <p class="h4"><strong>Make it happen. Hop in!</strong></p>
                                         </div>
                                         <div style="display:flex;flex-direction:column;">
-                                            <a href="{{ url_for("signup") }}"><button id="homeContent-signup" type="button" class="btn btn-warning">Sign up</button></a>
-                                            <a href="{{ url_for("login") }}"><button id="homeContent-login" type="button" class="btn btn-outline-warning">Log in</button></a>
+                                            <a href="{{ url_for("signup") }}"><button id="homeContent-signup" type="button" class="btn btn-warning">Sign Up</button></a>
+                                            <a href="{{ url_for("login") }}"><button id="homeContent-login" type="button" class="btn btn-outline-warning">Log In</button></a>
                                         </div>
                                     </div>
                                 </div>
