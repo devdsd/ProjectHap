@@ -151,7 +151,7 @@ def account(username):
         profilePic = url_for("static", filename="images/" + user.image_file)
         events = Events.query.filter_by(user_id=user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
-        joinedEventsCount = Events.query.filter(Events.joinrel.any(id=current_user.id)).count()
+        joinedEventsCount = Events.query.filter(Events.joinrel.any(id=user.id)).count()
         return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline")
 
 @app.route("/<username>/accountevents")
@@ -169,7 +169,7 @@ def account_events(username):
         profilePic = url_for("static", filename="images/" + user.image_file)
         events = Events.query.filter_by(user_id=user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
-        joinedEventsCount = Events.query.filter(Events.joinrel.any(id=current_user.id)).count()
+        joinedEventsCount = Events.query.filter(Events.joinrel.any(id=user.id)).count()
         return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline")
 
 @app.route("/<username>/joinedevents")
@@ -185,10 +185,10 @@ def joined_events(username):
     else:
         user = Users.query.filter_by(username=username).first()
         profilePic = url_for("static", filename="images/" + user.image_file)
-        events = Events.query.filter(Events.joinrel.any(id=current_user.id)).order_by(Events.dateCreated.desc())
+        events = Events.query.filter(Events.joinrel.any(id=user.id)).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
-        joinedEventsCount = Events.query.filter(Events.joinrel.any(id=current_user.id)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarJoinedEventsUnderline="underline")
+        joinedEventsCount = Events.query.filter(Events.joinrel.any(id=user.id)).count()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarJoinedEventsUnderline="underline")
 
 @app.route("/settings", methods=["GET", "POST"])
 @login_required
