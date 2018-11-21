@@ -6,7 +6,6 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from wtforms.fields.html5 import DateField
 from wtforms_components import TimeField
 from hap.models import Users
-from hap import bcrypt
 
 class SignupForm(FlaskForm):
   firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
