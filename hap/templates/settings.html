@@ -27,10 +27,9 @@
                     </svg>
                 </div>
             </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a id="navbar-myEvents" class="dropdown-item" href=" {{ url_for("my_events", username=current_user.username) }}>My Events</a>
-                <a id="navbar-settings" class="dropdown-item" href="{{ url_for("settings") }}">Settings</a>
-                <a id="navbar-logout" class="dropdown-item" href="{{ url_for("logout") }}">Log Out</a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a id="navbar-settings" class="dropdown-item" href='{{ url_for("settings") }}'>Settings</a>
+                <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
             </div>
         </div>
     {% endblock navbarRightComponent %}
@@ -39,7 +38,7 @@
         <div class="forms">
             <div class="row align-items-center">
                 <div class="col-md-auto">
-                    <img src="{{ url_for("static", filename="assets/hap-logo.svg") }}" style="width:50px;margin:15px 0;">
+                    <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0;">
                 </div>
                 <div class="col">
                     <p class="h4" style="color:#FFC000;">Update your account</p>
@@ -117,9 +116,11 @@
                                     {{ form.email(class="form-control form-control-lg", placeholder="Email") }}
                                 {% endif %}
                             </div>
+                            <div class="form-group float-right" style="margin:20px 0 -10px 0;">
+                                {{ form.submit(class="btn btn-warning", style="color:white;") }}
+                            </div>
                         </fieldset>
                         <div class="form-group">
-                            {{ form.submit(class="btn btn-warning", style="color:white;") }}
                         </div>
                     </div>
                 </fieldset>

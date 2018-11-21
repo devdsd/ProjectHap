@@ -4,7 +4,7 @@
 			<div class="forms">
 				<div class="row align-items-center">
 					<div class="col-md-auto">
-						<img src="{{ url_for("static", filename="assets/hap-logo.svg") }}" style="width:50px;margin:15px 0;">
+						<img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0;">
 					</div>
 					<div class="col">
 						<p class="h4" style="color:#FFC000;">Log in to Hap</p>
@@ -14,16 +14,16 @@
 					{{ form.hidden_tag() }}
 					<fieldset class="form-group">
 						<div class="form-group">
-							<label>Email</label>
-							{% if form.email.errors %}
-								{{ form.email(class="form-control form-control-lg is-invalid", placeholder="Email") }}
+							<label>Username or Email Address</label>
+							{% if form.usernameOrEmail.errors %}
+								{{ form.usernameOrEmail(class="form-control form-control-lg is-invalid") }}
 								<div class="invalid-feedback">
-									{% for error in form.email.errors %}
+									{% for error in form.usernameOrEmail.errors %}
 										<span> {{ error }} </span>
 									{% endfor %}
 								</div>
 							{% else %}
-								{{ form.email(class="form-control form-control-lg", placeholder="Email") }}
+								{{ form.usernameOrEmail(class="form-control form-control-lg") }}
 							{% endif %}
 						</div>
 						<div class="form-group">
@@ -53,7 +53,7 @@
 				</form>
 				<div class="border-top pt-3">
 					<small class="text-muted">
-						New to Hap? <a class="ml-2" href="{{ url_for("signup") }}">Sign up here</a>
+						New to Hap? <a class="ml-2" href='{{ url_for("signup") }}'>Sign up here</a>
 					</small>
 				</div>
 			</div>

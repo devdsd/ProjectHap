@@ -4,7 +4,7 @@
             <div class="forms">
                 <div class="row align-items-center">
                     <div class="col-md-auto">
-                        <img src="{{ url_for("static", filename="assets/hap-logo.svg") }}" style="width:50px;margin:15px 0;">
+                        <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0;">
                     </div>
                     <div class="col">
                         <p class="h4" style="color:#FFC000;">Create your account</p>
@@ -101,7 +101,7 @@
                 </form>
                 <div class="border-top pt-3">
                     <small class="text-muted">
-                        Already have an account? <a class="ml-2" href="{{ url_for("login") }}">Log in here</a>
+                        Already have an account? <a class="ml-2" href='{{ url_for("login") }}'>Log in here</a>
                     </small>
                 </div>
             </div>

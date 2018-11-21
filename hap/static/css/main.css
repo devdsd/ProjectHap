@@ -1,4 +1,3 @@
-
 body {
     padding:0;
     margin:0;
@@ -29,7 +28,6 @@ body {
    height:auto;
 }
 #navbar-loginBox input {
-   height:35px;
    font-size:15px;
 }
 #navbar-signup:hover {
@@ -66,7 +64,6 @@ body {
     text-decoration:underline;
 }
 .forms {
-    border-radius:10px;
     width:800px;
     height:auto;
     border:1px lightgray solid;
@@ -102,33 +99,34 @@ body {
 #home-container {
     height:auto;
     width:1200px;
-    margin:100px auto 0 auto;
+    margin:90px auto 0 auto;
 }
-#home-leftBox {
+.leftBox {
     margin-left:20px;
     height:200px;
     border:1px lightgray solid;
+    background-color:white;
 }
-#home-feed {
+.middlebox {
     height:auto;
+    background-color:white;
 }
-#home-rightBox {
+.rightBox {
     margin-right:20px;
     height:200px;
     border:1px lightgray solid;
+    background-color:white;
 }
 #createEvent-fee input {
     width:150px;
 }
+#updateEvent-fee input {
+    width:150px;
+}
 #profile-header {
     height:auto;
-    width:1000px;
-    margin:75px auto 0 auto;
-}
-#event-header {
-    height:auto;
-    width:1000px;
-    margin:100px auto 0 auto;
+    width:920px;
+    margin:65px auto 0 auto;
 }
 #profile-body {
     height:400px;
@@ -136,11 +134,10 @@ body {
     margin:5px auto 0 auto;
 }
 #profileBody-navbar {
-    width:948px;
+    width:100%;
     height:35px;
     font-size:18px;
     font-weight:bold;
-    border-bottom:1px lightgray solid;
 }
 .bodyNavbar-container {
     float:left;
@@ -151,10 +148,11 @@ body {
 }
 .bodyNavbar-elements:hover {
     text-decoration:none;
+    color:black;
 }
 #profileBody-content {
-    height:365px;
-    width:948px;
+    height:auto;
+    width:100%;
     padding-top:5px;
 }
 #create-panel {
@@ -172,10 +170,16 @@ body {
 #close-createEventModal:hover {
     color:white;
 }
+#close-updateEventModal:hover {
+    color:white;
+}
+#close-deleteEventModal:hover {
+    color:white;
+}
 #settings-updateProfile {
     height:auto;
     width:1200px;
-    margin:100px auto 0 auto;
+    margin:90px auto 0 auto;
 }
 #alert-box {
     z-index:2;
@@ -193,13 +197,19 @@ body {
 #feed-updateBtn:hover {
     color:white;
 }
-#homeDeleteEvent-closeModalBtn:hover {
+#deleteEvent-closeModalBtn:hover {
     color:white;
 }
 #accountdeleteEvent-CloseModalBtn:hover {
     color:white;
 }
 #createEvent-modalContent {
+    font-size:15px;
+    height: 250px;
+    overflow-y: auto;
+    height:500px;
+}
+#updateEvent-modalContent {
     font-size:15px;
     height: 250px;
     overflow-y: auto;
@@ -213,9 +223,29 @@ body {
     top:-0.5px;
     background:white;
 }
+#event-navbar {
+    position:fixed;
+    z-index:2;
+    padding:0 17%;
+    border-bottom:1px lightgray solid;
+    top:-0.5px;
+    background:white;
+}
 body.modal-open {
     overflow: hidden;
 }
 body.modal-open #homefeed-navbar {
     padding:0 17.9% 0 16.82%;
+}
+body.modal-open #event-navbar {
+    padding:0 17.9% 0 16.82%;
+}
+body.modal-open #alert-box{
+    right:57px;
+}
+#pencil-logo:hover .st0{
+    fill:white;
+}
+#garbagecan-logo:hover .st0{
+    fill:white;
 }

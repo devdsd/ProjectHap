@@ -11,7 +11,7 @@
         <div class="dropdown {{ dropdownAppearance }}">
             {% if current_user.is_authenticated %}
                 <div class="dropdown">
-                    <button id="gear-logo" class="btn btn-outline-warning" type="button" data-toggle="dropdown">
+                    <button id="gear-logo" class="btn btn-outline-warning" data-toggle="dropdown">
                         <div style="width:25px;margin-bottom:-5px;">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                 viewBox="150 -150 500 500" style="enable-background:new 150 -150 500 500;" xml:space="preserve">
@@ -29,10 +29,9 @@
                             </svg>
                         </div>
                     </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a id="navbar-myEvents" class="dropdown-item" href=" {{ url_for("my_events", username=current_user.username) }} "> My Events</a>
-                        <a id="navbar-settings" class="dropdown-item" href="{{ url_for("settings") }}">Settings</a>
-                        <a id="navbar-logout" class="dropdown-item" href="{{ url_for("logout") }}">Log Out</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a id="navbar-settings" class="dropdown-item" href='{{ url_for("settings") }}'>Settings</a>
+                        <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
                     </div>
                 </div>
             {% else %}
@@ -41,55 +40,41 @@
                 </button>
                 <div class="dropdown-menu {{ dropdownAppearance }}" id="navbar-loginBox">
                     <form class="px-4 py-3" method="POST" action="">
-                        {{ form.hidden_tag() }}
+                        {{ formOne.hidden_tag() }}
                         <fieldset class="form-group">
                             <div class="form-group">
-                                <label>Email Address/Username</label>
-                                {% if form.emailOrUsername.errors %}
-                                    {{ form.emailOrUsername(class="form-control form-control-lg is-invalid") }}
+                                <label>Username or Email Address</label>
+                                {% if formOne.usernameOrEmail.errors %}
+                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg is-invalid") }}
                                     <div class="invalid-feedback">
-                                        {% for error in form.emailOrUsername.errors %}
-                                            <span> {{ error }} </span>
-                                        {% endfor %}
-                                    </div>
-                                {% elif form.email.errors %}
-                                    {{ form.emailOrUsername(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.email.errors %}
-                                            <span> {{ error }} </span>
-                                        {% endfor %}
-                                    </div>
-                                {% elif form.username.errors %}
-                                    {{ form.emailOrUsername(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in form.username.errors %}
+                                        {% for error in formOne.usernameOrEmail.errors %}
                                             <span> {{ error }} </span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ form.emailOrUsername(class="form-control form-control-lg") }}
+                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg") }}
                                 {% endif %}
                             </div>
                             <div class="form-group">
                                 <label>Password</label>
-                                {% if form.password.errors %}
-                                    {{ form.password(class="form-control form-control-lg is-invalid") }}
+                                {% if formOne.password.errors %}
+                                    {{ formOne.password(class="form-control form-control-lg is-invalid") }}
                                     <div class="invalid-feedback">
-                                        {% for error in form.password.errors %}
+                                        {% for error in formOne.password.errors %}
                                             <span> {{ error }} </span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ form.password(class="form-control form-control-lg") }}
+                                    {{ formOne.password(class="form-control form-control-lg") }}
                                 {% endif %}
                             </div>
                             <div class="form-check">
-                                {{ form.remember(class="form-check-input") }}
+                                {{ formOne.remember(class="form-check-input") }}
                                 <label style="margin-top:9px;">Remember Password</label>
                             </div>
                         </fieldset>
                         <div class="form-group">
-                            {{ form.submit(class="btn btn-warning", style="color:white;") }}
+                            {{ formOne.submit(class="btn btn-warning", style="color:white;") }}
                         </div>
                         <small class="text-muted ml-2">
                             <a href="#">Forgot password?</a>
@@ -105,11 +90,11 @@
                 <div id="home-container">
                     <div class="row justify-content-md-center">
                         <div class="col">
-                            <div id="home-leftBox" class="content">
+                            <div class="leftBox">
                             </div>
                         </div>
                         <div class="col-6">
-                            <div id="home-feed" class="content">
+                            <div class="middlebox">
                                 <div id="create-panel" class="container-fluid">
                                     <div class="row">
                                         <div class="col-md-auto">
@@ -128,13 +113,13 @@
                                                     </svg>
                                                 </div>
                                             </button>
-                                            <div class="modal fade" id="createEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div class="modal" id="createEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <div class="row align-items-center">
                                                                 <div class="col-md-auto">
-                                                                    <img src="{{ url_for("static", filename="assets/hap-logo.svg") }}" style="width:50px;margin:15px 0 15px 10px;">
+                                                                    <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
                                                                 </div>
                                                                 <div class="col">
                                                                     <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Create Event</h5>
@@ -144,13 +129,13 @@
                                                             <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
-                                                        <div class="modal-body" id="createEvent-modalContent">
-                                                            <div class="container-fluid">
-                                                                <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
+                                                        <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
+                                                            <div class="modal-body" id="createEvent-modalContent">
+                                                                <div class="container-fluid">
                                                                     {{ formTwo.hidden_tag() }}
                                                                     <fieldset class="form-group">
                                                                         <label>Event Banner</label>
-                                                                        <div class="container-fluid" style="border-bottom:1px lightgray solid;border-top:1px lightgray solid;margin:5.5px 0 20px 0;padding:40px 0 40px 0">
+                                                                        <div class="container-fluid" style="border-bottom:1px lightgray solid;border-top:1px lightgray solid;margin:4px 0 20px 0;padding:40px 0 40px 0">
                                                                             <div class="row">
                                                                                 <div class="col-md-auto">
                                                                                     <div class="form-group">
@@ -164,21 +149,24 @@
                                                                                 </div>
                                                                                 <div class="col">
                                                                                     <img class="card-img-top" id="eventBanner-preview" style="height:200px;object-fit:cover;background:gray;">
-                                                                                    <script>document.getElementById("eventBanner-preview").src = '{{ url_for("static", filename="images/eventBanner-blankPreview.jpg") }}';</script>
+                                                                                    <script>document.getElementById("eventBanner-preview").src = '{{ url_for("static", filename="images/uploadEventBanner-blankPreview.jpg") }}';</script>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group">
                                                                             <label>Event Name</label>
+                                                                            <div id="count-cont" style="float:right;display:none;">
+                                                                                <span class="text-muted"><span id="countEventNameChar" style="color:red;">0</span>/80</span>
+                                                                            </div>
                                                                             {% if formTwo.eventName.errors %}
-                                                                                {{ formTwo.eventName(class="form-control form-control-lg is-invalid", placeholder="Event name") }}
+                                                                                {{ formTwo.eventName(class="form-control form-control-lg is-invalid", placeholder="Event name", onkeyup="count_up(this);") }}
                                                                                 <div class="invalid-feedback">
                                                                                     {% for error in formTwo.eventName.errors %}
                                                                                         <span> {{ error }} </span>
                                                                                     {% endfor %}
                                                                                 </div>
                                                                             {% else %}
-                                                                                {{ formTwo.eventName(class="form-control form-control-lg", placeholder="Event name") }}
+                                                                                {{ formTwo.eventName(class="form-control form-control-lg", placeholder="Event name", onkeyup="count_up(this);") }}
                                                                             {% endif %}
                                                                         </div>
                                                                         <div class="form-group">
@@ -274,13 +262,13 @@
                                                                             </div>
                                                                         </div>
                                                                     </fieldset>
-                                                                    <div class="modal-footer">
-                                                                        <button id="close-createEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                                                                        {{ formTwo.submit(class="btn btn-warning", style="color:white;") }}
-                                                                    </div>
-                                                                </form>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                            <div class="modal-footer">
+                                                                <button id="close-updateEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                                                                {{ formTwo.submit(class="btn btn-success", style="color:white;") }}
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -291,21 +279,54 @@
                                 </div>
                                 <div style="width:100%;height:100%;padding:0 10px;">
                                     {% for event in events %}
-                                        <div class="card" style="width:35rem;margin-top:5px;">
-                                            <img class="card-img-top" src="{{ url_for("static", filename="images/" + event.image_file) }}" alt="Card image cap" style="height:200px;object-fit:cover;">
-                                            <div class="card-body" style="background-color:Snow;">
-                                                <a href="{{ url_for("event", event_id=event.id) }}" style="color:black;"><h5 class="card-title">{{ event.eventName }}</h5></a>
-                                                <small>by <a href="{{ url_for("account", username=event.host.username) }}">{{ event.host.firstName }} {{ event.host.lastName }}</a></small>
-                                                <br>
-                                                <p style="font-style: italic; padding-top: 20px;" > Time: {{ event.eventStartTime }} - {{ event.eventEndTime }} </p>
-                                                <p class="card-text" style="color:red;"> {{ event.eventDate.strftime("(%a) %b %d, %Y") }}</p>
-                                                {% if event.user_id != current_user.id %}
-                                                    <div class="row justify-content-end">
-                                                        <div class="col-md-auto">
-                                                            <a href="#" class="btn btn-warning btn-sm m-1" style="color:white;">Join</a>
+                                        <div class="card" style="width:565px;margin-top:20px;">
+                                            <a href='{{ url_for("event", event_id=event.id) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file) }}' alt="Event Banner" style="height:200px;object-fit:cover;"></a>
+                                            <div class="card-body">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-auto" style="border-right:1px lightgray solid;width:80px;">
+                                                        <div style="width:50px;">
+                                                            <svg version="1.1" id="calendar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                                viewBox="-55 147 500 500" style="enable-background:new -55 147 500 500;" xml:space="preserve">
+                                                                <style type="text/css">
+                                                                    .rectColorGray{fill:#808080;stroke:#D3D3D3;stroke-miterlimit:10;}
+                                                                    .fillNone{fill:none;}
+                                                                    .fontBlack{fill:black;}
+                                                                    .fontArial{font-family:Arial, Helvetica, sans-serif;font-weight:bold;}
+                                                                    .fontSize{font-size:150px;}
+                                                                    .fontColorWhite{fill:#FFFFFF;}
+                                                                    .fontSizeTwo{font-size:100px;}
+                                                                </style>
+                                                                <path id="calendar_block" class="rectColorGray" d="M361.9,197.4v-33.3h-18v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3
+                                                                h-18.1v33.3H40.9v-33.3H22.8v33.3h-45.8V628h430.6V197.4H361.9z M381.5,585H3.2V343.8h378.4V585z"/>
+                                                                <rect x="3.2" y="407" class="fillNone" width="378.4" height="121"/>
+                                                                <text id="day" transform="matrix(1 0 0 1 98 521.5586)" class="fontBlack fontArial fontSize">{{ event.eventDate.strftime("%d") }}</text>
+                                                                <rect x="-22.9" y="240" class="fillNone" width="430.6" height="96"/>
+                                                                <text transform="matrix(1 0 0 1 79 311.5986)" class="fontColorWhite fontArial fontSizeTwo">{{ event.eventDate.strftime("%b")|upper }}</text>
+                                                            </svg>
                                                         </div>
                                                     </div>
-                                                {% endif %}
+                                                    <div class="col" style="width:350px;">
+                                                        <div class="row">
+                                                            <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                                                <a href='{{ url_for("event", event_id=event.id) }}' class="h5" style="color:black;font-size:17.5px;">{{ event.eventName }}</a>
+                                                            </div>
+                                                            <div class="w-100"></div>
+                                                            <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                                                <span style="font-size:13.5px;"><span style="color:red;">{{ event.eventDate.strftime("%a") }}</span> {{ event.eventStartTime.strftime("%I %p") }} | at {{ event.location }}</span>
+                                                            </div>
+                                                            <div class="w-100"></div>
+                                                            <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                                                <span class="text-muted" style="font-size:13.5px;">Hosted by {% if event.host == current_user %}you{% else %}<a href='{{ url_for("account", username=event.host.username) }}' style="color:gray;">{{ event.host.firstName }} {{ event.host.lastName }}</a>{% endif %}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-auto" style="width:85px;">
+                                                        {% if event.user_id != current_user.id %}
+                                                            
+                                                
+                                                        {% endif %}
+                                                    </div>
+                                                </div>       
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -313,7 +334,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div id="home-rightBox" class="content">
+                            <div class="rightBox">
                             </div>
                         </div>
                     </div>
@@ -345,7 +366,7 @@
                                     <use xlink:href="#XMLID_6_"  style="overflow:visible;"/>
                                 </clipPath>
                                 <g transform="matrix(1 0 0 1 0 0)" style="clip-path:url(#XMLID_19_);">
-                                    <image style="overflow:visible;" width="5000" height="3513" id="XMLID_2_" xlink:href="{{ url_for("static", filename="assets/concert.jpg") }}"  transform="matrix(8.318575e-002 0 0 8.318585e-002 18.7287 13.8493)">
+                                    <image style="overflow:visible;" width="5000" height="3513" id="XMLID_2_" xlink:href='{{ url_for("static", filename="assets/concert.jpg") }}' transform="matrix(8.318575e-002 0 0 8.318585e-002 18.7287 13.8493)">
                                     </image>
                                 </g>
                             </g>
@@ -360,8 +381,8 @@
                                             <p class="h4"><strong>Make it happen. Hop in!</strong></p>
                                         </div>
                                         <div style="display:flex;flex-direction:column;">
-                                            <a href="{{ url_for("signup") }}"><button id="homeContent-signup" type="button" class="btn btn-warning">Sign Up</button></a>
-                                            <a href="{{ url_for("login") }}"><button id="homeContent-login" type="button" class="btn btn-outline-warning">Log In</button></a>
+                                            <a href='{{ url_for("signup") }}'><button id="homeContent-signup" type="button" class="btn btn-warning">Sign Up</button></a>
+                                            <a href='{{ url_for("login") }}'><button id="homeContent-login" type="button" class="btn btn-outline-warning">Log In</button></a>
                                         </div>
                                     </div>
                                 </div>
@@ -372,7 +393,7 @@
             </div>
             <nav class="navbar fixed-bottom navbar-light bg-light" style="border-top:1px lightgray solid;">
                 <div class="container" style="margin:0 auto;">
-                    <a id="home-about" class="navbar-brand" class="font-weight-light" href="{{ url_for("about") }}">About</a>
+                    <a id="home-about" class="navbar-brand" class="font-weight-light" href='{{ url_for("about") }}'>About</a>
                     <span class="navbar-brand" class="font-weight-light" style="color:gray;font-size:15px;">2018 Hap</span>
                 </div>
             </nav>

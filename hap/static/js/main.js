@@ -19,3 +19,16 @@ function readURL(input) {
 $("#imageFile").change(function(){
   readURL(this);
 });
+
+function count_up(obj) {
+  var count = document.getElementById("countEventNameChar")
+  document.getElementById("count-cont").style.display = "block";
+  count.style.color = "red";
+  count.innerHTML = obj.value.length;
+  if(obj.value.length > 2) {
+    count.style.color = "gray";
+  }
+  if(obj.value.length > 80) {
+    count.style.color = "red";
+  }
+}
