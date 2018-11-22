@@ -44,12 +44,13 @@ class Users(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     creates = db.relationship('Events', backref='host', lazy=True)
     image_file = db.Column(db.String(50), nullable=False, default='default-profPic.jpg')
+    interest = db.Column(db.String(150), nullable=False)
     review_relationship = db.relationship('Events', secondary=review_rel_table, backref=db.backref('reviewrel', lazy=True))
     rate_relationship = db.relationship('Events', secondary=rate_rel_table, backref=db.backref('raterel', lazy=True))
     userhasinterest_relationship = db.relationship('Categories', secondary=userhasinterest_rel_table, backref=db.backref('userhasinterest', lazy=True))
 
     def __repr__(self):
-        return "Users({}, {}, {}, {})".format(self.firstName, self.lastName, self.email, self.username)
+        return "Users({}, {}, {}, {}, {})".format(self.firstName, self.lastName, self.email, self.username, self.interest)
 
 class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -73,5 +74,9 @@ class Categories(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     categoryName = db.Column(db.String(100), nullable=False)
 
+
     def __repr__(self):
         return "Categories({})".format(self.categoryName)
+
+# def categories_query():
+#     return Categories.query

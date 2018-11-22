@@ -1,11 +1,13 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField, SelectField
+# from wtforms_sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from wtforms.fields.html5 import DateField
 from wtforms_components import TimeField
-from hap.models import Users
+from hap.models import Users, Categories
+# from hap.models import categories_query
 
 class SignupForm(FlaskForm):
     firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
@@ -14,6 +16,7 @@ class SignupForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=50)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    interestoption = SelectField('Choose an Interest', choices=[(interest.id, interest.categoryName) for interest in Categories.query.all()], validators=[DataRequired()])
 
     submit = SubmitField('SIGN UP')
 

@@ -84,16 +84,19 @@
                         <div class="form-group">
                             <label>Confirm Password</label>
                             {% if form.confirm_password.errors %}
-                                {{ form.confirm_password(class="form-control form-control-lg is-invalid", placeholder="Password") }}
+                                {{ form.confirm_password(class="form-control form-control-lg is-invalid", placeholder="Confirm Password") }}
                                 <div class="invalid-feedback">
                                     {% for error in form.confirm_password.errors %}
                                         <span> {{ error }} </span>
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                {{ form.confirm_password(class="form-control form-control-lg", placeholder="Password") }}
+                                {{ form.confirm_password(class="form-control form-control-lg", placeholder="Confirm Password") }}
                             {% endif %}
                         </div>
+
+                            <label>Select an Interest</label>
+                                {{ form.interestoption(class="form-control form-control-lg", placeholder="Interest") }}
                     </fieldset>
                     <div class="form-group">
                         {{ form.submit(class="btn btn-warning", style="color:white;") }}

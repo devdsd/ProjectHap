@@ -71,10 +71,15 @@ def signup():
         return redirect(url_for('home'))
     
     form = SignupForm()
+    interest = Categories.query(categoryName).filter_by(id=form.interestoption.data).first()
+
     if form.validate_on_submit():
+        print(form.data)
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         # User registration 
-        user = Users(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, username=form.username.data, password=hashed_password)
+        # user = Users(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, username=form.username.data, password=hashed_password, interest=form.interestoptions.data)
+        print(hashed_password)
+        user = Users(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, username=form.username.data, password=hashed_password, interest=interest)
         db.session.add(user)
         db.session.commit()
 
