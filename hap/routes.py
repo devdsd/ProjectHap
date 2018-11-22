@@ -39,11 +39,22 @@ def home():
                 db.session.add(event)
                 db.session.commit()
 
+                # foreventId = Events.query.filter_by(id=event.id).first()
+        
+                statement = eventhascategory_rel_table.insert().values(category_id=formTwo.categoryoption.data, event_id=event.id)
+                db.session.execute(statement)
+                db.session.commit()
+
             else:
                 event = Events(eventName=formTwo.eventName.data, eventDate=formTwo.eventDate.data, eventStartTime=formTwo.startTime.data, eventEndTime=formTwo.endTime.data, eventDescription=formTwo.eventDescription.data, fee=formTwo.fee.data, location=formTwo.location.data, host=current_user)
             
                 db.session.add(event)
                 db.session.commit()
+
+                statement = eventhascategory_rel_table.insert().values(category_id=formTwo.categoryoption.data, event_id=event.id)
+                db.session.execute(statement)
+                db.session.commit()
+
                 
             flash("Your event has been created.", "success")
             return redirect(url_for("home"))
@@ -94,10 +105,18 @@ def signup():
         return redirect(url_for('home'))
     
     form = SignupForm()
+
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        
         user = Users(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, username=form.username.data, password=hashed_password)
         db.session.add(user)
+        db.session.commit()
+
+        forUserId = Users.query.filter_by(username=form.username.data).first()
+        
+        statement = userhasinterest_rel_table.insert().values(category_id=form.interestoption.data, user_id=forUserId.id)
+        db.session.execute(statement)
         db.session.commit()
 
         login_user(user)

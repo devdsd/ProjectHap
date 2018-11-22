@@ -15,7 +15,7 @@ review_rel_table = db.Table('review_rel_table',
 rate_rel_table = db.Table('rate_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('event_id', db.Integer, db.ForeignKey('events.id')),
-    db.Column('rate', db.Text, nullable=True)
+    db.Column('rate', db.Integer)
 )
 
 join_rel_table = db.Table('join_rel_table',
@@ -33,6 +33,14 @@ eventhascategory_rel_table = db.Table('eventhascategory_rel_table',
     db.Column('category_id', db.Integer, db.ForeignKey('categories.id'))
 )
 
+   
+class Categories(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    categoryName = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return "Categories({})".format(self.categoryName)
+
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     firstName = db.Column(db.String(50), nullable=False)
@@ -49,7 +57,7 @@ class Users(db.Model, UserMixin):
     join_relationship = db.relationship('Events', secondary=join_rel_table, backref=db.backref('joinrel', lazy=True))
 
     def __repr__(self):
-        return "Users({}, {}, {}, {})".format(self.firstName, self.lastName, self.email, self.username)
+        return "Users({}, {}, {}, {}, {})".format(self.firstName, self.lastName, self.email, self.username, self.interest)
 
 class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -68,10 +76,7 @@ class Events(db.Model):
 
     def __repr__(self):
         return "Events({}, {}, {}, {}, {}, {}, {})".format(self.eventName, self.location, self.eventDate, self.eventStartTime, self.eventEndTime, self.eventDescription, self.fee)
-    
-class Categories(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    categoryName = db.Column(db.String(100), nullable=False)
+ 
 
-    def __repr__(self):
-        return "Categories({})".format(self.categoryName)
+# def categories_query():
+#     return Categories.query

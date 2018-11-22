@@ -265,6 +265,21 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+
+                                                                        <div class="form-group">
+                                                                            {{ formTwo.categoryoption.label }}
+                                                                            {% if formTwo.categoryoption.errors %}
+                                                                                {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
+                                                                                <div class="invalid-feedback">
+                                                                                    {% for error in formTwo.categoryoption.errors %}
+                                                                                        <span> {{ error }} </span>
+                                                                                    {% endfor %}
+                                                                                </div>
+                                                                            {% else %}
+                                                                                {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
+                                                                            {% endif %}
+                                                                        </div>
+
                                                                     </fieldset>
                                                                 </div>
                                                             </div>
