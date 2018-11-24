@@ -1,101 +1,143 @@
 {% extends 'layouts.html' %}
+    {% block navbarAdjust %}
+        <div class="container-fluid" style="position:fixed;z-index:2;padding:0 17%;border-bottom:1px lightgray solid;top:-0.5px;background:white;">
+    {% endblock navbarAdjust %}
 
-{% block content %}
-<h1> Account </h1>
+    {% block navbarToggler %}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    {% endblock navbarToggler %}
 
-<div class="content-section">
-    <div class="media">
-        <img class="rounded-circle account-img" src="{{ image_file }}">
-        <div class="media-body">
-            <h2 class="account-heading">{{ current_user.username }}</h2>
-            <p class="text-secondary">{{ current_user.email}}</p>
-        </div>
-    </div>
-
-    <div class="jumbotron">
-        
-            <form method="POST" action="" enctype="multipart/form-data">
-                {{ form.hidden_tag() }}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Account Info</legend>
-                    
-                    <div class="form-group">
-                        {{ form.firstName.label(class="form-control-label") }}
-    
-                        {% if form.firstName.errors %}
-                            {{ form.firstName(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.firstName.errors %}
-                                    <span> {{ error }} </span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.firstName(class="form-control form-control-lg") }}
-                        {% endif %}
-    
-                    </div>
-                    <div class="form-group">
-                        {{ form.lastName.label(class="form-control-label") }}
-    
-                        {% if form.lastName.errors %}
-                            {{ form.lastName(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.lastName.errors %}
-                                    <span> {{ error }} </span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.lastName(class="form-control form-control-lg") }}
-                        {% endif %}
-    
-                    </div>
-                    <div class="form-group">
-                        {{ form.email.label(class="form-control-label") }}
-    
-                        {% if form.email.errors %}
-                            {{ form.email(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.email.errors %}
-                                    <span> {{ error }} </span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.email(class="form-control form-control-lg") }}
-                        {% endif %}
-    
-                    </div>
-                    
-                    <div class="form-group">
-                        {{ form.username.label(class="form-control-label") }}
-    
-                        {% if form.username.errors %}
-                            {{ form.username(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.username.errors %}
-                                    <span> {{ error }} </span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.username(class="form-control form-control-lg") }}
-                        {% endif %}
-    
-                    </div>
-                    <div class="form-group">
-                        {{ form.picture.label() }}
-                        {{ form.picture(class="form-control-file") }}
-                        {% if form.picture.errors %}
-                        {% for error in form.picture.errors %}
-                        <span class="text-danger"> {{ error }} </span></br>
-                    {% endfor %}
-                        {% endif %}
-                    </div>
-                </fieldset>
-                <div class="form-group">
-                        {{ form.submit(class="btn btn-outline-info") }}
+    {% block navbarRightComponent %}
+        <div class="dropdown">
+            <button id="gear-logo" class="btn btn-outline-warning" type="button" data-toggle="dropdown">
+                <div style="width:25px;margin-bottom:-5px;">
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        viewBox="150 -150 500 500" style="enable-background:new 150 -150 500 500;" xml:space="preserve">
+                        <style type="text/css">
+                            .st0{fill:#FFC000;}
+                        </style>
+                        <path class="st0" d="M621.6,62.2l-60.1-9.8c-3.4-11.6-8-22.6-13.7-33.1l35.1-50c2.8-4,2.3-9.4-1.1-12.8l-38.9-38.9
+                            c-3.5-3.5-8.9-3.9-12.9-1L480.7-48c-10.5-5.8-21.6-10.4-33.3-13.9l-10.5-59.8c-0.8-4.8-5-8.3-9.9-8.3h-55c-4.9,0-9.1,3.5-9.9,8.4
+                            l-9.7,59.6c-11.7,3.4-22.8,8-33.4,13.7L270-83.5c-4-2.8-9.4-2.4-12.9,1.1l-38.9,38.9c-3.4,3.4-3.9,8.8-1.1,12.8l34.6,49.5
+                            c-5.8,10.6-10.5,21.8-14,33.6l-59.3,9.9c-4.8,0.8-8.3,5-8.3,9.9v55c0,4.9,3.5,9,8.2,9.9l59.3,10.5c3.5,11.8,8.1,23,13.9,33.6l-35,49
+                            c-2.8,4-2.4,9.4,1.1,12.9l38.9,38.9c3.4,3.4,8.8,3.9,12.8,1.1l49.6-34.7c10.5,5.8,21.7,10.4,33.5,13.8l9.9,59.6
+                            c0.8,4.8,5,8.4,9.9,8.4h55c4.9,0,9-3.5,9.9-8.3l10.6-59.9c11.7-3.5,22.8-8.2,33.3-14l49.9,35c4,2.8,9.4,2.3,12.8-1.1l38.9-38.9
+                            c3.5-3.5,3.9-8.9,1-12.9l-35.6-49.4c5.7-10.4,10.3-21.5,13.7-33.1l60.2-10.5c4.8-0.8,8.3-5,8.3-9.9v-55
+                            C630,67.2,626.4,63,621.6,62.2z M400,180c-44.1,0-80-35.9-80-80s35.9-80,80-80s80,35.9,80,80S444.1,180,400,180z"/>
+                    </svg>
                 </div>
-            </form>
-        
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a id="navbar-settings" class="dropdown-item" href='{{ url_for("settings") }}'>Settings</a>
+                <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
+            </div>
         </div>
-</div>
-    
-{% endblock content %}
+    {% endblock navbarRightComponent %}
+
+    {% block content %}
+        <div class="container-fluid" style="padding:0 auto;border-bottom:1px lightgray solid;">
+            <div id="profile-header">
+                <div class="row">
+                    <div class="col">
+                        <div class="media">
+                            <img src="{{ profilePic }}" style="border:1px lightgray solid;width:120px;margin:25px;">
+                            <div class="media-body" style="margin:25px;">
+                                <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><h3 class="account-heading">{{ user.firstName }} {{ user.lastName }}</h3></a>
+                                <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><p class="text-secondary">{{ user.username }}</p></a>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="col-md-auto" style="width:385px;">
+                        <div class="container-fluid">
+                            <div class="row justify-content-md-center" style="margin-top:25px;">
+                                <div class="col-md-auto" style="width:115px;border-left:1px lightgray solid;border-right:1px lightgray solid;">
+                                    <span style="font-size:30px;">{{ createdEventsCount }}</span><br><span style="font-size:12px;">Created Events</span>
+                                </div>
+                                <div class="col-md-auto" style="width:115px;border-right:1px lightgray solid;">
+                                    <span style="font-size:30px;">{{ joinedEventsCount }}</span><br><span style="font-size:12px;">Joined Events</span>
+                                </div>
+                                <div class="col-md-auto" style="width:115px;border-right:1px lightgray solid;">
+                                    <span style="font-size:30px;">{{ joinedEventsCount }}</span><br><span style="font-size:12px;">Joined Events</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="profileBody-navbar">
+                    <div class="bodyNavbar-container">
+                        <a href='{{ url_for("account_events", username=user.username) }}' class="bodyNavbar-elements" style="text-decoration:{{ navbarCreatedEventsUnderline }}">Created Events</a>
+                    </div>
+                    <div class="bodyNavbar-container">
+                        <a href='{{ url_for("joined_events", username=user.username) }}' class="bodyNavbar-elements" style="text-decoration:{{ navbarJoinedEventsUnderline }}">Joined Events</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="profile-body">
+            <div id="profileBody-content">
+                <div class="row">
+                    {% set count = 1 %}
+                    {% for event in events %}
+                        {% if count > 3 %}
+                            <div class="w-100"></div>
+                        {% endif %}
+                            <div class="col-md-auto">
+                                <div class="card" style="width:286.67185974121px;height:300px;margin:5px 0;">
+                                    <a href='{{ url_for("event", event_id=event.id) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file_sm) }}' alt="Card image cap" style="height:120px;object-fit:cover;"></a>
+                                    <div class="card-body" style="height:100px;">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-auto" style="width:70px;border-right:1px lightgray solid;">
+                                                <div style="width:40px;">
+                                                    <svg version="1.1" id="calendar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                        viewBox="-55 147 500 500" style="enable-background:new -55 147 500 500;" xml:space="preserve">
+                                                        <style type="text/css">
+                                                            .rectColorGray{fill:#808080;stroke:#D3D3D3;stroke-miterlimit:10;}
+                                                            .fillNone{fill:none;}
+                                                            .fontBlack{fill:black;}
+                                                            .fontArial{font-family:Arial, Helvetica, sans-serif;font-weight:bold;}
+                                                            .fontSize{font-size:150px;}
+                                                            .fontColorWhite{fill:#FFFFFF;}
+                                                            .fontSizeTwo{font-size:100px;}
+                                                        </style>
+                                                        <path id="calendar_block" class="rectColorGray" d="M361.9,197.4v-33.3h-18v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3
+                                                        h-18.1v33.3H40.9v-33.3H22.8v33.3h-45.8V628h430.6V197.4H361.9z M381.5,585H3.2V343.8h378.4V585z"/>
+                                                        <rect x="3.2" y="407" class="fillNone" width="378.4" height="121"/>
+                                                        <text id="day" transform="matrix(1 0 0 1 98 521.5586)" class="fontBlack fontArial fontSize">{{ event.eventDate.strftime("%d") }}</text>
+                                                        <rect x="-22.9" y="240" class="fillNone" width="430.6" height="96"/>
+                                                        <text transform="matrix(1 0 0 1 79 311.5986)" class="fontColorWhite fontArial fontSizeTwo">{{ event.eventDate.strftime("%b")|upper }}</text>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                                        <a href='{{ url_for("event", event_id=event.id) }}' class="h5" style="color:black;font-size:17.5px;">{{ event.eventName }}</a>
+                                                    </div>
+                                                    <div class="w-100"></div>
+                                                    <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                                        <span style="font-size:13.5px;"><span style="color:red;">{{ event.eventDate.strftime("%a") }}</span> {{ event.eventStartTime.strftime("%I %p") }} | at {{ event.location }}</span>
+                                                    </div>
+                                                    <div class="w-100"></div>
+                                                    <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                                        <span class="text-muted" style="font-size:13.5px;">Hosted by {% if event.host == current_user %}you{% else %}<a href='{{ url_for("account", username=event.host.username) }}' style="color:gray;">{{ event.host.firstName }} {{ event.host.lastName }}</a>{% endif %}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>      
+                                        {% if event.user_id == current_user.id %}
+                                            
+                                        {% else %}
+                                        
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% set count = count + 1 %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endblock content %}

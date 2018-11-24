@@ -1,0 +1,386 @@
+{% extends "layouts.html" %}
+    {% block navbarAdjust %}
+        <div id="event-navbar" class="container-fluid">
+    {% endblock navbarAdjust %}
+    {% block navbarToggler %}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    {% endblock navbarToggler %}
+    {% block navbarRightComponent %}
+        <div class="dropdown {{ dropdownAppearance }}">
+            <div class="dropdown">
+                <button id="gear-logo" class="btn btn-outline-warning" type="button" data-toggle="dropdown">
+                    <div style="width:25px;margin-bottom:-5px;">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                            viewBox="150 -150 500 500" style="enable-background:new 150 -150 500 500;" xml:space="preserve">
+                            <style type="text/css">
+                                .st0{fill:#FFC000;}
+                            </style>
+                            <path class="st0" d="M621.6,62.2l-60.1-9.8c-3.4-11.6-8-22.6-13.7-33.1l35.1-50c2.8-4,2.3-9.4-1.1-12.8l-38.9-38.9
+                                c-3.5-3.5-8.9-3.9-12.9-1L480.7-48c-10.5-5.8-21.6-10.4-33.3-13.9l-10.5-59.8c-0.8-4.8-5-8.3-9.9-8.3h-55c-4.9,0-9.1,3.5-9.9,8.4
+                                l-9.7,59.6c-11.7,3.4-22.8,8-33.4,13.7L270-83.5c-4-2.8-9.4-2.4-12.9,1.1l-38.9,38.9c-3.4,3.4-3.9,8.8-1.1,12.8l34.6,49.5
+                                c-5.8,10.6-10.5,21.8-14,33.6l-59.3,9.9c-4.8,0.8-8.3,5-8.3,9.9v55c0,4.9,3.5,9,8.2,9.9l59.3,10.5c3.5,11.8,8.1,23,13.9,33.6l-35,49
+                                c-2.8,4-2.4,9.4,1.1,12.9l38.9,38.9c3.4,3.4,8.8,3.9,12.8,1.1l49.6-34.7c10.5,5.8,21.7,10.4,33.5,13.8l9.9,59.6
+                                c0.8,4.8,5,8.4,9.9,8.4h55c4.9,0,9-3.5,9.9-8.3l10.6-59.9c11.7-3.5,22.8-8.2,33.3-14l49.9,35c4,2.8,9.4,2.3,12.8-1.1l38.9-38.9
+                                c3.5-3.5,3.9-8.9,1-12.9l-35.6-49.4c5.7-10.4,10.3-21.5,13.7-33.1l60.2-10.5c4.8-0.8,8.3-5,8.3-9.9v-55
+                                C630,67.2,626.4,63,621.6,62.2z M400,180c-44.1,0-80-35.9-80-80s35.9-80,80-80s80,35.9,80,80S444.1,180,400,180z"/>
+                        </svg>
+                    </div>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a id="navbar-settings" class="dropdown-item" href='{{ url_for("settings") }}'>Settings</a>
+                    <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
+                </div>
+            </div>
+        </div>
+    {% endblock navbarRightComponent %}
+    {% block content %}
+        <div style="padding-left: calc(100vw - 100%);">
+            <div id="home-container">
+                <div class="row justify-content-md-center">
+                    <div class="col">
+                        <div class="leftBox">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="middlebox">
+                            <div class="container" style="margin-top:-20px;">
+                                <div class="row justify-content-md-center">
+                                    <div class="col-md-auto">
+                                        <div class="card" style="width:35rem;margin-top:20px;">
+                                            <img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file) }}' alt="Event Banner" style="height:200px;object-fit:cover;">
+                                            <div class="card-body">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-auto" style="border-right:1px lightgray solid;width:80px;">
+                                                        <div style="width:50px;">
+                                                            <svg version="1.1" id="calendar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                                viewBox="-55 147 500 500" style="enable-background:new -55 147 500 500;" xml:space="preserve">
+                                                                <style type="text/css">
+                                                                    .rectColorGray{fill:#808080;stroke:#D3D3D3;stroke-miterlimit:10;}
+                                                                    .fillNone{fill:none;}
+                                                                    .fontBlack{fill:black;}
+                                                                    .fontArial{font-family:Arial, Helvetica, sans-serif;font-weight:bold;}
+                                                                    .fontSize{font-size:150px;}
+                                                                    .fontColorWhite{fill:#FFFFFF;}
+                                                                    .fontSizeTwo{font-size:100px;}
+                                                                </style>
+                                                                <path id="calendar_block" class="rectColorGray" d="M361.9,197.4v-33.3h-18v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3
+                                                                h-18.1v33.3H40.9v-33.3H22.8v33.3h-45.8V628h430.6V197.4H361.9z M381.5,585H3.2V343.8h378.4V585z"/>
+                                                                <rect x="3.2" y="407" class="fillNone" width="378.4" height="121"/>
+                                                                <text id="day" transform="matrix(1 0 0 1 98 521.5586)" class="fontBlack fontArial fontSize">{{ event.eventDate.strftime("%d") }}</text>
+                                                                <rect x="-22.9" y="240" class="fillNone" width="430.6" height="96"/>
+                                                                <text transform="matrix(1 0 0 1 79 311.5986)" class="fontColorWhite fontArial fontSizeTwo">{{ event.eventDate.strftime("%b")|upper }}</text>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="row">
+                                                            <div class="col-md-auto" style="width:300px;">
+                                                                <span class="h5" style="color:black;font-size:20px;">{{ event.eventName }}</span>
+                                                            </div>
+                                                            <div class="w-100"></div>
+                                                            <div class="col-md-auto" style="width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                                                <span class="text-muted" style="font-size:13.5px;">Hosted by {% if event.host == current_user %}you{% else %}<a href='{{ url_for("account", username=event.host.username) }}' style="color:gray;">{{ event.host.firstName }} {{ event.host.lastName }}</a>{% endif %}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% if event.user_id != current_user.id %}
+                                                    <div class="col-md-auto" style="width:150px;">
+                                                        <form method="POST" action="">
+                                                            {{ formOneOrTwo.hidden_tag() }}
+                                                            <div class="form-group">
+                                                                {{ formOneOrTwo.submit(class="btn btn-" + formButtonClass, style="color:white;width:118px;") }}
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    {% else %}
+                                                    <div class="col-md-auto" style="width:150px;">
+                                                        <div class="row">
+                                                            <div class="col-md-auto" style="width:75px;margin:0;padding:0;">
+                                                                <button id="garbagecan-logo" type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#deleteModal">
+                                                                    <div style="width:25px;margin-bottom:-5px;">
+                                                                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                                            viewBox="-780 281.5 438.5 438.5" style="enable-background:new -780 281.5 438.5 438.5;" xml:space="preserve">
+                                                                            <style type="text/css">
+                                                                                .st0{fill:#FFC000;}
+                                                                            </style>
+                                                                            <path id="XMLID_8_" class="st0" d="M-478,331.2c-1-3.9-3.9-15.1-14.6-24.4c-10.7-9.3-22.4-11.2-26.3-11.7c-25.9,0-51.2,0-77.1,0
+                                                                                c-3.9,0.5-15.6,2-26.3,11.7c-10.7,9.3-13.7,20.5-14.6,24.4h-79v19.5c105.8,0,211.7,0,317.5,0v-19.5H-478z M-608.7,331.2
+                                                                                c0-1.5,0-4.4,2.4-7.3c3.4-4.9,9.3-5.4,10.2-5.4c25.9,0,51.7,0,77.6,0c1,0,6.8,0.5,10.2,5.4c2,2.9,2.4,5.9,2.4,7.3H-608.7z"/>
+                                                                            <path id="XMLID_9_" class="st0" d="M-703.8,358.5c0,10.7,0,21.5,0,32.2c0.5,0,6.8,0.5,10.2,5.4c1.5,2.4,2,5.4,2,6.3
+                                                                                c0,92.7,0,185.8,0,278.5c0.5,2.4,2.4,8.3,7.8,13.7c4.9,4.9,10.2,6.3,12.7,7.3c76.1,0,151.7,0,227.8,0c2.4-0.5,7.8-2.4,12.7-7.3
+                                                                                c5.4-5.4,7.3-10.7,7.8-13.7c0-92.7,0-185.8,0-278.5c0-1.5,0-3.9,2-6.3c3.4-4.9,9.3-5.4,10.2-5.4c0-10.7,0-21.5,0-32.2
+                                                                                C-508.7,358.5-606.3,358.5-703.8,358.5z M-481.9,633.1h-25.9V426.8c-11.7,0-23.4,0-35.6,0v206.3c-9.8,0-19.5,0-28.8,0V426.3
+                                                                                c-11.7,0-23.4,0-35.6,0v206.3h-25.9V426.3c8.8,0,17.1,0,25.9,0c11.7,0,23.4,0,35.6,0c9.8,0,19.5,0,28.8,0c11.7,0,23.4,0,35.6,0
+                                                                                c8.8,0,17.1,0,25.9,0V633.1z"/>
+                                                                        </svg>
+                                                                    </div>
+                                                                </button>
+                                                                <div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <div class="row align-items-center">
+                                                                                    <div class="col-md-auto">
+                                                                                        <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Delete Event</h5>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <form method="POST" action="" onsubmit="submit.disabled=true;return true;">
+                                                                                <div class="modal-body" id="deleteEvent-modalContent">
+                                                                                    <div class="container-fluid">
+                                                                                        {{ formFour.hidden_tag() }}
+                                                                                        <fieldset class="form-group">
+                                                                                            <div class="form-group">
+                                                                                                <label>Type the name of your event to confirm:</label>
+                                                                                                {% if formFour.confirm_eventName.errors %}
+                                                                                                    {{ formFour.confirm_eventName(class="form-control form-control-lg is-invalid") }}
+                                                                                                    <div class="invalid-feedback">
+                                                                                                        {% for error in formFour.confirm_eventName.errors %}
+                                                                                                            <span> {{ error }} </span>
+                                                                                                        {% endfor %}
+                                                                                                    </div>
+                                                                                                {% else %}
+                                                                                                    {{ formFour.confirm_eventName(class="form-control form-control-lg") }}
+                                                                                                {% endif %}
+                                                                                            </div>
+                                                                                        </fieldset>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button id="close-deleteEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                                                                                    {{ formFour.submit(class="btn btn-danger", style="color:white;") }}
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-auto" style="width:75px;">
+                                                                <button id="pencil-logo" type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#updateEventModal">
+                                                                    <div style="width:25px;margin-bottom:-5px;">
+                                                                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                                            viewBox="-780 281.5 438.5 438.5" style="enable-background:new -780 281.5 438.5 438.5;" xml:space="preserve">
+                                                                            <style type="text/css">
+                                                                                .st0{fill:#FFC000;}
+                                                                            </style>
+                                                                            <g id="surface1">
+                                                                                <path class="st0" d="M-444.3,298.1c-9.5,0-18.6,3.4-25.7,10.5l-15.8,16.4l104.4,104.8l15.8-16.4c14.2-14.2,14.4-37.4,0-52L-418,309
+                                                                                    C-425.3,301.7-434.8,298.1-444.3,298.1z M-503.6,339.3l-24.7,23.7l108.8,108.8l25.3-23.3L-503.6,339.3z M-544.2,380.2l-171.1,169.7
+                                                                                    c-4,2-6.7,5.5-7.9,9.9L-759.8,684c-1.6,5.5-0.2,11.5,3.8,15.4c4,4,10.1,5.5,15.4,3.8l124.2-36.6c5.7-0.8,10.5-4.9,12.5-10.5
+                                                                                    l168.7-167.2l-23.3-23.3l-173.1,173.7l-69.8,20.4l-14.8-14.8l21.4-72.8L-523.1,401L-544.2,380.2z M-506.6,418.4l-173.7,174.1
+                                                                                    l25.3,5.5l3.6,23.3l174.1-173.7L-506.6,418.4z"/>
+                                                                            </g>
+                                                                        </svg>
+                                                                    </div>
+                                                                </button>
+                                                                <div class="modal" id="updateEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-lg" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <div class="row align-items-center">
+                                                                                    <div class="col-md-auto">
+                                                                                        <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
+                                                                                    </div>
+                                                                                    <div class="col">
+                                                                                        <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Update Event</h5>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
+                                                                                <div class="modal-body" id="updateEvent-modalContent">
+                                                                                    <div class="container-fluid">
+                                                                                        {{ formThree.hidden_tag() }}
+                                                                                        <fieldset class="form-group">
+                                                                                            <label>Event Banner</label>
+                                                                                            <div class="container-fluid" style="border-bottom:1px lightgray solid;border-top:1px lightgray solid;margin:4px 0 20px 0;padding:40px 0 40px 0">
+                                                                                                <div class="row">
+                                                                                                    <div class="col-md-auto">
+                                                                                                        <div class="form-group">
+                                                                                                            {{ formThree.imageFile(class="form-control-file") }}
+                                                                                                            {% if formThree.imageFile.errors %}
+                                                                                                                {% for error in formThree.imageFile.errors %}
+                                                                                                                    <span class="text-danger"> {{ error }} </span></br>
+                                                                                                                {% endfor %}
+                                                                                                            {% endif %}
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="col">
+                                                                                                        <img class="card-img-top" id="eventBanner-preview" style="height:200px;object-fit:cover;background:gray;">
+                                                                                                        <script>document.getElementById("eventBanner-preview").src = '{{ url_for("static", filename="images/" + event.image_file) }}';</script>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-group">
+                                                                                                <label>Event Name</label>
+                                                                                                <div id="count-cont" style="float:right;display:none;">
+                                                                                                    <span class="text-muted"><span id="countEventNameChar" style="color:red;">0</span>/80</span>
+                                                                                                </div>
+                                                                                                {% if formThree.eventName.errors %}
+                                                                                                    {{ formThree.eventName(class="form-control form-control-lg is-invalid", placeholder="Event name", onkeyup="count_up(this);") }}
+                                                                                                    <div class="invalid-feedback">
+                                                                                                        {% for error in formThree.eventName.errors %}
+                                                                                                            <span> {{ error }} </span>
+                                                                                                        {% endfor %}
+                                                                                                    </div>
+                                                                                                {% else %}
+                                                                                                    {{ formThree.eventName(class="form-control form-control-lg", placeholder="Event name", onkeyup="count_up(this);") }}
+                                                                                                {% endif %}
+                                                                                            </div>
+                                                                                            <div class="form-group">
+                                                                                                <label>Event Description</label>
+                                                                                                {% if formThree.eventDescription.errors %}
+                                                                                                    {{ formThree.eventDescription(class="form-control form-control-lg is-invalid", placeholder="Event description") }}
+                                                                                                    <div class="invalid-feedback">
+                                                                                                        {% for error in formThree.eventDescription.errors %}
+                                                                                                            <span> {{ error }} </span>
+                                                                                                        {% endfor %}
+                                                                                                    </div>
+                                                                                                {% else %}
+                                                                                                    {{ formThree.eventDescription(class="form-control form-control-lg", placeholder="Event description") }}
+                                                                                                {% endif %}
+                                                                                            </div>
+                                                                                            <div class="row">
+                                                                                                <div class="col">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Event Date</label>
+                                                                                                        {% if formThree.eventDate.errors %}
+                                                                                                            {{ formThree.eventDate(class="form-control form-control-lg is-invalid") }}
+                                                                                                            <div class="invalid-feedback">
+                                                                                                                {% for error in formThree.eventDate.errors %}
+                                                                                                                    <span> {{ error }} </span>
+                                                                                                                {% endfor %}
+                                                                                                            </div>
+                                                                                                        {% else %}
+                                                                                                            {{ formThree.eventDate(class="form-control form-control-lg") }}
+                                                                                                        {% endif %}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Event Start Time</label>
+                                                                                                        {% if formThree.startTime.errors %}
+                                                                                                            {{ formThree.startTime(class="form-control form-control-lg is-invalid") }}
+                                                                                                            <div class="invalid-feedback">
+                                                                                                                {% for error in formThree.startTime.errors %}
+                                                                                                                    <span> {{ error }} </span>
+                                                                                                                {% endfor %}
+                                                                                                            </div>
+                                                                                                        {% else %}
+                                                                                                            {{ formThree.startTime(class="form-control form-control-lg") }}
+                                                                                                        {% endif %}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Event End Time</label>
+                                                                                                        {% if formThree.endTime.errors %}
+                                                                                                            {{ formThree.endTime(class="form-control form-control-lg is-invalid") }}
+                                                                                                            <div class="invalid-feedback">
+                                                                                                                {% for error in formThree.endTime.errors %}
+                                                                                                                    <span> {{ error }} </span>
+                                                                                                                {% endfor %}
+                                                                                                            </div>
+                                                                                                        {% else %}
+                                                                                                            {{ formThree.endTime(class="form-control form-control-lg") }}
+                                                                                                        {% endif %}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="row">
+                                                                                                <div class="col-md-auto" id="updateEvent-fee">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Event Fee</label>
+                                                                                                        {% if formThree.fee.errors %}
+                                                                                                            {{ formThree.fee(class="form-control form-control-lg is-invalid") }}
+                                                                                                            <div class="invalid-feedback">
+                                                                                                                {% for error in formThree.fee.errors %}
+                                                                                                                    <span> {{ error }} </span>
+                                                                                                                {% endfor %}
+                                                                                                            </div>
+                                                                                                        {% else %}
+                                                                                                            {{ formThree.fee(class="form-control form-control-lg") }}
+                                                                                                        {% endif %}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Event Location</label>
+                                                                                                        {% if formThree.location.errors %}
+                                                                                                            {{ formThree.location(class="form-control form-control-lg is-invalid") }}
+                                                                                                            <div class="invalid-feedback">
+                                                                                                                {% for error in formThree.location.errors %}
+                                                                                                                    <span> {{ error }} </span>
+                                                                                                                {% endfor %}
+                                                                                                            </div>
+                                                                                                        {% else %}
+                                                                                                            {{ formThree.location(class="form-control form-control-lg") }}
+                                                                                                        {% endif %}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </fieldset>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button id="close-updateEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                                                                                    {{ formThree.submit(class="btn btn-success", style="color:white;") }}
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="container-fluid" style="margin:35px 5px;border:1px lightgray solid;padding:25px;">
+                                                    <div class="row">
+                                                        <div class="col-md-auto" style="margin-bottom:20px;width:50px;">
+                                                            <img src='{{ url_for("static", filename="assets/time-logo.svg") }}' style="width:20px;margin-top:-5px;">
+                                                        </div>
+                                                        <div class="col-md-auto" style="margin-bottom:20px;width:440px;">
+                                                            {{ event.eventDate.strftime("%a") }}, {{ event.eventDate.strftime("%B %d, %Y") }} at {{ event.eventStartTime.strftime("%I %p") }} to {{ event.eventEndTime.strftime("%I %p") }}
+                                                        </div>
+                                                        <div class="w-100"></div>
+                                                        <div class="col-md-auto" style="margin-bottom:20px;width:50px;">
+                                                            <img src='{{ url_for("static", filename="assets/location-logo.svg") }}' style="width:20px;margin-top:-5px;">
+                                                        </div>
+                                                        <div class="col-md-auto" style="margin-bottom:20px;width:440px;">
+                                                            {{ event.location }}
+                                                        </div>
+                                                        <div class="w-100"></div>
+                                                        <div class="col-md-auto" style="margin-bottom:20px;width:50px;">
+                                                            <img src='{{ url_for("static", filename="assets/fee-logo.svg") }}' style="width:20px;margin-top:-5px;">
+                                                        </div>
+                                                        <div class="col-md-auto" style="margin-bottom:20px;width:440px;">
+                                                            {{ event.fee }}
+                                                        </div>
+                                                    </div>
+                                                </div>                  
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="rightBox">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock content %}

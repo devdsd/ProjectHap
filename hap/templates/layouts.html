@@ -1,61 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
-    {% if title %}
-        <title> {{title}} | Hap </title>
-    {% else %}
-        <title> Hap </title>
-    {% endif %}
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <?xml version="1.0" encoding="utf-8"?>
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/hap-logo.ico') }}"
-
-</head>
-<body>
-
-        <header class="site-header">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-            <a class="navbar-brand mr-4" href="{{ url_for('home') }}">Hap</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarToggle">
-                <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-                <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
+        {% if title == "Welcome to Hap!" %}
+            <title>{{ title }}</title>
+        {% elif title %}
+            <title>Hap | {{ title }}</title>
+        {% else %}
+            <title>Hap</title>
+        {% endif %}
+        
+        <script src='{{ url_for("static", filename="js/jquery-3.3.1.min.js") }}'></script>
+        <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/main.css") }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/bootstrap.min.css") }}">
+        <link rel="shortcut icon" href="{{ url_for("static", filename="assets/hap-logo.ico") }}">
+    </head>
+    <body>
+        {% if current_user.is_authenticated %}
+            {% block navbarAdjust %}{% endblock navbarAdjust %}
+        {% else %}
+            <div class="container-fluid" style="padding:0 17%;border-bottom:1px lightgray solid;background:transparent;">
+        {% endif %}
+            <nav class="navbar navbar-expand-lg navbar-light" style="background:white;">
+                {% block navbarToggler %}
+                {% endblock navbarToggler %}
+                <a class="navbar-brand" href="{{ url_for("home") }}">
+                    <img src="{{ url_for("static", filename="assets/hap-nameplate.svg") }}" style="width:70px;">
+                </a>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                        <li class="nav-item">
+                            {% if current_user.is_authenticated %}
+                                <a class="nav-link" href="{{ url_for("home") }}"><img src="{{ url_for("static", filename="assets/home-logo.svg") }}" style="width:28px;margin:0 11.5px;padding-bottom:5px;border-bottom:2px {{ homeNavbarLogoBorderBottom }} solid;"></a>
+                            {% endif %}
+                        </li>
+                        <li class="nav-item">
+                            {% if current_user.is_authenticated %}
+                                <a class="nav-link" href="{{ url_for("account", username=current_user.username) }}"><img src="{{ url_for("static", filename="assets/profile-logo.svg") }}" style="width:28px;margin:0 11.5px;padding-bottom:5px;border-bottom:2px {{ profileNavbarLogoBorderBottom }} solid;"></a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    {% block navbarRightComponent %}{% endblock navbarRightComponent %}
                 </div>
-                <!-- Navbar Right Side -->
-                <div class="navbar-nav">
-                                {% if current_user.is_authenticated %}
-                                    <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
-                                    <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
-                                {% else %}
-                                    <a class="nav-item nav-link" href="{{ url_for('signup') }}">Sign Up</a>
-                                    <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                                {% endif %}
-                </div>
-            </div>
-            </div>
-        </nav>
-        </header>
-
-        <div class="container">
+            </nav>
+        </div>
+        <div id="alert-box" class="container">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                             {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            {% block content %} {% endblock content %}
         </div>
-
-</body>
+        {% block content %}{% endblock content %}
+        <script type="text/javascript" src="{{ url_for("static", filename="js/main.js") }}"></script>
+        <script type="text/javascript" src="{{ url_for("static", filename="js/jquery-3.3.1.slim.min.js") }}"></script>
+        <script type="text/javascript" src="{{ url_for("static", filename="js/bootstrap.bundle.js") }}"></script>
+    </body>
 </html>
