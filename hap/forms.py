@@ -4,6 +4,7 @@ from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from hap.models import Users
+from wtforms.validators import InputRequired
 
 class SignupForm(FlaskForm):
     firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
@@ -58,3 +59,7 @@ class UpdateAccountForm(FlaskForm):
           user = User.query.filter_by(email=email.data).first()
           if user:
               raise ValidationError('That email is Taken.')
+
+class AddCommentForm(FlaskForm):
+    body = StringField("Body", validators=[DataRequired()])
+    submit = SubmitField("Post")

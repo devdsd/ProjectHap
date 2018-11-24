@@ -89,3 +89,29 @@ class Events(db.Model):
 
 # # class Images(db.Model):
 # #     id = db.Column
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String(140))
+    body = db.Column(db.String(2000))
+    timestamp = db.Column(db.DateTime)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    comments = db.relationship('Comment', backref='title', lazy='dynamic')
+
+    def get_comments(self):
+        return Comment.query.filter_by(post_id=post.id).order_by(Comment.timestamp.desc())
+
+
+    def __repr__(self):
+        return '<Post %r>' % (self.body)
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+
+    def __repr__(self):
+        return '<Post %r>' % (self.body)
+
+        
