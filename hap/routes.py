@@ -25,8 +25,9 @@ def save_picture(form_picture, size):
 def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
-        events = Events.query.filter(Categories.userhasinterest.any(id=current_user.id)).order_by(Events.dateCreated.desc())
-        # interest = Categories.query.filter(Categories.userhasinterest.any(id=current_user.id)).first()
+        events = Events.query.order_by(Events.dateCreated.desc())
+        # events = Events.query.filter(Categories.eventhascategory.any(id=event.id)).order_by(Events.dateCreated.desc()).all()
+        # print "Ambot nimo !"
 
         if formTwo.validate_on_submit():
             picture_file = ""
@@ -59,10 +60,13 @@ def home():
                 
             flash("Your event has been created.", "success")
             return redirect(url_for("home"))
-        
+
+
         elif formTwo.eventName.data:
             flash("Create event unsuccessful.", "danger")
             return redirect(url_for("home"))
+
+        # print formTwo.categoryoption.data
 
         return render_template("home.html", title="Home", formTwo=formTwo, homeNavbarLogoBorderBottom="#FFC000", profileNavbarLogoBorderBottom="white", events=events)
 
