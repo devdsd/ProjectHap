@@ -25,7 +25,8 @@ def save_picture(form_picture, size):
 def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
-        events = Events.query.order_by(Events.dateCreated.desc())
+        events = Events.query.filter(Categories.userhasinterest.any(id=current_user.id)).order_by(Events.dateCreated.desc())
+        # interest = Categories.query.filter(Categories.userhasinterest.any(id=current_user.id)).first()
 
         if formTwo.validate_on_submit():
             picture_file = ""
@@ -164,14 +165,16 @@ def account(username):
         events = Events.query.filter_by(user_id=current_user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
         joinedEventsCount = Events.query.filter(Events.joinrel.any(id=current_user.id)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline")
+        interest = Categories.query.filter(Categories.userhasinterest.any(id=current_user.id)).first()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline", interest=interest)
     else:
         user = Users.query.filter_by(username=username).first()
         profilePic = url_for("static", filename="images/" + user.image_file)
         events = Events.query.filter_by(user_id=user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
         joinedEventsCount = Events.query.filter(Events.joinrel.any(id=user.id)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline")
+        interest = Categories.query.filter(Categories.userhasinterest.any(id=current_user.id)).first()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline", interest=interest)
 
 @app.route("/<username>/accountevents")
 @login_required

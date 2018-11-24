@@ -39,7 +39,8 @@ class Categories(db.Model):
     categoryName = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
-        return "Categories({})".format(self.categoryName)
+        return "{}".format(self.categoryName)
+        # return "Categories({})".format(self.categoryName)
 
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

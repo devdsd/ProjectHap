@@ -46,6 +46,7 @@
                             <div class="media-body" style="margin:25px;">
                                 <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><h3 class="account-heading">{{ user.firstName }} {{ user.lastName }}</h3></a>
                                 <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><p class="text-secondary">{{ user.username }}</p></a>
+                                <p> Interest: <small style="color: gray;">  {{ interest }} </small> </p>
                             </div>
                         </div> 
                     </div>
