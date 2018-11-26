@@ -92,28 +92,26 @@ class CreateEventForm(FlaskForm):
   location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
   submit = SubmitField('Post Event')
 
-<<<<<<< HEAD
-class UpdateAccountForm(FlaskForm):
-      username = StringField('Username', validators=[DataRequired(),Length(min=2, max=20)])
-      email = StringField('Email', validators=[DataRequired(), Email()])
-      picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
-      submit = SubmitField('Update')
-      def validate_username(self, username):
-        if username.data != current_user.username:
-          user = User.query.filter_by(username=username.data).first()
-          if user:
-            raise ValidationError('That username is taken. Please choose another name')
+# class UpdateAccountForm(FlaskForm):
+#       username = StringField('Username', validators=[DataRequired(),Length(min=2, max=20)])
+#       email = StringField('Email', validators=[DataRequired(), Email()])
+#       picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+#       submit = SubmitField('Update')
+#       def validate_username(self, username):
+#         if username.data != current_user.username:
+#           user = User.query.filter_by(username=username.data).first()
+#           if user:
+#             raise ValidationError('That username is taken. Please choose another name')
       
-      def validate_email(self, email):
-        if email.data != current_user.email:
-          user = User.query.filter_by(email=email.data).first()
-          if user:
-              raise ValidationError('That email is Taken.')
+#       def validate_email(self, email):
+#         if email.data != current_user.email:
+#           user = User.query.filter_by(email=email.data).first()
+#           if user:
+#               raise ValidationError('That email is Taken.')
 
 class AddCommentForm(FlaskForm):
     body = StringField("Body", validators=[DataRequired()])
     submit = SubmitField("Post")
-=======
 class DeleteEventForm(FlaskForm):
   eventName = StringField('Event Name', validators=[Length(min=2, max =80)])
   confirm_eventName = StringField('Confirm Event Name', validators=[DataRequired(), Length(min=2, max =80), EqualTo('eventName')])
@@ -124,4 +122,3 @@ class JoinEventForm(FlaskForm):
 
 class UnjoinEventForm(FlaskForm):
   submit = SubmitField("Unjoin Event")
->>>>>>> master

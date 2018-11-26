@@ -304,7 +304,7 @@ def event(event_id):
 
             return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formOne, formButtonClass="warning", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
 
-<<<<<<< HEAD
+
     image_file = url_for('static', filename='images/' + current_user.image_file)
     return render_template('account.html', title = 'Account', image_file=image_file, form=form)
 
@@ -322,6 +322,6 @@ def comment_post(post_id):
             return redirect(url_for("post", post_id=post.id))
     return render_template("comment_post.html", title="Comment Post", 
 form=form, post_id=post_id)
-=======
+
     return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formFour=formFour, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
->>>>>>> master
+

@@ -73,7 +73,6 @@ class Categories(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     categoryName = db.Column(db.String(100), nullable=False)
 
-<<<<<<< HEAD
 # # class Images(db.Model):
 # #     id = db.Column
 
@@ -102,7 +101,5 @@ class Comment(db.Model):
         return '<Post %r>' % (self.body)
 
         
-=======
     def __repr__(self):
         return "Categories({})".format(self.categoryName)
->>>>>>> master
