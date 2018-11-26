@@ -173,7 +173,7 @@ def account(username):
         events = Events.query.filter_by(user_id=user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
         joinedEventsCount = Events.query.filter(Events.joinrel.any(id=user.id)).count()
-        interest = Categories.query.filter(Categories.userhasinterest.any(id=current_user.id)).first()
+        interest = Categories.query.filter(Categories.userhasinterest.any(id=user.id)).first()
         return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline", interest=interest)
 
 @app.route("/<username>/accountevents")
