@@ -1,12 +1,13 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from wtforms.fields.html5 import DateField
 from wtforms_components import TimeField
 from hap.models import Users
 from wtforms.validators import InputRequired
+from hap.models import Users, Categories
 
 class SignupForm(FlaskForm):
   firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
@@ -15,6 +16,7 @@ class SignupForm(FlaskForm):
   username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
   password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=50)])
   confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+  interestoption = SelectField('Choose an Interest', coerce=int, choices=[(interest.id, interest.categoryName) for interest in Categories.query.all()])
 
   submit = SubmitField('Sign Up')
 
@@ -90,6 +92,7 @@ class CreateEventForm(FlaskForm):
   imageFile = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"])])
   fee = IntegerField("Fee", validators=[NumberRange(max=1000000)])
   location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
+  categoryoption = SelectField('Choose a Category of Event', coerce=int, choices=[(category.id, category.categoryName) for category in Categories.query.all()])
   submit = SubmitField('Post Event')
 
 # class UpdateAccountForm(FlaskForm):
@@ -112,6 +115,7 @@ class CreateEventForm(FlaskForm):
 class AddCommentForm(FlaskForm):
     body = StringField("Body", validators=[DataRequired()])
     submit = SubmitField("Post")
+    
 class DeleteEventForm(FlaskForm):
   eventName = StringField('Event Name', validators=[Length(min=2, max =80)])
   confirm_eventName = StringField('Confirm Event Name', validators=[DataRequired(), Length(min=2, max =80), EqualTo('eventName')])

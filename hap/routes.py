@@ -26,7 +26,8 @@ def save_picture(form_picture, size):
 def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
-        events = Events.query.order_by(Events.dateCreated.desc())
+        events = Events.query.filter(Categories.userhasinterest.any(id=current_user.id)).order_by(Events.dateCreated.desc())
+        # interest = Categories.query.filter(Categories.userhasinterest.any(id=current_user.id)).first()
 
         if formTwo.validate_on_submit():
             picture_file = ""
@@ -40,11 +41,22 @@ def home():
                 db.session.add(event)
                 db.session.commit()
 
+                # foreventId = Events.query.filter_by(id=event.id).first()
+        
+                statement = eventhascategory_rel_table.insert().values(category_id=formTwo.categoryoption.data, event_id=event.id)
+                db.session.execute(statement)
+                db.session.commit()
+
             else:
                 event = Events(eventName=formTwo.eventName.data, eventDate=formTwo.eventDate.data, eventStartTime=formTwo.startTime.data, eventEndTime=formTwo.endTime.data, eventDescription=formTwo.eventDescription.data, fee=formTwo.fee.data, location=formTwo.location.data, host=current_user)
             
                 db.session.add(event)
                 db.session.commit()
+
+                statement = eventhascategory_rel_table.insert().values(category_id=formTwo.categoryoption.data, event_id=event.id)
+                db.session.execute(statement)
+                db.session.commit()
+
                 
             flash("Your event has been created.", "success")
             return redirect(url_for("home"))
@@ -95,10 +107,18 @@ def signup():
         return redirect(url_for('home'))
     
     form = SignupForm()
+
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        
         user = Users(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, username=form.username.data, password=hashed_password)
         db.session.add(user)
+        db.session.commit()
+
+        forUserId = Users.query.filter_by(username=form.username.data).first()
+        
+        statement = userhasinterest_rel_table.insert().values(category_id=form.interestoption.data, user_id=forUserId.id)
+        db.session.execute(statement)
         db.session.commit()
 
         login_user(user)
@@ -146,14 +166,16 @@ def account(username):
         events = Events.query.filter_by(user_id=current_user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=current_user.id).count()
         joinedEventsCount = Events.query.filter(Events.joinrel.any(id=current_user.id)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline")
+        interest = Categories.query.filter(Categories.userhasinterest.any(id=current_user.id)).first()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline", interest=interest)
     else:
         user = Users.query.filter_by(username=username).first()
         profilePic = url_for("static", filename="images/" + user.image_file)
         events = Events.query.filter_by(user_id=user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
         joinedEventsCount = Events.query.filter(Events.joinrel.any(id=user.id)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline")
+        interest = Categories.query.filter(Categories.userhasinterest.any(id=user.id)).first()
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline", interest=interest)
 
 @app.route("/<username>/accountevents")
 @login_required
