@@ -25,9 +25,10 @@ def save_picture(form_picture, size):
 def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
-        # events = Events.query.order_by(Events.dateCreated.desc())
-        userinterest = userhasinterest_rel_table.query.filter().first()
-        events = Events.query.filter(Categories.eventhascategory.any(id=category.id)).order_by(Events.dateCreated.desc()).all()
+        events = Events.query.order_by(Events.dateCreated.desc())
+        # userinterest = userhasinterest_rel_table.query.filter_by(user_id=current_user.id).first()
+        # print userinterest.category_id
+        # events = Events.query.filter(Categories.eventhascategory.any(id=category.id)).order_by(Events.dateCreated.desc()).all()
         # print "Ambot nimo !"
 
         if formTwo.validate_on_submit():
@@ -251,6 +252,7 @@ def settings():
 @login_required
 def event(event_id):
     event = Events.query.get_or_404(event_id)
+    category = Categories.query.filter(Categories.eventhascategory.any(id=event_id)).first()
 
     formFour = DeleteEventForm()
     formThree = UpdateEventForm()
@@ -315,7 +317,7 @@ def event(event_id):
 
                 return redirect(url_for("event", event_id=event.id))
             
-            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formTwo, formButtonClass="danger", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formTwo, formButtonClass="danger", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", category=category)
 
         else:
             formOne = JoinEventForm()
@@ -328,6 +330,6 @@ def event(event_id):
 
                 return redirect(url_for("event", event_id=event.id))
 
-            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formOne, formButtonClass="warning", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formOne, formButtonClass="warning", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", category=category)
 
-    return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formFour=formFour, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+    return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formFour=formFour, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", category=category)
