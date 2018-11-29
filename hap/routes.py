@@ -28,6 +28,8 @@ def home():
         formTwo = CreateEventForm()
         events = Events.query.filter(Categories.userhasinterest.any(id=current_user.id)).order_by(Events.dateCreated.desc())
         # interest = Categories.query.filter(Categories.userhasinterest.any(id=current_user.id)).first()
+        #review = Review.query(Events.any(id=current_user.id))
+
 
         if formTwo.validate_on_submit():
             picture_file = ""
@@ -325,25 +327,6 @@ def event(event_id):
                 return redirect(url_for("event", event_id=event.id))
 
             return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formOne, formButtonClass="warning", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
-
-
-    image_file = url_for('static', filename='images/' + current_user.image_file)
-    return render_template('account.html', title = 'Account', image_file=image_file, form=form)
-
-@app.route("/post/<int:post_id>/comment", methods=["GET", "POST"])
-@login_required
-def comment_post(post_id):
-    post = Post.query.get_or_404(post_id)
-    form = AddCommentForm()
-    if request.method == 'POST': # this only gets executed when the form is submitted and not when the page loads
-        if form.validate_on_submit():
-            comment = Comment(body=form.body.data, article=post.id)
-            db.session.add(comment)
-            db.session.commit()
-            flash("Your comment has been added to the post", "success")
-            return redirect(url_for("post", post_id=post.id))
-    return render_template("comment_post.html", title="Comment Post", 
-form=form, post_id=post_id)
 
     return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formFour=formFour, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
 

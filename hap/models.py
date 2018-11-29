@@ -18,11 +18,11 @@ rate_rel_table = db.Table('rate_rel_table',
     db.Column('rate', db.Integer)
 )
 
-post_rel_table = db.Table('post_rel_table',
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('event_id', db.Integer, db.ForeignKey('events.id')),
-    db.Column('post', db.Text, nullable=True)
-)
+# post_rel_table = db.Table('post_rel_table',
+#     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+#     db.Column('event_id', db.Integer, db.ForeignKey('events.id')),
+#     db.Column('post', db.Text, nullable=True)
+# )
 
 join_rel_table = db.Table('join_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
@@ -88,35 +88,35 @@ class Events(db.Model):
 # # class Images(db.Model):
 # #     id = db.Column
 
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    title = db.Column(db.String(140))
-    body = db.Column(db.String(2000))
-    timestamp = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    comments = db.relationship('Events', secondary=review_rel_table, backref=db.backref('reviewrel', lazy=True))
+# class Posts(db.Model):
+#     id = db.Column(db.Integer, primary_key = True)
+#     title = db.Column(db.String(140))
+#     body = db.Column(db.String(2000))
+#     timestamp = db.Column(db.DateTime)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+#     review = db.relationship('Events', secondary=review_rel_table, backref=db.backref('reviewrel', lazy=True))
 
     
-   # db.relationship('Comment', backref='title', lazy='dynamic')
+#    # db.relationship('Comment', backref='title', lazy='dynamic')
 
-    def get_comments(self):
-        return Comment.query.filter_by(post_id=post.id).order_by(Comment.timestamp.desc())
+#     def get_review(self):
+#         return review.query.filter_by(post_id=post.id).order_by(review.timestamp.desc())
 
 
-    def __repr__(self):
-        return '<Post %r>' % (self.body)
+#     def __repr__(self):
+#         return "Post({})".format(self.body)
 
-class review(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+# class Reviews(db.Model):
+#     id = db.Column(db.Integer, primary_key = True)
+#     body = db.Column(db.String(140))
+#     timestamp = db.Column(db.DateTime)
+#     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
 
-    def __repr__(self):
-        return '<Post %r>' % (self.body)
+#     def __repr__(self):
+#         return '<Post %r>' % (self.body)
 
         
-    def __repr__(self):
-        return "Categories({})".format(self.categoryName)
+#     def __repr__(self):
+#         return "Categories({})".format(self.categoryName)
 # def categories_query():
 #     return Categories.query
