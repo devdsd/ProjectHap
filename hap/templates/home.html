@@ -1,4 +1,7 @@
 {% extends 'layouts.html' %}
+    {% block bodyStyle %}
+        <body>
+    {% endblock bodyStyle %}
     {% block navbarAdjust %}
         <div id="homefeed-navbar" class="container-fluid">
     {% endblock navbarAdjust %}
@@ -35,8 +38,8 @@
                     </div>
                 </div>
             {% else %}
-                <button style="color:white;height:32px;width:78px;padding-top:3.3px;padding-left:5px;" class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="{{ ariaExpansionBool }}">
-                    <span style="font-size:13px;">Log In&nbsp;&nbsp;</span>
+                <button style="color:white;height:32px;width:78px;padding-top:3.3px;padding-left:10px;" class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="{{ ariaExpansionBool }}">
+                    <span style="font-size:13px;margin-right:-5px;">Log In&nbsp;&nbsp;</span>
                 </button>
                 <div class="dropdown-menu {{ dropdownAppearance }}" id="navbar-loginBox">
                     <form class="px-4 py-3" method="POST" action="">
@@ -45,40 +48,40 @@
                             <div class="form-group">
                                 <label style="font-size:13px;">Username or Email Address</label>
                                 {% if formOne.usernameOrEmail.errors %}
-                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg is-invalid") }}
+                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg is-invalid", style="height:40px;") }}
                                     <div class="invalid-feedback">
                                         {% for error in formOne.usernameOrEmail.errors %}
                                             <span> {{ error }} </span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg") }}
+                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg", style="height:40px;") }}
                                 {% endif %}
                             </div>
                             <div class="form-group">
                                 <label style="font-size:13px;">Password</label>
                                 {% if formOne.password.errors %}
-                                    {{ formOne.password(class="form-control form-control-lg is-invalid") }}
+                                    {{ formOne.password(class="form-control form-control-lg is-invalid", style="height:40px;") }}
                                     <div class="invalid-feedback">
                                         {% for error in formOne.password.errors %}
                                             <span> {{ error }} </span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ formOne.password(class="form-control form-control-lg") }}
+                                    {{ formOne.password(class="form-control form-control-lg", style="height:40px;") }}
                                 {% endif %}
                             </div>
-                            <div class="form-check" style="margin-top:27px;">
-                                <div style="background:red;margin-top:-20px;">
+                            <div class="form-check">
+                                <div>
                                     {{ formOne.remember(class="form-check-input") }}
                                 </div>
                                 <div>
-                                    <label style="font-size:12px;margin-top:12.5px;">Remember Password</label>
+                                    <label>Remember Password</label>
                                 </div>
                             </div>
                         </fieldset>
                         <div class="form-group">
-                            {{ formOne.submit(class="btn btn-warning", style="color:white;") }}
+                            {{ formOne.submit(class="btn btn-warning", style="color:white;height:32px;font-size:13px;") }}
                         </div>
                         <small class="text-muted ml-2">
                             <a href="#" style="font-size:12px;">Forgot password?</a>
@@ -152,8 +155,8 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col">
-                                                                                    <img class="card-img-top" id="eventBanner-preview" style="height:200px;object-fit:cover;background:gray;">
-                                                                                    <script>document.getElementById("eventBanner-preview").src = '{{ url_for("static", filename="images/uploadEventBanner-blankPreview.jpg") }}';</script>
+                                                                                    <img class="card-img-top" id="image-preview" style="height:200px;object-fit:cover;background:gray;">
+                                                                                    <script>document.getElementById("image-preview").src = '{{ url_for("static", filename="images/uploadEventBanner-blankPreview.jpg") }}';</script>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -279,7 +282,6 @@
                                                                                 {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
                                                                             {% endif %}
                                                                         </div>
-
                                                                     </fieldset>
                                                                 </div>
                                                             </div>

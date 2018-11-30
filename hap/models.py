@@ -48,16 +48,17 @@ class Users(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    creates = db.relationship('Events', backref='host', lazy=True)
     image_file = db.Column(db.String(50), nullable=False, default='default-profPic.jpg')
     image_file_sm = db.Column(db.String(50), nullable=False, default='default-profPic-sm.jpg')
+    numberOfLogins = db.Column(db.Integer, default=0)
+    creates = db.relationship('Events', backref='host', lazy=True)
     review_relationship = db.relationship('Events', secondary=review_rel_table, backref=db.backref('reviewrel', lazy=True))
     rate_relationship = db.relationship('Events', secondary=rate_rel_table, backref=db.backref('raterel', lazy=True))
     userhasinterest_relationship = db.relationship('Categories', secondary=userhasinterest_rel_table, backref=db.backref('userhasinterest', lazy=True))
     join_relationship = db.relationship('Events', secondary=join_rel_table, backref=db.backref('joinrel', lazy=True))
 
     def __repr__(self):
-        return "Users({}, {}, {}, {}, {})".format(self.firstName, self.lastName, self.email, self.username, self.interest)
+        return "Users({}, {}, {}, {}, {})".format(self.firstName, self.lastName, self.email, self.username, self.password)
 
 class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)

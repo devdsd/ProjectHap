@@ -3,20 +3,12 @@ body {
     margin:0;
     overflow-y:scroll;
 }
-input {
-    height:35px;
+input:not(type=submit) {
+    height:50px;
+    padding-bottom:25px;
 }
 ::-webkit-input-placeholder {
-    font-size:13.5px;
-}
-::-moz-placeholder {
-    font-size:13.5px;
-}
-:-ms-input-placeholder {
-    font-size:13.5px;
-}
-:-moz-placeholder {
-    font-size:13.5px;
+    font-size:15px;
 }
 #navbar-nameplate {
     order:1;
@@ -69,7 +61,7 @@ input {
 .forms {
     width:800px;
     height:auto;
-    border:1px lightgray solid;
+    border-radius:10px;
     margin:25px auto 0 auto;
     padding:25px;
 }
@@ -218,6 +210,18 @@ input {
     overflow-y: auto;
     height:500px;
 }
+#setupAcc-modalContent {
+    font-size:15px;
+    height: 250px;
+    overflow-y: auto;
+    height:500px;
+}
+#interests-modalContent {
+    font-size:15px;
+    height: 250px;
+    overflow-y: auto;
+    height:500px;
+}
 #homefeed-navbar {
     position:fixed;
     z-index:2;
@@ -252,4 +256,13 @@ body.modal-open #alert-box{
 }
 #garbagecan-logo:hover .st0{
     fill:white;
+}
+#signupModals .close {
+    display:none;
+}
+#interest-panel .followBtn:hover {
+    color:white;
+}
+#interest-panel .unfollowBtn {
+    color:white;
 }

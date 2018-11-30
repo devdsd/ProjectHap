@@ -1,7 +1,7 @@
 import os, binascii
 from PIL import Image
 from hap import app, db, bcrypt
-from flask import render_template, url_for, flash, redirect, request, abort
+from flask import render_template, url_for, flash, redirect, request, abort, jsonify, session
 from hap.forms import *
 from hap.models import *
 from flask_login import login_user, current_user, logout_user, login_required
@@ -26,6 +26,13 @@ def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
         events = Events.query.order_by(Events.dateCreated.desc())
+        
+        # #RETRIEVE EVENTS SUCH THAT EVENT'S CATEGORY IS EQUAL TO USER'S INTEREST
+        # # (1) INTERESTS OF USER CONSISTING CATEGORY IDS
+        # userhasinterests = userhasinterest_rel_table.select().where(userhasinterest_rel_table.c.user_id==current_user.id)
+        
+        # # (2) EVENTS WITH THE SAME CATEGORY ID
+        # events = Events.query.filter(eventhascategory_rel_table.c.category_id==userhasinterests.c.category_id).all()
 
         if formTwo.validate_on_submit():
             picture_file = ""
@@ -39,8 +46,6 @@ def home():
                 db.session.add(event)
                 db.session.commit()
 
-                # foreventId = Events.query.filter_by(id=event.id).first()
-        
                 statement = eventhascategory_rel_table.insert().values(category_id=formTwo.categoryoption.data, event_id=event.id)
                 db.session.execute(statement)
                 db.session.commit()
@@ -72,6 +77,10 @@ def home():
         if user is not None:
             if bcrypt.check_password_hash(user.password, formOne.password.data) == True:
                 login_user(user, remember=formOne.remember.data)
+
+                user.numberOfLogins = user.numberOfLogins + 1
+                db.session.commit()
+
                 next_page = request.args.get("next")
                 return redirect(next_page) if next_page else redirect(url_for("home"))
             else:
@@ -82,6 +91,10 @@ def home():
             
             if user and bcrypt.check_password_hash(user.password, formOne.password.data):
                 login_user(user, remember=formOne.remember.data)
+
+                user.numberOfLogins = user.numberOfLogins + 1
+                db.session.commit()
+
                 next_page = request.args.get("next")
                 return redirect(next_page) if next_page else redirect(url_for("home"))
             else:
@@ -93,36 +106,98 @@ def home():
         
     return render_template("home.html", formOne=formOne, title="Welcome to Hap!", dropdownAppearance="", ariaExpansionBool="false")
 
-
 @app.route('/about')
 def about():
     return render_template('about.html', title='About Hap')
-
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    
-    form = SignupForm()
 
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        
-        user = Users(firstName=form.firstName.data, lastName=form.lastName.data, email=form.email.data, username=form.username.data, password=hashed_password)
+    formOne = BasicAccountInfoForm()
+
+    if formOne.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(formOne.password.data).decode('utf-8')
+
+        user = Users(firstName=formOne.firstName.data, lastName=formOne.lastName.data, username=formOne.username.data, email=formOne.email.data, password=hashed_password)
+
         db.session.add(user)
         db.session.commit()
 
-        forUserId = Users.query.filter_by(username=form.username.data).first()
-        
-        statement = userhasinterest_rel_table.insert().values(category_id=form.interestoption.data, user_id=forUserId.id)
+        login_user(user)
+
+        return redirect(url_for('interests'))
+
+    return render_template('signup.html', title='Sign Up', formOne=formOne)
+
+@app.route('/interests', methods=['GET', 'POST'])
+def interests():
+    if current_user.numberOfLogins == 0:
+        interestsDisplay = db.session.query(Categories.id, Categories.categoryName, userhasinterest_rel_table.c.user_id).outerjoin(userhasinterest_rel_table, Categories.id==userhasinterest_rel_table.c.category_id).order_by(Categories.id.asc()).all()
+
+        formOne = UserInterestForm()
+
+        if formOne.validate_on_submit():
+            return redirect(url_for('setup_acc'))
+
+        return render_template('interests.html', title='Getting Started', formOne=formOne, interestsDisplay=interestsDisplay, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+    else:
+        return redirect(url_for("settings"))
+
+@app.route('/follow', methods=['POST'])
+@login_required
+def follow():
+    req = request.form['category_id']
+
+    lookRow = db.session.query(userhasinterest_rel_table).filter(userhasinterest_rel_table.c.user_id==current_user.id, userhasinterest_rel_table.c.category_id==req).first()
+    
+    print lookRow
+
+    if lookRow is None:
+        statement =  userhasinterest_rel_table.insert().values(user_id=current_user.id, category_id=req)
+
         db.session.execute(statement)
         db.session.commit()
 
-        login_user(user)
-        return redirect(url_for('home'))
+    return jsonify({'result' : 'success'})
 
-    return render_template('signup.html', title='Sign Up', form=form)
+@app.route('/unfollow', methods=['POST'])
+@login_required
+def unfollow():
+    statement = userhasinterest_rel_table.delete().where(userhasinterest_rel_table.c.user_id==current_user.id).where(userhasinterest_rel_table.c.category_id==request.form['category_id'])
+                
+    db.session.execute(statement)
+    db.session.commit()
+
+    return jsonify({'result' : 'success'})
+
+@app.route('/setupacc', methods=['GET', 'POST'])
+def setup_acc():
+    if current_user.numberOfLogins == 0:
+        formOne = SetUpAccount()
+
+        if formOne.validate_on_submit():
+            picture_file = ""
+            picture_file_sm = ""
+
+            if formOne.profPic.data is not None:
+                picture_file = save_picture(formOne.profPic.data, 1000)
+                picture_file_sm = save_picture(formOne.profPic.data, 500)
+
+                setattr(current_user, 'image_file', picture_file)
+                setattr(current_user, 'image_file_sm', picture_file_sm)
+
+            current_user.numberOfLogins = current_user.numberOfLogins + 1
+
+            db.session.commit()
+
+            return redirect(url_for('home'))
+
+        profilePic = url_for("static", filename="images/" + current_user.image_file)
+        return render_template('setupacc.html', title='Getting Started', formOne=formOne, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+    else:
+        return redirect(url_for("settings"))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -135,6 +210,10 @@ def login():
         if user is not None:
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
+
+                user.numberOfLogins = user.numberOfLogins + 1
+                db.session.commit()
+
                 next_page = request.args.get("next")
                 return redirect(next_page) if next_page else redirect(url_for("home"))
             else:
@@ -143,6 +222,10 @@ def login():
             user = Users.query.filter_by(username=form.usernameOrEmail.data).first()
             if user and bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
+
+                user.numberOfLogins = user.numberOfLogins + 1
+                db.session.commit()
+
                 next_page = request.args.get("next")
                 return redirect(next_page) if next_page else redirect(url_for("home"))
             else:
@@ -166,7 +249,7 @@ def account(username):
         joinedEventsCount = Events.query.filter(Events.joinrel.any(id=current_user.id)).count()
         return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline")
     else:
-        user = Users.query.filter_by(username=username).first()
+        user = Users.query.get_or_404(username)
         profilePic = url_for("static", filename="images/" + user.image_file)
         events = Events.query.filter_by(user_id=user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
@@ -184,7 +267,7 @@ def account_events(username):
         joinedEventsCount = Events.query.filter(Events.joinrel.any(id=current_user.id)).count()
         return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline")
     else:
-        user = Users.query.filter_by(username=username).first()
+        user = Users.query.get_or_404(username)
         profilePic = url_for("static", filename="images/" + user.image_file)
         events = Events.query.filter_by(user_id=user.id).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()
@@ -202,7 +285,7 @@ def joined_events(username):
         joinedEventsCount = Events.query.filter(Events.joinrel.any(id=current_user.id)).count()
         return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarJoinedEventsUnderline="underline")
     else:
-        user = Users.query.filter_by(username=username).first()
+        user = Users.query.get_or_404(username)
         profilePic = url_for("static", filename="images/" + user.image_file)
         events = Events.query.filter(Events.joinrel.any(id=user.id)).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=user.id).count()

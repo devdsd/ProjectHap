@@ -7,14 +7,13 @@ from wtforms.fields.html5 import DateField
 from wtforms_components import TimeField
 from hap.models import Users, Categories
 
-class SignupForm(FlaskForm):
+class BasicAccountInfoForm(FlaskForm):
   firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
   lastName = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=50)])
   email = StringField('Email', validators=[DataRequired(), Email()])
   username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
   password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=50)])
   confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-  interestoption = SelectField('Choose an Interest', coerce=int, choices=[(interest.id, interest.categoryName) for interest in Categories.query.all()])
 
   submit = SubmitField('Sign Up')
 
@@ -27,6 +26,14 @@ class SignupForm(FlaskForm):
     user = Users.query.filter_by(email=email.data).first()
     if user:
       raise ValidationError("Email already used.")
+
+class UserInterestForm(FlaskForm):
+  submit = SubmitField('Next', id="followInterests")
+
+class SetUpAccount(FlaskForm):
+  profPic = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+
+  submit = SubmitField('Hop In')
 
 class LoginForm(FlaskForm):
   usernameOrEmail = StringField('Username or Email Address', validators=[DataRequired()])
@@ -87,7 +94,7 @@ class CreateEventForm(FlaskForm):
   eventDate = DateField('Event Date', format='%Y-%m-%d')
   startTime = TimeField("Event Start Time", validators=[DataRequired()])
   endTime = TimeField("Event End Time", validators=[DataRequired()])
-  imageFile = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"])])
+  imageFile = FileField("Event Banner", validators=[FileAllowed(["jpg", "png"])])
   fee = IntegerField("Fee", validators=[NumberRange(max=1000000)])
   location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
   categoryoption = SelectField('Choose a Category of Event', coerce=int, choices=[(category.id, category.categoryName) for category in Categories.query.all()])
