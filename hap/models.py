@@ -9,13 +9,15 @@ def load_user(user_id):
 review_rel_table = db.Table('review_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.userId')),
     db.Column('event_id', db.Integer, db.ForeignKey('events.eventId')),
-    db.Column('review', db.Text, nullable=True)
+    db.Column('review', db.Text, nullable=True),
+    db.Column('dateCreated' ,db.DateTime, nullable=False, default=datetime.utcnow)
 )
 
 rate_rel_table = db.Table('rate_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.userId')),
     db.Column('event_id', db.Integer, db.ForeignKey('events.eventId')),
-    db.Column('rate', db.Integer, nullable=True)
+    db.Column('rate', db.Integer, nullable=True),
+    db.Column('dateCreated' ,db.DateTime, nullable=False, default=datetime.utcnow)
 )
 
 

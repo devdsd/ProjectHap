@@ -337,6 +337,7 @@
                                                             <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                                                                 <span style="font-size:13.5px;"><span style="color:red;">{{ d.event_date_dayName }}</span> {{ d.event_startTime }} | at {{ d.event_location }}</span>
                                                             </div>
+                                                            
                                                             <div class="w-100"></div>
                                                             <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                                                                 <span class="text-muted" style="font-size:13.5px;">Hosted by {% if d.host_id == current_user.userId %}you{% else %}<a href='{{ url_for("account", username=d.host_username) }}' style="color:gray;">{{ d.host_firstName }} {{ d.host_lastName }}</a>{% endif %}</span>
