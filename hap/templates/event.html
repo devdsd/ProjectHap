@@ -374,7 +374,7 @@
                                                 
                                                 <div class="container-fluid" style="border:1px lightgray solid;margin-bottom:30px;">
                                                     {% for review in reviews %}
-                                                        <label> <em>{{ review.firstName }} {{ review.lastName }} </em> : </label>
+                                                        <label style="text-decoration: underline; color: green;"> <strong> <em>{{ review.firstName }} {{ review.lastName }} </em> </strong> : </label>
                                                         <p> {{ review.review }} </p>
                                                     {% endfor %}
                                                 </div>
