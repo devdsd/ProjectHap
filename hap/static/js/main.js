@@ -11,6 +11,7 @@ function readURL(input) {
       reader.onload = function (e) {
           $('#image-preview').attr('src', e.target.result);
           $('#profpic-preview').attr('src', e.target.result);
+          $('#settingsProfPic').attr('src', e.target.result);
       }
       
       reader.readAsDataURL(input.files[0]);
@@ -25,6 +26,9 @@ $("#profPic").change(function(){
   readURL(this);
 });
 
+$("#picture").change(function(){
+  readURL(this);
+});
 
 function count_up(obj) {
   var count = document.getElementById("countEventNameChar")
@@ -106,7 +110,6 @@ $(document).ready(function() {
     }
 
     followedInterests.push(dict);
-    console.log(followedInterests)
   }
 
   $('#followInterests').click(function(){
@@ -137,8 +140,6 @@ $(document).ready(function() {
       }
     }
 
-    console.log(followedInterests)
-
     $(this).addClass('unfollowBtn').removeClass('followBtn');
     $(this).addClass('btn-warning').removeClass('btn-outline-warning');
   
@@ -150,8 +151,6 @@ $(document).ready(function() {
         followedInterests[i]["bool"] = "False";
       }
     }
-
-    console.log(followedInterests)
 
     $(this).addClass('followBtn').removeClass('unfollowBtn');
     $(this).addClass('btn-outline-warning').removeClass('btn-warning');
@@ -166,8 +165,6 @@ $(document).ready(function() {
         followedInterests[i]["bool"] = "False";
       }
     }
-    
-    console.log(followedInterests)
 
     $(this).addClass('followBtn').removeClass('unfollowBtn');
     $(this).addClass('btn-outline-warning').removeClass('btn-warning');
@@ -180,8 +177,6 @@ $(document).ready(function() {
         followedInterests[i]["bool"] = "True";
       }
     }
-
-    console.log(followedInterests)
 
     $(this).addClass('unfollowBtn').removeClass('followBtn');
     $(this).addClass('btn-warning').removeClass('btn-outline-warning');

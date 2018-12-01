@@ -266,3 +266,16 @@ body.modal-open #alert-box{
 #interest-panel .unfollowBtn {
     color:white;
 }
+#settings-leftPanel {
+    border-right:1px lightgray solid;
+    height:100%;
+    width:200px;
+    padding:0;
+}
+#settingsRightPanel-row .col {
+    margin-bottom:40px;
+}
+#settings-rightDisplayBox {
+    height:720px;
+    width:700px;
+}

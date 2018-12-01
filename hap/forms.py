@@ -63,7 +63,7 @@ class UpdateAccountForm(FlaskForm):
   username = StringField('Username', validators=[DataRequired(),Length(min=2, max=20)])
   email = StringField('Email', validators=[DataRequired(), Email()])
   picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
-  submit = SubmitField('Update Account')
+  submit = SubmitField('Update')
 
   def validate_username(self, username):
     if username.data != current_user.username:
@@ -97,7 +97,7 @@ class CreateEventForm(FlaskForm):
   imageFile = FileField("Event Banner", validators=[FileAllowed(["jpg", "png"])])
   fee = IntegerField("Fee", validators=[NumberRange(max=1000000)])
   location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
-  categoryoption = SelectField('Choose a Category of Event', coerce=int, choices=[(category.id, category.categoryName) for category in Categories.query.all()])
+  categoryoption = SelectField('Choose a Category of Event', coerce=int, choices=[(category.catId, category.categoryName) for category in Categories.query.all()])
   submit = SubmitField('Post Event')
 
 class DeleteEventForm(FlaskForm):

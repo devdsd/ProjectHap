@@ -11,7 +11,6 @@
             <span class="navbar-toggler-icon"></span>
         </button>
     {% endblock navbarToggler %}
-
     {% block navbarRightComponent %}
         <div class="dropdown">
             <button id="gear-logo" class="btn btn-outline-warning" type="button" data-toggle="dropdown">
@@ -33,22 +32,34 @@
                 </div>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a id="navbar-settings" class="dropdown-item" href='{{ url_for("settings") }}'>Settings</a>
+                <a id="navbar-settings" class="dropdown-item" href='{{ url_for("acc_info_settings") }}'>Settings</a>
                 <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
             </div>
         </div>
     {% endblock navbarRightComponent %}
-
     {% block content %}
         <div class="container-fluid" style="padding:0 auto;border-bottom:1px lightgray solid;">
             <div id="profile-header">
                 <div class="row">
                     <div class="col">
                         <div class="media">
-                            <img src="{{ profilePic }}" style="border:1px lightgray solid;width:120px;margin:25px;">
+                            <img src="{{ profilePic }}" class="rounded mx-auto d-block" style="margin:25px;height:135px;width:135px;object-fit:cover;background:gray;border:1px lightgray solid;">
                             <div class="media-body" style="margin:25px;">
                                 <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><h3 class="account-heading">{{ user.firstName }} {{ user.lastName }}</h3></a>
                                 <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><p class="text-secondary">{{ user.username }}</p></a>
+                                <p> Interest: 
+                                    <small style="color: gray;">  
+                                        {% for interest in userInterests %}
+                                            {% if loop.length == 1 %}
+                                                {{ interest.categoryName }}
+                                            {% elif loop.index == loop.length %}
+                                                and {{ interest.categoryName }}
+                                            {% else %}
+                                                {{ interest.categoryName }},&nbsp;
+                                            {% endif %}
+                                        {% endfor %} 
+                                    </small> 
+                                </p>
                             </div>
                         </div> 
                     </div>
@@ -88,7 +99,7 @@
                         {% endif %}
                             <div class="col-md-auto">
                                 <div class="card" style="width:286.67185974121px;height:300px;margin:5px 0;">
-                                    <a href='{{ url_for("event", event_id=event.id) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file_sm) }}' alt="Card image cap" style="height:120px;object-fit:cover;"></a>
+                                    <a href='{{ url_for("event", event_id=event.eventId) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file_sm) }}' alt="Card image cap" style="height:120px;object-fit:cover;"></a>
                                     <div class="card-body" style="height:100px;">
                                         <div class="row align-items-center">
                                             <div class="col-md-auto" style="width:70px;border-right:1px lightgray solid;">
@@ -116,7 +127,7 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                                        <a href='{{ url_for("event", event_id=event.id) }}' class="h5" style="color:black;font-size:17.5px;">{{ event.eventName }}</a>
+                                                        <a href='{{ url_for("event", event_id=event.eventId) }}' class="h5" style="color:black;font-size:17.5px;">{{ event.eventName }}</a>
                                                     </div>
                                                     <div class="w-100"></div>
                                                     <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
@@ -130,7 +141,7 @@
                                             </div>
                                         </div>
                                         <hr>      
-                                        {% if event.user_id == current_user.id %}
+                                        {% if event.user_id == current_user.userId %}
                                             
                                         {% else %}
                                         

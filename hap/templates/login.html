@@ -42,12 +42,12 @@
 								{{ form.password(class="form-control form-control-lg", placeholder="Password", style="width:370px;") }}
 							{% endif %}
 						</div>
-						<div class="form-check" style="margin-top:-12px;">
+						<div class="form-check">
 							<div>
 								{{ form.remember(class="form-check-input") }}
 							</div>
 							<div>
-								<label style="margin-top:16px;">Remember Password</label>
+								<label>Remember Password</label>
 							</div>
 						</div>
 					</fieldset>
@@ -60,7 +60,7 @@
 				</form>
 				<div class="border-top pt-3">
 					<small class="text-muted">
-						New to Hap? <a class="ml-2" href='{{ url_for("basic_acc_info") }}'>Sign up here</a>
+						New to Hap? <a class="ml-2" href='{{ url_for("signup") }}'>Sign up here</a>
 					</small>
 				</div>
 			</div>
