@@ -345,6 +345,7 @@
                                                     </div>
                                                     {% endif %}
                                                 </div>
+
                                                 <div class="container-fluid" style="margin:35px 5px;border:1px lightgray solid;padding:25px;">
                                                     <div class="row">
                                                         <div class="col-md-auto" style="margin-bottom:20px;width:50px;">
@@ -369,7 +370,34 @@
                                                         </div>
                                                         <p> Category: <small style="color: red;">{{ category }}</small> </p>
                                                     </div>
-                                                </div>                  
+                                                </div>
+                                                
+                                                <div class="container-fluid" style="border:1px lightgray solid;margin-bottom:30px;">
+                                                    {% for review in reviews %}
+                                                        <label> <em>{{ review.firstName }} {{ review.lastName }} </em> : </label>
+                                                        <p> {{ review.review }} </p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="container">
+                                                    <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
+                                                        <div class="form-group">
+                                                                {% if reviewbody.reviewbody.errors %}
+                                                                    {{ reviewbody.reviewbody(class="form-control form-control-lg is-invalid", placeholder="Write your comment here ..", onkeyup="count_up(this);") }}
+                                                                    <div class="invalid-feedback">
+                                                                        {% for error in reviewbody.reviewbody.errors %}
+                                                                            <span> {{ error }} </span>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                {% else %}
+                                                                    {{ reviewbody.reviewbody(class="form-control form-control-lg", placeholder="Write your comment here ..", onkeyup="count_up(this);") }}
+                                                                {% endif %}
+                                                        </div>
+                                                        <div class="form-group">
+                                                                {{ reviewbody.submit(class="btn btn-success") }}
+                                                        </div>
+                                                    </form>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>

@@ -5,6 +5,7 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from hap.forms import *
 from hap.models import *
 from flask_login import login_user, current_user, logout_user, login_required
+from flask import request
 
 
 def save_picture(form_picture, size):
@@ -30,6 +31,8 @@ def home():
         # print userinterest.category_id
         # events = Events.query.filter(Categories.eventhascategory.any(id=category.id)).order_by(Events.dateCreated.desc()).all()
         # print "Ambot nimo !"
+        # events = Events.query.filter(Categories.userhasinterest.any(id=current_user.id)).order_by(Events.dateCreated.desc())
+
 
         if formTwo.validate_on_submit():
             picture_file = ""
@@ -43,7 +46,6 @@ def home():
                 db.session.add(event)
                 db.session.commit()
 
-                # foreventId = Events.query.filter_by(id=event.id).first()
         
                 statement = eventhascategory_rel_table.insert().values(category_id=formTwo.categoryoption.data, event_id=event.id)
                 db.session.execute(statement)
@@ -97,7 +99,8 @@ def home():
 
     elif formOne.usernameOrEmail.data or formOne.password.data:
         return render_template("home.html", formOne=formOne, title="Welcome to Hap!", dropdownAppearance="show", ariaExpansionBool="true")
-        
+
+
     return render_template("home.html", formOne=formOne, title="Welcome to Hap!", dropdownAppearance="", ariaExpansionBool="false")
 
 
@@ -254,6 +257,23 @@ def event(event_id):
     event = Events.query.get_or_404(event_id)
     category = Categories.query.filter(Categories.eventhascategory.any(id=event_id)).first()
 
+    reviewbody = ReviewForm()
+    # print "1. Print this: {}".format(reviewbody.reviewbody.data)
+
+    if reviewbody.reviewbody.data is not None:
+        # print "NAA ko sa REVIEW BODY"
+        statement = review_rel_table.insert().values(user_id=current_user.id, event_id=event.id, review=reviewbody.reviewbody.data)
+        db.session.execute(statement)
+        db.session.commit()
+
+        # print "2. Print this: {}".format(event.id)
+
+        return redirect(url_for("event", event_id=event.id))
+
+    reviews = db.session.query(review_rel_table.c.review, Users.firstName, Users.lastName).filter(review_rel_table.c.event_id == event.id).filter(Users.id == review_rel_table.c.user_id).all()
+    # reviews = Events.query.join(review_rel_table).join(Users).filter(review_rel_table.c.user_id == current_user.id and review_rel_table.c.event_id == event.id).all()
+    # print "3. Print this: {}".format(reviews)
+
     formFour = DeleteEventForm()
     formThree = UpdateEventForm()
 
@@ -317,7 +337,7 @@ def event(event_id):
 
                 return redirect(url_for("event", event_id=event.id))
             
-            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formTwo, formButtonClass="danger", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", category=category)
+            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formTwo, formButtonClass="danger", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", reviewbody=reviewbody, reviews=reviews, category=category)
 
         else:
             formOne = JoinEventForm()
@@ -330,6 +350,6 @@ def event(event_id):
 
                 return redirect(url_for("event", event_id=event.id))
 
-            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formOne, formButtonClass="warning", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", category=category)
+            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formOne, formButtonClass="warning", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", reviewbody=reviewbody, reviews=reviews, category=category)
 
-    return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formFour=formFour, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", category=category)
+    return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formFour=formFour, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", reviewbody=reviewbody, reviews=reviews, category=category)

@@ -1,10 +1,12 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, IntegerField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, TextField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from wtforms.fields.html5 import DateField
 from wtforms_components import TimeField
+from hap.models import Users
+from wtforms.validators import InputRequired
 from hap.models import Users, Categories
 
 class SignupForm(FlaskForm):
@@ -93,6 +95,27 @@ class CreateEventForm(FlaskForm):
   categoryoption = SelectField('Choose a Category of Event', coerce=int, choices=[(category.id, category.categoryName) for category in Categories.query.all()])
   submit = SubmitField('Post Event')
 
+# class UpdateAccountForm(FlaskForm):
+#       username = StringField('Username', validators=[DataRequired(),Length(min=2, max=20)])
+#       email = StringField('Email', validators=[DataRequired(), Email()])
+#       picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+#       submit = SubmitField('Update')
+#       def validate_username(self, username):
+#         if username.data != current_user.username:
+#           user = User.query.filter_by(username=username.data).first()
+#           if user:
+#             raise ValidationError('That username is taken. Please choose another name')
+      
+#       def validate_email(self, email):
+#         if email.data != current_user.email:
+#           user = User.query.filter_by(email=email.data).first()
+#           if user:
+#               raise ValidationError('That email is Taken.')
+
+class ReviewForm(FlaskForm):
+  reviewbody = TextAreaField("Write your comment here ... ")
+  submit = SubmitField("Post")
+    
 class DeleteEventForm(FlaskForm):
   eventName = StringField('Event Name', validators=[Length(min=2, max =80)])
   confirm_eventName = StringField('Confirm Event Name', validators=[DataRequired(), Length(min=2, max =80), EqualTo('eventName')])

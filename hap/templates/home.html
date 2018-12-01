@@ -84,6 +84,7 @@
             {% endif %}
         </div>
     {% endblock navbarRightComponent %}
+
     {% block content %}
         {% if current_user.is_authenticated %}
             <div style="padding-left: calc(100vw - 100%);">
@@ -292,6 +293,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div style="width:100%;height:100%;padding:0 10px;">
                                     {% for event in events %}
                                         <div class="card" style="width:565px;margin-top:20px;">
@@ -344,6 +346,8 @@
                                                 </div>       
                                             </div>
                                         </div>
+
+
                                     {% endfor %}
                                 </div>
                             </div>

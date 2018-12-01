@@ -15,8 +15,9 @@ review_rel_table = db.Table('review_rel_table',
 rate_rel_table = db.Table('rate_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('event_id', db.Integer, db.ForeignKey('events.id')),
-    db.Column('rate', db.Integer)
+    db.Column('rate', db.Integer, nullable=True)
 )
+
 
 join_rel_table = db.Table('join_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
@@ -40,7 +41,6 @@ class Categories(db.Model):
 
     def __repr__(self):
         return "{}".format(self.categoryName)
-        # return "Categories({})".format(self.categoryName)
 
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -77,7 +77,3 @@ class Events(db.Model):
 
     def __repr__(self):
         return "Events({}, {}, {}, {}, {}, {}, {})".format(self.eventName, self.location, self.eventDate, self.eventStartTime, self.eventEndTime, self.eventDescription, self.fee)
- 
-
-# def categories_query():
-#     return Categories.query
