@@ -12,33 +12,35 @@
             <title>Hap</title>
         {% endif %}
         
+        <link rel="stylesheet" type="text/css" href='{{ url_for("static", filename="css/main.css") }}'>
         <script src='{{ url_for("static", filename="js/jquery-3.3.1.min.js") }}'></script>
-        <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/main.css") }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/bootstrap.min.css") }}">
-        <link rel="shortcut icon" href="{{ url_for("static", filename="assets/hap-logo.ico") }}">
+        <script type="text/javascript" src='{{ url_for("static", filename="js/glm-ajax.js") }}'></script>
+        <link rel="stylesheet" type="text/css" href='{{ url_for("static", filename="css/bootstrap.min.css") }}'>
+        <link rel="shortcut icon" href='{{ url_for("static", filename="assets/hap-logo.ico") }}'>
     </head>
-    <body>
+    {% block bodyStyle %}
+    {% endblock bodyStyle %}
         {% if current_user.is_authenticated %}
             {% block navbarAdjust %}{% endblock navbarAdjust %}
         {% else %}
-            <div class="container-fluid" style="padding:0 17%;border-bottom:1px lightgray solid;background:transparent;">
+            <div class="container-fluid" style="padding:0 17%;border-bottom:1px lightgray solid;background:white;padding-top:1.7px;padding-bottom:1px;">
         {% endif %}
-            <nav class="navbar navbar-expand-lg navbar-light" style="background:white;">
+            <nav class="navbar navbar-expand-lg navbar-light" style="background:transparent;">
                 {% block navbarToggler %}
                 {% endblock navbarToggler %}
-                <a class="navbar-brand" href="{{ url_for("home") }}">
-                    <img src="{{ url_for("static", filename="assets/hap-nameplate.svg") }}" style="width:70px;">
+                <a class="navbar-brand" href='{{ url_for("home") }}'>
+                    <img src='{{ url_for("static", filename="assets/hap-nameplate.svg") }}' style="width:55px;margin:-10px 0 -10px 0;">
                 </a>
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="margin-bottom:-5px;">
                         <li class="nav-item">
                             {% if current_user.is_authenticated %}
-                                <a class="nav-link" href="{{ url_for("home") }}"><img src="{{ url_for("static", filename="assets/home-logo.svg") }}" style="width:28px;margin:0 11.5px;padding-bottom:5px;border-bottom:2px {{ homeNavbarLogoBorderBottom }} solid;"></a>
+                                <a class="nav-link" href='{{ url_for("home") }}'><img src='{{ url_for("static", filename="assets/home-logo.svg") }}' style="width:25px;margin:0 11.5px;padding-bottom:5px;border-bottom:2px {{ homeNavbarLogoBorderBottom }} solid;"></a>
                             {% endif %}
                         </li>
                         <li class="nav-item">
                             {% if current_user.is_authenticated %}
-                                <a class="nav-link" href="{{ url_for("account", username=current_user.username) }}"><img src="{{ url_for("static", filename="assets/profile-logo.svg") }}" style="width:28px;margin:0 11.5px;padding-bottom:5px;border-bottom:2px {{ profileNavbarLogoBorderBottom }} solid;"></a>
+                                <a class="nav-link" href='{{ url_for("account", username=current_user.username) }}'><img src='{{ url_for("static", filename="assets/profile-logo.svg") }}' style="width:25px;margin:0 11.5px;padding-bottom:5px;border-bottom:2px {{ profileNavbarLogoBorderBottom }} solid;"></a>
                             {% endif %}
                         </li>
                     </ul>
@@ -61,8 +63,8 @@
             {% endwith %}
         </div>
         {% block content %}{% endblock content %}
-        <script type="text/javascript" src="{{ url_for("static", filename="js/main.js") }}"></script>
-        <script type="text/javascript" src="{{ url_for("static", filename="js/jquery-3.3.1.slim.min.js") }}"></script>
-        <script type="text/javascript" src="{{ url_for("static", filename="js/bootstrap.bundle.js") }}"></script>
+        <script type="text/javascript" src='{{ url_for("static", filename="js/main.js") }}'></script>
+        <script type="text/javascript" src='{{ url_for("static", filename="js/bootstrap.bundle.js") }}'></script>
+        {% block backdrop %}{% endblock backdrop %}
     </body>
 </html>

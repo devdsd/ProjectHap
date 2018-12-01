@@ -9,14 +9,13 @@ from hap.models import Users
 from wtforms.validators import InputRequired
 from hap.models import Users, Categories
 
-class SignupForm(FlaskForm):
+class BasicAccountInfoForm(FlaskForm):
   firstName = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
   lastName = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=50)])
   email = StringField('Email', validators=[DataRequired(), Email()])
   username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
   password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=50)])
   confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-  interestoption = SelectField('Choose an Interest', coerce=int, choices=[(interest.id, interest.categoryName) for interest in Categories.query.all()])
 
   submit = SubmitField('Sign Up')
 
@@ -29,6 +28,14 @@ class SignupForm(FlaskForm):
     user = Users.query.filter_by(email=email.data).first()
     if user:
       raise ValidationError("Email already used.")
+
+class UserInterestForm(FlaskForm):
+  submit = SubmitField('Next', id="followInterests")
+
+class SetUpAccount(FlaskForm):
+  profPic = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+
+  submit = SubmitField('Hop In')
 
 class LoginForm(FlaskForm):
   usernameOrEmail = StringField('Username or Email Address', validators=[DataRequired()])
@@ -58,7 +65,7 @@ class UpdateAccountForm(FlaskForm):
   username = StringField('Username', validators=[DataRequired(),Length(min=2, max=20)])
   email = StringField('Email', validators=[DataRequired(), Email()])
   picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
-  submit = SubmitField('Update Account')
+  submit = SubmitField('Update')
 
   def validate_username(self, username):
     if username.data != current_user.username:
@@ -89,28 +96,11 @@ class CreateEventForm(FlaskForm):
   eventDate = DateField('Event Date', format='%Y-%m-%d')
   startTime = TimeField("Event Start Time", validators=[DataRequired()])
   endTime = TimeField("Event End Time", validators=[DataRequired()])
-  imageFile = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"])])
+  imageFile = FileField("Event Banner", validators=[FileAllowed(["jpg", "png"])])
   fee = IntegerField("Fee", validators=[NumberRange(max=1000000)])
   location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
-  categoryoption = SelectField('Choose a Category of Event', coerce=int, choices=[(category.id, category.categoryName) for category in Categories.query.all()])
+  categoryoption = SelectField('Choose a Category of Event', coerce=int, choices=[(category.catId, category.categoryName) for category in Categories.query.all()])
   submit = SubmitField('Post Event')
-
-# class UpdateAccountForm(FlaskForm):
-#       username = StringField('Username', validators=[DataRequired(),Length(min=2, max=20)])
-#       email = StringField('Email', validators=[DataRequired(), Email()])
-#       picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
-#       submit = SubmitField('Update')
-#       def validate_username(self, username):
-#         if username.data != current_user.username:
-#           user = User.query.filter_by(username=username.data).first()
-#           if user:
-#             raise ValidationError('That username is taken. Please choose another name')
-      
-#       def validate_email(self, email):
-#         if email.data != current_user.email:
-#           user = User.query.filter_by(email=email.data).first()
-#           if user:
-#               raise ValidationError('That email is Taken.')
 
 class ReviewForm(FlaskForm):
   reviewbody = TextAreaField("Write your comment here ... ")
