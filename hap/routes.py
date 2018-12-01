@@ -27,6 +27,9 @@ def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
         events = Events.query.filter(Categories.userhasinterest.any(id=current_user.id)).order_by(Events.dateCreated.desc())
+
+        # print "Print this: {}".format(reviewbody.reviewbody.data)
+        # print 'You entered: {}'.format(request.form['text'])
         # interest = Categories.query.filter(Categories.userhasinterest.any(id=current_user.id)).first()
         #review = Review.query(Events.any(id=current_user.id))
 
@@ -43,7 +46,6 @@ def home():
                 db.session.add(event)
                 db.session.commit()
 
-                # foreventId = Events.query.filter_by(id=event.id).first()
         
                 statement = eventhascategory_rel_table.insert().values(category_id=formTwo.categoryoption.data, event_id=event.id)
                 db.session.execute(statement)
@@ -94,7 +96,8 @@ def home():
 
     elif formOne.usernameOrEmail.data or formOne.password.data:
         return render_template("home.html", formOne=formOne, title="Welcome to Hap!", dropdownAppearance="show", ariaExpansionBool="true")
-        
+
+
     return render_template("home.html", formOne=formOne, title="Welcome to Hap!", dropdownAppearance="", ariaExpansionBool="false")
 
 
@@ -250,6 +253,23 @@ def settings():
 def event(event_id):
     event = Events.query.get_or_404(event_id)
 
+    reviewbody = ReviewForm()
+    # print "1. Print this: {}".format(reviewbody.reviewbody.data)
+
+    if reviewbody.reviewbody.data is not None:
+        # print "NAA ko sa REVIEW BODY"
+        statement = review_rel_table.insert().values(user_id=current_user.id, event_id=event.id, review=reviewbody.reviewbody.data)
+        db.session.execute(statement)
+        db.session.commit()
+
+        # print "2. Print this: {}".format(event.id)
+
+        return redirect(url_for("event", event_id=event.id))
+
+    reviews = db.session.query(review_rel_table.c.review, Users.firstName, Users.lastName).filter(review_rel_table.c.event_id == event.id).filter(Users.id == review_rel_table.c.user_id).all()
+    # reviews = Events.query.join(review_rel_table).join(Users).filter(review_rel_table.c.user_id == current_user.id and review_rel_table.c.event_id == event.id).all()
+    # print "3. Print this: {}".format(reviews)
+
     formFour = DeleteEventForm()
     formThree = UpdateEventForm()
 
@@ -313,7 +333,7 @@ def event(event_id):
 
                 return redirect(url_for("event", event_id=event.id))
             
-            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formTwo, formButtonClass="danger", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formTwo, formButtonClass="danger", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", reviewbody=reviewbody, reviews=reviews)
 
         else:
             formOne = JoinEventForm()
@@ -326,7 +346,6 @@ def event(event_id):
 
                 return redirect(url_for("event", event_id=event.id))
 
-            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formOne, formButtonClass="warning", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formOne, formButtonClass="warning", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", reviewbody=reviewbody, reviews=reviews)
 
-    return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formFour=formFour, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
-
+    return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formFour=formFour, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", reviewbody=reviewbody, reviews=reviews)
