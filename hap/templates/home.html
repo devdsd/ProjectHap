@@ -1,4 +1,7 @@
 {% extends 'layouts.html' %}
+    {% block bodyStyle %}
+        <body>
+    {% endblock bodyStyle %}
     {% block navbarAdjust %}
         <div id="homefeed-navbar" class="container-fluid">
     {% endblock navbarAdjust %}
@@ -12,7 +15,7 @@
             {% if current_user.is_authenticated %}
                 <div class="dropdown">
                     <button id="gear-logo" class="btn btn-outline-warning" data-toggle="dropdown">
-                        <div style="width:25px;margin-bottom:-5px;">
+                        <div style="width:17px;margin-bottom:-5px;">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                 viewBox="150 -150 500 500" style="enable-background:new 150 -150 500 500;" xml:space="preserve">
                                 <style type="text/css">
@@ -30,60 +33,65 @@
                         </div>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a id="navbar-settings" class="dropdown-item" href='{{ url_for("settings") }}'>Settings</a>
+                        <a id="navbar-settings" class="dropdown-item" href='{{ url_for("acc_info_settings") }}'>Settings</a>
                         <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
                     </div>
                 </div>
             {% else %}
-                <button style="color:white;" class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="{{ ariaExpansionBool }}">
-                    <span id="navbarLogin-label">Log In</span>
+                <button style="color:white;height:32px;width:78px;padding-top:3.3px;padding-left:10px;" class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="{{ ariaExpansionBool }}">
+                    <span style="font-size:13px;margin-right:-5px;">Log In&nbsp;&nbsp;</span>
                 </button>
                 <div class="dropdown-menu {{ dropdownAppearance }}" id="navbar-loginBox">
                     <form class="px-4 py-3" method="POST" action="">
                         {{ formOne.hidden_tag() }}
                         <fieldset class="form-group">
                             <div class="form-group">
-                                <label>Username or Email Address</label>
+                                <label style="font-size:13px;">Username or Email Address</label>
                                 {% if formOne.usernameOrEmail.errors %}
-                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg is-invalid") }}
+                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg is-invalid", style="height:40px;") }}
                                     <div class="invalid-feedback">
                                         {% for error in formOne.usernameOrEmail.errors %}
                                             <span> {{ error }} </span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg") }}
+                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg", style="height:40px;") }}
                                 {% endif %}
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
+                                <label style="font-size:13px;">Password</label>
                                 {% if formOne.password.errors %}
-                                    {{ formOne.password(class="form-control form-control-lg is-invalid") }}
+                                    {{ formOne.password(class="form-control form-control-lg is-invalid", style="height:40px;") }}
                                     <div class="invalid-feedback">
                                         {% for error in formOne.password.errors %}
                                             <span> {{ error }} </span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ formOne.password(class="form-control form-control-lg") }}
+                                    {{ formOne.password(class="form-control form-control-lg", style="height:40px;") }}
                                 {% endif %}
                             </div>
                             <div class="form-check">
-                                {{ formOne.remember(class="form-check-input") }}
-                                <label style="margin-top:9px;">Remember Password</label>
+                                <div>
+                                    {{ formOne.remember(class="form-check-input") }}
+                                </div>
+                                <div>
+                                    <label>Remember Password</label>
+                                </div>
                             </div>
                         </fieldset>
                         <div class="form-group">
-                            {{ formOne.submit(class="btn btn-warning", style="color:white;") }}
+                            {{ formOne.submit(class="btn btn-success", style="color:white;height:32px;font-size:13px;") }}
                         </div>
                         <small class="text-muted ml-2">
-                            <a href="#">Forgot password?</a>
+                            <a href="#" style="font-size:12px;">Forgot password?</a>
                         </small>
                     </form>
                 </div>
             {% endif %}
         </div>
     {% endblock navbarRightComponent %}
+
     {% block content %}
         {% if current_user.is_authenticated %}
             <div style="padding-left: calc(100vw - 100%);">
@@ -99,7 +107,7 @@
                                     <div class="row">
                                         <div class="col-md-auto">
                                             <button id="plus-logo" type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#createEventModal">
-                                                <div style="width:25px;margin-bottom:-5px;">
+                                                <div style="width:17px;margin-bottom:-5px;">
                                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                                         viewBox="119 -119.5 438.5 438.5" style="enable-background:new 119 -119.5 438.5 438.5;" xml:space="preserve">
                                                         <style type="text/css">
@@ -148,8 +156,8 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col">
-                                                                                    <img class="card-img-top" id="eventBanner-preview" style="height:200px;object-fit:cover;background:gray;">
-                                                                                    <script>document.getElementById("eventBanner-preview").src = '{{ url_for("static", filename="images/uploadEventBanner-blankPreview.jpg") }}';</script>
+                                                                                    <img class="card-img-top" id="image-preview" style="height:200px;object-fit:cover;background:gray;">
+                                                                                    <script>document.getElementById("image-preview").src = '{{ url_for("static", filename="images/uploadEventBanner-blankPreview.jpg") }}';</script>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -275,7 +283,6 @@
                                                                                 {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
                                                                             {% endif %}
                                                                         </div>
-
                                                                     </fieldset>
                                                                 </div>
                                                             </div>
@@ -292,10 +299,11 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div style="width:100%;height:100%;padding:0 10px;">
-                                    {% for event in events %}
+                                    {% for d in display %}
                                         <div class="card" style="width:565px;margin-top:20px;">
-                                            <a href='{{ url_for("event", event_id=event.id) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file) }}' alt="Event Banner" style="height:200px;object-fit:cover;"></a>
+                                            <a href='{{ url_for("event", event_id=d.event_id) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + d.event_imgFile) }}' alt="Event Banner" style="height:200px;object-fit:cover;"></a>
                                             <div class="card-body">
                                                 <div class="row align-items-center">
                                                     <div class="col-md-auto" style="border-right:1px lightgray solid;width:80px;">
@@ -314,29 +322,30 @@
                                                                 <path id="calendar_block" class="rectColorGray" d="M361.9,197.4v-33.3h-18v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3
                                                                 h-18.1v33.3H40.9v-33.3H22.8v33.3h-45.8V628h430.6V197.4H361.9z M381.5,585H3.2V343.8h378.4V585z"/>
                                                                 <rect x="3.2" y="407" class="fillNone" width="378.4" height="121"/>
-                                                                <text id="day" transform="matrix(1 0 0 1 98 521.5586)" class="fontBlack fontArial fontSize">{{ event.eventDate.strftime("%d") }}</text>
+                                                                <text id="day" transform="matrix(1 0 0 1 98 521.5586)" class="fontBlack fontArial fontSize">{{ d.event_date_dayNum }}</text>
                                                                 <rect x="-22.9" y="240" class="fillNone" width="430.6" height="96"/>
-                                                                <text transform="matrix(1 0 0 1 79 311.5986)" class="fontColorWhite fontArial fontSizeTwo">{{ event.eventDate.strftime("%b")|upper }}</text>
+                                                                <text transform="matrix(1 0 0 1 79 311.5986)" class="fontColorWhite fontArial fontSizeTwo">{{ d.event_date_month|upper }}</text>
                                                             </svg>
                                                         </div>
                                                     </div>
                                                     <div class="col" style="width:350px;">
                                                         <div class="row">
                                                             <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                                                <a href='{{ url_for("event", event_id=event.id) }}' class="h5" style="color:black;font-size:17.5px;">{{ event.eventName }}</a>
+                                                                <a href='{{ url_for("event", event_id=d.event_id) }}' class="h5" style="color:black;font-size:17.5px;">{{ d.event_name }}</a>
                                                             </div>
                                                             <div class="w-100"></div>
                                                             <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                                                <span style="font-size:13.5px;"><span style="color:red;">{{ event.eventDate.strftime("%a") }}</span> {{ event.eventStartTime.strftime("%I %p") }} | at {{ event.location }}</span>
+                                                                <span style="font-size:13.5px;"><span style="color:red;">{{ d.event_date_dayName }}</span> {{ d.event_startTime }} | at {{ d.event_location }}</span>
                                                             </div>
+                                                            
                                                             <div class="w-100"></div>
                                                             <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                                                <span class="text-muted" style="font-size:13.5px;">Hosted by {% if event.host == current_user %}you{% else %}<a href='{{ url_for("account", username=event.host.username) }}' style="color:gray;">{{ event.host.firstName }} {{ event.host.lastName }}</a>{% endif %}</span>
+                                                                <span class="text-muted" style="font-size:13.5px;">Hosted by {% if d.host_id == current_user.userId %}you{% else %}<a href='{{ url_for("account", username=d.host_username) }}' style="color:gray;">{{ d.host_firstName }} {{ d.host_lastName }}</a>{% endif %}</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-auto" style="width:85px;">
-                                                        {% if event.user_id != current_user.id %}
+                                                        {% if d.user_id != current_user.userId %}
                                                             
                                                 
                                                         {% endif %}
@@ -344,6 +353,8 @@
                                                 </div>       
                                             </div>
                                         </div>
+
+
                                     {% endfor %}
                                 </div>
                             </div>
@@ -408,8 +419,8 @@
             </div>
             <nav class="navbar fixed-bottom navbar-light bg-light" style="border-top:1px lightgray solid;">
                 <div class="container" style="margin:0 auto;">
-                    <a id="home-about" class="navbar-brand" class="font-weight-light" href='{{ url_for("about") }}'>About</a>
-                    <span class="navbar-brand" class="font-weight-light" style="color:gray;font-size:15px;">2018 Hap</span>
+                    <a id="home-about" class="navbar-brand" class="font-weight-light" href='{{ url_for("about") }}' style="font-size:12px;">About</a>
+                    <span class="navbar-brand" class="font-weight-light" style="color:gray;font-size:12px;">2018 Hap</span>
                 </div>
             </nav>
         {% endif %}

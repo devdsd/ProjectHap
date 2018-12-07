@@ -3,16 +3,11 @@ body {
     margin:0;
     overflow-y:scroll;
 }
+input:not(type=submit) {
+    height:50px;
+    padding-bottom:25px;
+}
 ::-webkit-input-placeholder {
-    font-size:15px;
-}
-::-moz-placeholder {
-    font-size:15px;
-}
-:-ms-input-placeholder {
-    font-size:15px;
-}
-:-moz-placeholder {
     font-size:15px;
 }
 #navbar-nameplate {
@@ -66,7 +61,7 @@ body {
 .forms {
     width:800px;
     height:auto;
-    border:1px lightgray solid;
+    border-radius:10px;
     margin:25px auto 0 auto;
     padding:25px;
 }
@@ -99,7 +94,7 @@ body {
 #home-container {
     height:auto;
     width:1200px;
-    margin:90px auto 0 auto;
+    margin:70px auto 0 auto;
 }
 .leftBox {
     margin-left:20px;
@@ -126,7 +121,7 @@ body {
 #profile-header {
     height:auto;
     width:920px;
-    margin:65px auto 0 auto;
+    margin:45px auto 0 auto;
 }
 #profile-body {
     height:400px;
@@ -215,11 +210,24 @@ body {
     overflow-y: auto;
     height:500px;
 }
+#setupAcc-modalContent {
+    font-size:15px;
+    height: 250px;
+    overflow-y: auto;
+    height:500px;
+}
+#interests-modalContent {
+    font-size:15px;
+    height: 250px;
+    overflow-y: auto;
+    height:500px;
+}
 #homefeed-navbar {
     position:fixed;
     z-index:2;
     padding:0 17%;
     border-bottom:1px lightgray solid;
+    width:100%;
     top:-0.5px;
     background:white;
 }
@@ -248,4 +256,26 @@ body.modal-open #alert-box{
 }
 #garbagecan-logo:hover .st0{
     fill:white;
+}
+#signupModals .close {
+    display:none;
+}
+#interest-panel .followBtn:hover {
+    color:white;
+}
+#interest-panel .unfollowBtn {
+    color:white;
+}
+#settings-leftPanel {
+    border-right:1px lightgray solid;
+    height:100%;
+    width:200px;
+    padding:0;
+}
+#settingsRightPanel-row .col {
+    margin-bottom:40px;
+}
+#settings-rightDisplayBox {
+    height:720px;
+    width:700px;
 }
