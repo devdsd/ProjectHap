@@ -25,12 +25,12 @@ def save_picture(form_picture, size):
 def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
-        events = Events.query.order_by(Events.dateCreated.desc())
-        # userinterest = userhasinterest_rel_table.query.filter_by(user_id=current_user.id).first()
-        # print userinterest.category_id
-        # events = Events.query.filter(Categories.eventhascategory.any(id=category.id)).order_by(Events.dateCreated.desc()).all()
-        # print "Ambot nimo !"
 
+-        events = Events.query.order_by(Events.dateCreated.desc())
+-        # userinterest = userhasinterest_rel_table.query.filter_by(user_id=current_user.id).first()
+-        # print userinterest.category_id
+-        # events = Events.query.filter(Categories.eventhascategory.any(id=category.id)).order_by(Events.dateCreated.desc()).all()
+-        # print "Ambot nimo !"
         if formTwo.validate_on_submit():
             picture_file = ""
             picture_file_sm = ""
