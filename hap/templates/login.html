@@ -1,7 +1,10 @@
 {% extends 'layouts.html' %}
+	{% block bodyStyle %}
+		<body style="background-color:#FFC000;">
+	{% endblock bodyStyle %}
 	{% block content %}
 		<div class="container">
-			<div class="forms">
+			<div class="forms" style="background-color:white;width:420px;">
 				<div class="row align-items-center">
 					<div class="col-md-auto">
 						<img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0;">
@@ -16,40 +19,44 @@
 						<div class="form-group">
 							<label>Username or Email Address</label>
 							{% if form.usernameOrEmail.errors %}
-								{{ form.usernameOrEmail(class="form-control form-control-lg is-invalid") }}
+								{{ form.usernameOrEmail(class="form-control form-control-lg is-invalid", placeholder="Username or Email Address", style="width:370px;") }}
 								<div class="invalid-feedback">
 									{% for error in form.usernameOrEmail.errors %}
 										<span> {{ error }} </span>
 									{% endfor %}
 								</div>
 							{% else %}
-								{{ form.usernameOrEmail(class="form-control form-control-lg") }}
+								{{ form.usernameOrEmail(class="form-control form-control-lg", placeholder="Username or Email Address", style="width:370px;") }}
 							{% endif %}
 						</div>
 						<div class="form-group">
 							<label>Password</label>
 							{% if form.password.errors %}
-								{{ form.password(class="form-control form-control-lg is-invalid", placeholder="Password") }}
+								{{ form.password(class="form-control form-control-lg is-invalid", placeholder="Password", style="width:370px;") }}
 								<div class="invalid-feedback">
 									{% for error in form.password.errors %}
 										<span> {{ error }} </span>
 									{% endfor %}
 								</div>
 							{% else %}
-								{{ form.password(class="form-control form-control-lg", placeholder="Password") }}
+								{{ form.password(class="form-control form-control-lg", placeholder="Password", style="width:370px;") }}
 							{% endif %}
 						</div>
 						<div class="form-check">
-							{{ form.remember(class="form-check-input") }}
-							<label>Remember Password</label>
+							<div>
+								{{ form.remember(class="form-check-input") }}
+							</div>
+							<div>
+								<label>Remember Password</label>
+							</div>
 						</div>
 					</fieldset>
 					<div class="form-group">
-						{{ form.submit(class="btn btn-warning", style="color:white;") }}
+						{{ form.submit(class="btn btn-success", style="color:white;") }}
+						<small class="text-muted ml-2">
+							<a href="{{ url_for('reset_request') }}">Forgot Password?</a>
+						</small>
 					</div>
-					<small class="text-muted ml-2">
-						<a href="#">Forgot password?</a>
-					</small>
 				</form>
 				<div class="border-top pt-3">
 					<small class="text-muted">
