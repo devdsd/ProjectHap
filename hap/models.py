@@ -67,16 +67,16 @@ class Users(db.Model, UserMixin):
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'user_id': self.id}).decode('utf-8')
+        return s.dumps({'userId': self.userId}).decode('utf-8')
 
     @staticmethod
     def verify_reset_token(token):
         s = Serializer(app.config['SECRET_KEY'])
         try:
-            user_id = s.loads(token)['user_id']
+            userId = s.loads(token)['userId']
         except:
             return None
-        return User.query.get(user_id)
+        return Users.query.get(userId)
 
 
     def __repr__(self):

@@ -17,20 +17,18 @@
 					{{ form.hidden_tag() }}
 					<fieldset class="form-group">
 						<div class="form-group">
-							<label>Username or Email Address</label>
-							{% if form.usernameOrEmail.errors %}
-								{{ form.usernameOrEmail(class="form-control form-control-lg is-invalid", placeholder="Username or Email Address", style="width:370px;") }}
+							<label>Enter your Email Address</label>
+							{% if form.email.errors %}
+								{{ form.email(class="form-control form-control-lg is-invalid", placeholder="Username or Email Address", style="width:370px;") }}
 								<div class="invalid-feedback">
-									{% for error in form.usernameOrEmail.errors %}
+									{% for error in form.email.errors %}
 										<span> {{ error }} </span>
 									{% endfor %}
 								</div>
 							{% else %}
-								{{ form.usernameOrEmail(class="form-control form-control-lg", placeholder="Username or Email Address", style="width:370px;") }}
+								{{ form.email(class="form-control form-control-lg", placeholder="Username or Email Address", style="width:370px;") }}
 							{% endif %}
 						</div>
-						
-						
 					</fieldset>
 					<div class="form-group">
 						{{ form.submit(class="btn btn-success", style="color:white;") }}
