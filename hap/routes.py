@@ -26,7 +26,9 @@ def save_picture(form_picture, size):
 def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
-        
+        # eventParticipants = Events.query.filter(Events.joinrel.any(userId=current_user.userId))
+        reviews = db.session.query(review_rel_table.c.review, Users.firstName, Users.lastName).filter(review_rel_table.c.event_id == Events.eventId).filter(Users.userId == review_rel_table.c.user_id).order_by(review_rel_table.c.dateCreated.desc()).all()
+
         if current_user.numberOfLogins == 0:
             return redirect(url_for("setup_acc"))
 
@@ -420,21 +422,15 @@ def event(event_id):
     category = Categories.query.filter(Categories.eventhascategory.any(eventId=event_id)).first()
 
     reviewbody = ReviewForm()
-    # print "1. Print this: {}".format(reviewbody.reviewbody.data)
 
     if reviewbody.reviewbody.data is not None:
-        # print "NAA ko sa REVIEW BODY"
         statement = review_rel_table.insert().values(user_id=current_user.userId, event_id=event.eventId, review=reviewbody.reviewbody.data)
         db.session.execute(statement)
         db.session.commit()
 
-        # print "2. Print this: {}".format(event.id)
-
         return redirect(url_for("event", event_id=event.eventId))
 
     reviews = db.session.query(review_rel_table.c.review, Users.firstName, Users.lastName).filter(review_rel_table.c.event_id == event.eventId).filter(Users.userId == review_rel_table.c.user_id).order_by(review_rel_table.c.dateCreated.desc()).all()
-    # reviews = Events.query.join(review_rel_table).join(Users).filter(review_rel_table.c.user_id == current_user.id and review_rel_table.c.event_id == event.id).all()
-    # print "3. Print this: {}".format(reviews)
 
     formFour = DeleteEventForm()
     formThree = UpdateEventForm()
