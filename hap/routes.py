@@ -469,6 +469,7 @@ def event(event_id, bottomBlock):
 
     joiners = db.session.query(Users.userId, Users.username, Users.image_file_sm, Users.firstName, Users.lastName, join_rel_table.c.dateJoined).filter(join_rel_table.c.event_id==event_id).filter(join_rel_table.c.user_id==Users.userId).order_by(join_rel_table.c.dateJoined.asc()).all()
     reviewPosts = db.session.query(review_rel_table.c.review, review_rel_table.c.dateReviewed, Users.firstName, Users.lastName, Users.image_file_sm, Users.username).filter(review_rel_table.c.event_id == event.eventId).filter(Users.userId == review_rel_table.c.user_id).order_by(review_rel_table.c.dateReviewed.desc()).all()
+    ratingPosts = db.session.query(rate_rel_table.c.rate, rate_rel_table.c.dateRated, Users.firstName, Users.lastName, Users.image_file_sm, Users.username).filter(rate_rel_table.c.event_id == event.eventId).filter(Users.userId == rate_rel_table.c.user_id).order_by(rate_rel_table.c.dateRated.desc()).all()
 
     if event.host != current_user:
         formOne = PostReviewForm()
@@ -481,7 +482,7 @@ def event(event_id, bottomBlock):
             formThree.rating.default = ratedEvent.rate
             formThree.process() 
 
-        return render_template("event.html", title=event.eventName, event=event, formOne=formOne, formTwo=formTwo, formThree=formThree, joinedEvent=joinedEvent, ratedEvent=ratedEvent, joiners=joiners, reviewPosts=reviewPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
+        return render_template("event.html", title=event.eventName, event=event, formOne=formOne, formTwo=formTwo, formThree=formThree, joinedEvent=joinedEvent, ratedEvent=ratedEvent, joiners=joiners, reviewPosts=reviewPosts, ratingPosts=ratingPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
 
     else:
         formTwo = DeleteEventForm()
@@ -533,7 +534,7 @@ def event(event_id, bottomBlock):
             formThree.fee.data = event.fee
             formThree.location.data = event.location
 
-        return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formTwo=formTwo, joiners=joiners, reviewPosts=reviewPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
+        return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formTwo=formTwo, joiners=joiners, reviewPosts=reviewPosts, ratingPosts=ratingPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
 
 @app.route("/event/<int:event_id>/bottomblockaction=bb<int:bottomBlock>/join", methods=["GET", "POST"])
 @login_required
@@ -642,9 +643,11 @@ def edit_rate_event(event_id):
         eventReq = request.form['event_id']
         rateReq = request.form['rate']
 
-        statement = session.query().filter(rate_rel_table.c.user_id == current_user.userId).filter(rate_rel_table.c.event_id == eventReq).update({ "rate": rateReq })
-        
-        db.session.execute(statement)
+        statementOne = rate_rel_table.delete().where(rate_rel_table.c.user_id==current_user.userId).where(rate_rel_table.c.event_id==eventReq)
+        statementTwo = rate_rel_table.insert().values(user_id=current_user.userId, event_id=eventReq, rate=rateReq)
+
+        db.session.execute(statementOne)
+        db.session.execute(statementTwo)
         db.session.commit()
 
         return redirect(url_for("event", event_id=event_id, bottomBlock=3))

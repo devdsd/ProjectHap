@@ -592,13 +592,48 @@
                                     </div>
                                 </div>
                             {% endif %}
-                            <div class="container" id="ratingsBlock" style="padding:200px;">
+                            <div class="container" id="ratingsBlock">
                                 <div class="row justify-content-md-center">
                                     <div class="col-md-auto">
                                         <div class="card" style="width:565px;">
-                                            {% for post in ratingsPosts %}
-                                                <div class="container-fluid" style="padding:20px 0;border-bottom:1px lightgray solid;">
-                                                    
+                                            {% for post in ratingPosts %}
+                                                {% if loop.last %}
+                                                    <div class="container-fluid" style="padding:20px 0;">
+                                                {% else %}
+                                                    <div class="container-fluid" style="padding:20px 0;border-bottom:1px lightgray solid;">
+                                                {% endif %}
+                                                    <div class="row">
+                                                        <div class="col-md-auto" style="width:15%;height:60px;padding:2px 0 0 35px;">
+                                                            <a href='{{ url_for("account", username=post.username) }}'><img src='{{url_for("static", filename="images/" + post.image_file_sm)}}' class="rounded-circle" style="width:48px;height:48px;object-fit:cover;"></a>
+                                                        </div>
+                                                        <div class="col-md-auto" style="width:85%;height:60px;">
+                                                            <a href='{{ url_for("account", username=post.username) }}' style="color:black;"><strong>{{ post.firstName }} {{ post.lastName }}</strong></a>
+                                                            <br>
+                                                            <span class="text-muted" style="font-size:12px;">{{ post.dateRated.strftime("%B") }} {{ post.dateRated.strftime("%m") }}, {{ post.dateRated.strftime("%Y") }} | {{ post.dateRated.strftime("%I") }}:{{ post.dateRated.strftime("%M") }} {{ post.dateRated.strftime("%p") }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-auto" style="width:15%;">
+                                                        </div>
+                                                        <div class="col-md-auto ratingSection" style="width:85%;">
+                                                            <div class="float-left">
+                                                                {% if post.rate == 5 %}
+                                                                    <label class="onStar">★</label><label class="offStar">★</label><label class="offStar">★</label><label class="offStar">★</label><label class="offStar">★</label>
+                                                                {% elif post.rate == 4 %}
+                                                                    <label class="onStar">★</label><label class="onStar">★</label><label class="offStar">★</label><label class="offStar">★</label><label class="offStar">★</label>
+                                                                {% elif post.rate == 3 %}
+                                                                    <label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="offStar">★</label><label class="offStar">★</label>
+                                                                {% elif post.rate == 2 %}
+                                                                    <label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="offStar">★</label>
+                                                                {% elif post.rate == 1 %}
+                                                                    <label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="container-fluid" style="width:100%;">
+                                                        
+                                                    </div>
                                                 </div>
                                             {% endfor %}
                                         </div>

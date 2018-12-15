@@ -378,14 +378,13 @@ body.modal-open .float {
 .rating {
     float:left;
   }
-  
-  .rating:not(:checked) > input {
+.rating:not(:checked) > input {
     position:absolute;
     top:-9999px;
     clip:rect(0,0,0,0);
-  }
+}
   
-  .rating:not(:checked) > label {
+.rating:not(:checked) > label {
     float:right;
     width:1em;
     padding:0 .1em;
@@ -395,23 +394,43 @@ body.modal-open .float {
     font-size:200%;
     line-height:1.2;
     color:gray;
-  }
-  
-  .rating:not(:checked) > label:before {
+}
+.rating:not(:checked) > label:before {
     content: '★ ';
-  }
-  
-  .rating > input:checked ~ label {
+} 
+.rating > input:checked ~ label {
     color: gold;
-  }
-  
-  .rating:not(:checked) > label:hover,
-  .rating:not(:checked) > label:hover ~ label {
+}  
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
     color: gold;
-  }
+}
   
-  .rating > label:active {
+.rating > label:active {
     position:relative;
     top:2px;
     left:2px;
-  }
+}
+
+.onStar {
+    width:1em;
+    padding:0 .1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:200%;
+    line-height:1.2;
+    content: '★ ';
+    color: gold;
+}
+.offStar {
+    width:1em;
+    padding:0 .1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:200%;
+    line-height:1.2;
+    content: '★ ';
+    color:gray;
+}
