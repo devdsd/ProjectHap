@@ -1,0 +1,39 @@
+{% extends 'layouts.html' %}
+	{% block bodyStyle %}
+		<body style="background-color:#FFC000;">
+	{% endblock bodyStyle %}
+	{% block content %}
+		<div class="container">
+			<div class="forms" style="background-color:white;width:420px;">
+				<div class="row align-items-center">
+					<div class="col-md-auto">
+						<img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0;">
+					</div>
+					<div class="col">
+						<p class="h4" style="color:#FFC000;">Reset Password</p>
+					</div>
+				</div>
+				<form method="POST" action="">
+					{{ form.hidden_tag() }}
+					<fieldset class="form-group">
+						<div class="form-group">
+							<label>Enter your Email Address</label>
+							{% if form.email.errors %}
+								{{ form.email(class="form-control form-control-lg is-invalid", placeholder="Username or Email Address", style="width:370px;") }}
+								<div class="invalid-feedback">
+									{% for error in form.email.errors %}
+										<span> {{ error }} </span>
+									{% endfor %}
+								</div>
+							{% else %}
+								{{ form.email(class="form-control form-control-lg", placeholder="Username or Email Address", style="width:370px;") }}
+							{% endif %}
+						</div>
+					</fieldset>
+					<div class="form-group">
+						{{ form.submit(class="btn btn-success", style="color:white;") }}
+					</div>
+				</form>
+			</div>
+		</div>
+	{% endblock content %}

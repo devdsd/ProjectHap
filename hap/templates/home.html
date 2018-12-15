@@ -39,7 +39,7 @@
                     </div>
                 </div>
             {% else %}
-                <button style="color:white;height:32px;width:78px;padding-top:3.3px;padding-left:10px;" class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="{{ ariaExpansionBool }}">
+                <button style="color:white;" class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="{{ ariaExpansionBool }}">
                     <span style="font-size:13px;margin-right:-5px;">Log In&nbsp;&nbsp;</span>
                 </button>
                 <div class="dropdown-menu {{ dropdownAppearance }}" id="navbar-loginBox">
@@ -82,11 +82,11 @@
                             </div>
                         </fieldset>
                         <div class="form-group">
-                            {{ formOne.submit(class="btn btn-success", style="color:white;height:32px;font-size:13px;") }}
+                            {{ formOne.submit(class="btn btn-success btn-sm") }}
+                            <small class="text-muted ml-2">
+                                <a href="{{ url_for('reset_request') }}" style="font-size:12px;">Forgot Password?</a>
+                            </small>
                         </div>
-                        <small class="text-muted ml-2">
-                            <a href="#" style="font-size:12px;">Forgot password?</a>
-                        </small>
                     </form>
                 </div>
             {% endif %}

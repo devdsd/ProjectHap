@@ -1,5 +1,6 @@
 from datetime import datetime
-from hap import db, login_manager
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from hap import db, login_manager, app
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -20,7 +21,6 @@ rate_rel_table = db.Table('rate_rel_table',
     db.Column('dateRated', db.DateTime, nullable=False, default=datetime.utcnow)
 )
 
-
 join_rel_table = db.Table('join_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.userId')),
     db.Column('event_id', db.Integer, db.ForeignKey('events.eventId')),
@@ -36,7 +36,6 @@ eventhascategory_rel_table = db.Table('eventhascategory_rel_table',
     db.Column('event_id', db.Integer, db.ForeignKey('events.eventId')),
     db.Column('category_id', db.Integer, db.ForeignKey('categories.catId'))
 )
-
    
 class Categories(db.Model):
     catId = db.Column(db.Integer, primary_key=True)
@@ -64,8 +63,19 @@ class Users(db.Model, UserMixin):
     def get_id(self):
         return unicode(self.userId)
 
-    def get_username(self):
-        return unicode(self.username)
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'userId': self.userId}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            userId = s.loads(token)['userId']
+        except:
+            return None
+        return Users.query.get(userId)
+
 
     def __repr__(self):
         return "Users({}, {}, {}, {}, {})".format(self.firstName, self.lastName, self.email, self.username, self.password)
