@@ -27,7 +27,9 @@ def save_picture(form_picture, size):
 def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
-        
+        # eventParticipants = Events.query.filter(Events.joinrel.any(userId=current_user.userId))
+        reviews = db.session.query(review_rel_table.c.review, Users.firstName, Users.lastName).filter(review_rel_table.c.event_id == Events.eventId).filter(Users.userId == review_rel_table.c.user_id).order_by(review_rel_table.c.dateReviewed.desc()).all()
+
         if current_user.numberOfLogins == 0:
             return redirect(url_for("setup_acc"))
 
