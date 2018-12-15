@@ -33,6 +33,7 @@
                         </div>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a id="navbar-account" class="dropdown-item" href='{{ url_for("account", username=current_user.username) }}'>Profile</a>
                         <a id="navbar-settings" class="dropdown-item" href='{{ url_for("acc_info_settings") }}'>Settings</a>
                         <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
                     </div>
@@ -91,7 +92,6 @@
             {% endif %}
         </div>
     {% endblock navbarRightComponent %}
-
     {% block content %}
         {% if current_user.is_authenticated %}
             <div style="padding-left: calc(100vw - 100%);">
@@ -103,207 +103,28 @@
                         </div>
                         <div class="col-6">
                             <div class="middlebox">
-                                <div id="create-panel" class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-md-auto">
-                                            <button id="plus-logo" type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#createEventModal">
-                                                <div style="width:17px;margin-bottom:-5px;">
-                                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                                        viewBox="119 -119.5 438.5 438.5" style="enable-background:new 119 -119.5 438.5 438.5;" xml:space="preserve">
-                                                        <style type="text/css">
-                                                            .st0{fill:#FFC000;}
-                                                        </style>
-                                                        <path class="st0" d="M542.7,130c0,7.9-2.9,14.7-8.6,20.4c-5.8,5.7-12.6,8.6-20.4,8.6l-116.2,0l0,116.1c0,7.9-2.9,14.7-8.6,20.4
-                                                       c-5.7,5.7-12.5,8.6-20.4,8.6l-58.1,0c-7.9,0-14.7-2.9-20.4-8.6c-5.7-5.8-8.6-12.6-8.6-20.4l0-116.1l-116.2,0
-                                                       c-7.9,0-14.7-2.9-20.4-8.6c-5.7-5.7-8.6-12.6-8.6-20.4l0-58.1c0-7.9,2.9-14.7,8.6-20.4c5.7-5.7,12.6-8.6,20.4-8.6l116.2,0l0-116.2
-                                                       c0-7.9,2.9-14.7,8.6-20.4c5.7-5.7,12.6-8.6,20.4-8.6l58.1,0c7.9,0,14.7,2.9,20.4,8.6c5.7,5.7,8.6,12.6,8.6,20.4l0,116.2l116.1,0
-                                                       c7.9,0,14.7,2.9,20.4,8.6c5.7,5.7,8.6,12.6,8.6,20.4L542.7,130z"/>
-                                                    </svg>
+                                <div class="container-fluid">
+                                    {% with messages = get_flashed_messages(with_categories=true) %}
+                                        {% if messages %}
+                                            {% for category, message in messages %}
+                                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
                                                 </div>
-                                            </button>
-                                            <div class="modal" id="createEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <div class="row align-items-center">
-                                                                <div class="col-md-auto">
-                                                                    <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
-                                                                </div>
-                                                                <div class="col">
-                                                                    <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Create Event</h5>
-                                                                </div>
-                                                            </div>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
-                                                            <div class="modal-body" id="createEvent-modalContent">
-                                                                <div class="container-fluid">
-                                                                    {{ formTwo.hidden_tag() }}
-                                                                    <fieldset class="form-group">
-                                                                        <label>Event Banner</label>
-                                                                        <div class="container-fluid" style="border-bottom:1px lightgray solid;border-top:1px lightgray solid;margin:4px 0 20px 0;padding:40px 0 40px 0">
-                                                                            <div class="row">
-                                                                                <div class="col-md-auto">
-                                                                                    <div class="form-group">
-                                                                                        {{ formTwo.imageFile(class="form-control-file") }}
-                                                                                        {% if formTwo.imageFile.errors %}
-                                                                                            {% for error in formTwo.imageFile.errors %}
-                                                                                                <span class="text-danger"> {{ error }} </span></br>
-                                                                                            {% endfor %}
-                                                                                        {% endif %}
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="col">
-                                                                                    <img class="card-img-top" id="image-preview" style="height:200px;object-fit:cover;background:gray;">
-                                                                                    <script>document.getElementById("image-preview").src = '{{ url_for("static", filename="images/uploadEventBanner-blankPreview.jpg") }}';</script>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Event Name</label>
-                                                                            <div id="count-cont" style="float:right;display:none;">
-                                                                                <span class="text-muted"><span id="countEventNameChar" style="color:red;">0</span>/80</span>
-                                                                            </div>
-                                                                            {% if formTwo.eventName.errors %}
-                                                                                {{ formTwo.eventName(class="form-control form-control-lg is-invalid", placeholder="Event name", onkeyup="count_up(this);") }}
-                                                                                <div class="invalid-feedback">
-                                                                                    {% for error in formTwo.eventName.errors %}
-                                                                                        <span> {{ error }} </span>
-                                                                                    {% endfor %}
-                                                                                </div>
-                                                                            {% else %}
-                                                                                {{ formTwo.eventName(class="form-control form-control-lg", placeholder="Event name", onkeyup="count_up(this);") }}
-                                                                            {% endif %}
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Event Description</label>
-                                                                            {% if formTwo.eventDescription.errors %}
-                                                                                {{ formTwo.eventDescription(class="form-control form-control-lg is-invalid", placeholder="Event description") }}
-                                                                                <div class="invalid-feedback">
-                                                                                    {% for error in formTwo.eventDescription.errors %}
-                                                                                        <span> {{ error }} </span>
-                                                                                    {% endfor %}
-                                                                                </div>
-                                                                            {% else %}
-                                                                                {{ formTwo.eventDescription(class="form-control form-control-lg", placeholder="Event description") }}
-                                                                            {% endif %}
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col">
-                                                                                <div class="form-group">
-                                                                                    <label>Event Date</label>
-                                                                                    {% if formTwo.eventDate.errors %}
-                                                                                        {{ formTwo.eventDate(class="form-control form-control-lg is-invalid") }}
-                                                                                        <div class="invalid-feedback">
-                                                                                            {% for error in formTwo.eventDate.errors %}
-                                                                                                <span> {{ error }} </span>
-                                                                                            {% endfor %}
-                                                                                        </div>
-                                                                                    {% else %}
-                                                                                        {{ formTwo.eventDate(class="form-control form-control-lg") }}
-                                                                                    {% endif %}
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <div class="form-group">
-                                                                                    <label>Event Start Time</label>
-                                                                                    {% if formTwo.startTime.errors %}
-                                                                                        {{ formTwo.startTime(class="form-control form-control-lg is-invalid") }}
-                                                                                        <div class="invalid-feedback">
-                                                                                            {% for error in formTwo.startTime.errors %}
-                                                                                                <span> {{ error }} </span>
-                                                                                            {% endfor %}
-                                                                                        </div>
-                                                                                    {% else %}
-                                                                                        {{ formTwo.startTime(class="form-control form-control-lg") }}
-                                                                                    {% endif %}
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <div class="form-group">
-                                                                                    <label>Event End Time</label>
-                                                                                    {% if formTwo.endTime.errors %}
-                                                                                        {{ formTwo.endTime(class="form-control form-control-lg is-invalid") }}
-                                                                                        <div class="invalid-feedback">
-                                                                                            {% for error in formTwo.endTime.errors %}
-                                                                                                <span> {{ error }} </span>
-                                                                                            {% endfor %}
-                                                                                        </div>
-                                                                                    {% else %}
-                                                                                        {{ formTwo.endTime(class="form-control form-control-lg") }}
-                                                                                    {% endif %}
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div class="col-md-auto" id="createEvent-fee">
-                                                                                <div class="form-group">
-                                                                                    <label>Event Fee</label>
-                                                                                    {% if formTwo.fee.errors %}
-                                                                                        {{ formTwo.fee(class="form-control form-control-lg is-invalid", placeholder="") }}
-                                                                                        <div class="invalid-feedback">
-                                                                                            {% for error in formTwo.fee.errors %}
-                                                                                                <span> {{ error }} </span>
-                                                                                            {% endfor %}
-                                                                                        </div>
-                                                                                    {% else %}
-                                                                                        {{ formTwo.fee(class="form-control form-control-lg", placeholder="") }}
-                                                                                    {% endif %}
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <div class="form-group">
-                                                                                    <label>Event Location</label>
-                                                                                    {% if formTwo.location.errors %}
-                                                                                        {{ formTwo.location(class="form-control form-control-lg is-invalid", placeholder="") }}
-                                                                                        <div class="invalid-feedback">
-                                                                                            {% for error in formTwo.location.errors %}
-                                                                                                <span> {{ error }} </span>
-                                                                                            {% endfor %}
-                                                                                        </div>
-                                                                                    {% else %}
-                                                                                        {{ formTwo.location(class="form-control form-control-lg", placeholder="") }}
-                                                                                    {% endif %}
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            {{ formTwo.categoryoption.label }}
-                                                                            {% if formTwo.categoryoption.errors %}
-                                                                                {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
-                                                                                <div class="invalid-feedback">
-                                                                                    {% for error in formTwo.categoryoption.errors %}
-                                                                                        <span> {{ error }} </span>
-                                                                                    {% endfor %}
-                                                                                </div>
-                                                                            {% else %}
-                                                                                {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
-                                                                            {% endif %}
-                                                                        </div>
-                                                                    </fieldset>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button id="close-updateEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                                                                {{ formTwo.submit(class="btn btn-success", style="color:white;") }}
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                        </div>
-                                    </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
                                 </div>
-
-                                <div style="width:100%;height:100%;padding:0 10px;">
+                                <div style="padding:0 10px;">
                                     {% for d in display %}
-                                        <div class="card" style="width:565px;margin-top:20px;">
-                                            <a href='{{ url_for("event", event_id=d.event_id) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + d.event_imgFile) }}' alt="Event Banner" style="height:200px;object-fit:cover;"></a>
+                                        {% if loop.index == 1 %}
+                                            <div class="card" style="width:565px;border:1px lightgray solid;">
+                                        {% else %}
+                                            <div class="card" style="width:565px;margin-top:20px;border:1px lightgray solid;">
+                                        {% endif %}
+                                            <a href='{{ url_for("event", event_id=d.event_id, bottomBlock=1) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + d.event_imgFile) }}' alt="Event Banner" style="height:200px;object-fit:cover;"></a>
                                             <div class="card-body">
                                                 <div class="row align-items-center">
                                                     <div class="col-md-auto" style="border-right:1px lightgray solid;width:80px;">
@@ -331,7 +152,7 @@
                                                     <div class="col" style="width:350px;">
                                                         <div class="row">
                                                             <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                                                <a href='{{ url_for("event", event_id=d.event_id) }}' class="h5" style="color:black;font-size:17.5px;">{{ d.event_name }}</a>
+                                                                <a href='{{ url_for("event", event_id=d.event_id, bottomBlock=1) }}' class="h5" style="color:black;font-size:17.5px;">{{ d.event_name }}</a>
                                                             </div>
                                                             <div class="w-100"></div>
                                                             <div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
@@ -344,17 +165,18 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-auto" style="width:85px;">
-                                                        {% if d.user_id != current_user.userId %}
-                                                            
-                                                
+                                                    <div class="col-md-auto" style="width:120px;">
+                                                        {% if d.host_id != current_user.userId %}
+                                                            {% if d.joined is not defined %}
+                                                                <button type="button" class="btn btn-outline-success joinBtn btn-sm" style="width:70px;" event_id="{{ d.event_id }}" bottom_block="1">Join</button>
+                                                            {% else %}
+                                                                <button type="button" class="btn btn-outline-secondary unjoinBtn btn-sm" style="width:70px;" event_id="{{ d.event_id }}" bottom_block="1">Unjoin</button>
+                                                            {% endif %}
                                                         {% endif %}
                                                     </div>
                                                 </div>       
                                             </div>
                                         </div>
-
-
                                     {% endfor %}
                                 </div>
                             </div>
@@ -363,6 +185,184 @@
                             <div class="rightBox">
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <a id="createBtnFloat" class="float" data-toggle="modal" data-target="#createEventModal">
+                <img id="plus-logo" src='{{ url_for("static", filename="assets/plus-logo-white.svg") }}'>
+            </a>
+            <div class="label-container">
+                <div class="label-text">Create Event</div>
+            </div>
+            <div class="modal" id="createEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="row align-items-center">
+                                <div class="col-md-auto">
+                                    <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
+                                </div>
+                                <div class="col">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Create Event</h5>
+                                </div>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
+                            <div class="modal-body" id="createEvent-modalContent">
+                                <div class="container-fluid">
+                                    {{ formTwo.hidden_tag() }}
+                                    <fieldset class="form-group">
+                                        <label>Event Banner</label>
+                                        <div class="container-fluid" style="border-bottom:1px lightgray solid;border-top:1px lightgray solid;margin:4px 0 20px 0;padding:40px 0 40px 0">
+                                            <div class="row">
+                                                <div class="col-md-auto">
+                                                    <div class="form-group">
+                                                        {{ formTwo.imageFile(class="form-control-file") }}
+                                                        {% if formTwo.imageFile.errors %}
+                                                            {% for error in formTwo.imageFile.errors %}
+                                                                <span class="text-danger"> {{ error }} </span></br>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <img class="card-img-top" id="image-preview" style="height:200px;object-fit:cover;background:gray;">
+                                                    <script>document.getElementById("image-preview").src = '{{ url_for("static", filename="images/uploadEventBanner-blankPreview.jpg") }}';</script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Event Name</label>
+                                            <div id="count-cont" style="float:right;display:none;">
+                                                <span class="text-muted"><span id="countEventNameChar" style="color:red;">0</span>/80</span>
+                                            </div>
+                                            {% if formTwo.eventName.errors %}
+                                                {{ formTwo.eventName(class="form-control form-control-lg is-invalid", placeholder="Event name", onkeyup="count_up(this);") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in formTwo.eventName.errors %}
+                                                        <span> {{ error }} </span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ formTwo.eventName(class="form-control form-control-lg", placeholder="Event name", onkeyup="count_up(this);") }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Event Description</label>
+                                            {% if formTwo.eventDescription.errors %}
+                                                {{ formTwo.eventDescription(class="form-control form-control-lg is-invalid", placeholder="Event description") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in formTwo.eventDescription.errors %}
+                                                        <span> {{ error }} </span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ formTwo.eventDescription(class="form-control form-control-lg", placeholder="Event description") }}
+                                            {% endif %}
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>Event Date</label>
+                                                    {% if formTwo.eventDate.errors %}
+                                                        {{ formTwo.eventDate(class="form-control form-control-lg is-invalid") }}
+                                                        <div class="invalid-feedback">
+                                                            {% for error in formTwo.eventDate.errors %}
+                                                                <span> {{ error }} </span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% else %}
+                                                        {{ formTwo.eventDate(class="form-control form-control-lg") }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>Event Start Time</label>
+                                                    {% if formTwo.startTime.errors %}
+                                                        {{ formTwo.startTime(class="form-control form-control-lg is-invalid") }}
+                                                        <div class="invalid-feedback">
+                                                            {% for error in formTwo.startTime.errors %}
+                                                                <span> {{ error }} </span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% else %}
+                                                        {{ formTwo.startTime(class="form-control form-control-lg") }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>Event End Time</label>
+                                                    {% if formTwo.endTime.errors %}
+                                                        {{ formTwo.endTime(class="form-control form-control-lg is-invalid") }}
+                                                        <div class="invalid-feedback">
+                                                            {% for error in formTwo.endTime.errors %}
+                                                                <span> {{ error }} </span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% else %}
+                                                        {{ formTwo.endTime(class="form-control form-control-lg") }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-auto" id="createEvent-fee">
+                                                <div class="form-group">
+                                                    <label>Event Fee</label>
+                                                    {% if formTwo.fee.errors %}
+                                                        {{ formTwo.fee(class="form-control form-control-lg is-invalid", placeholder="") }}
+                                                        <div class="invalid-feedback">
+                                                            {% for error in formTwo.fee.errors %}
+                                                                <span> {{ error }} </span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% else %}
+                                                        {{ formTwo.fee(class="form-control form-control-lg", placeholder="") }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label>Event Location</label>
+                                                    {% if formTwo.location.errors %}
+                                                        {{ formTwo.location(class="form-control form-control-lg is-invalid", placeholder="") }}
+                                                        <div class="invalid-feedback">
+                                                            {% for error in formTwo.location.errors %}
+                                                                <span> {{ error }} </span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% else %}
+                                                        {{ formTwo.location(class="form-control form-control-lg", placeholder="") }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            {{ formTwo.categoryoption.label }}
+                                            {% if formTwo.categoryoption.errors %}
+                                                {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in formTwo.categoryoption.errors %}
+                                                        <span> {{ error }} </span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
+                                            {% endif %}
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="close-updateEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                                {{ formTwo.submit(class="btn btn-success", style="color:white;") }}
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

@@ -76,6 +76,10 @@ input:not(type=submit) {
     background-color:#FFC000;
     color:white;    
 }
+#navbar-account:hover {
+    background-color:#FFC000;
+    color:white;    
+}
 #navbar-settings:hover {
     background-color:#FFC000;
     color:white;    
@@ -122,6 +126,8 @@ input:not(type=submit) {
     height:auto;
     width:920px;
     margin:45px auto 0 auto;
+    padding-bottom:5px;
+
 }
 #profile-body {
     height:400px;
@@ -155,12 +161,6 @@ input:not(type=submit) {
     border-style: solid;
     border-width: 1px 1px 1px 1px;
     height:100px;
-}
-#plus-logo {
-    margin:30px 0 0 20px;
-}
-#plus-logo:hover .st0{
-    fill:white;
 }
 #close-createEventModal:hover {
     color:white;
@@ -200,7 +200,6 @@ input:not(type=submit) {
 }
 #createEvent-modalContent {
     font-size:15px;
-    height: 250px;
     overflow-y: auto;
     height:500px;
 }
@@ -279,3 +278,140 @@ body.modal-open #alert-box{
     height:720px;
     width:700px;
 }
+.label-container{
+	position:fixed;
+	bottom:42px;
+	right:110px;
+	display:table;
+	visibility: hidden;
+}
+.label-text{
+	color:#FFF;
+	background:rgba(51,51,51,0.5);
+	display:table-cell;
+	vertical-align:middle;
+	padding:10px;
+	border-radius:3px;
+}
+.label-arrow{
+	display:table-cell;
+	vertical-align:middle;
+	color:#333;
+	opacity:0.5;
+}
+.float{
+	position:fixed;
+	width:50px;
+	height:50px;
+	bottom:40px;
+	right:55px;
+	background-color:#FFC000;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+#createBtnFloat.float + div.label-container {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s ease;
+}
+#createBtnFloat.float:hover + div.label-container{
+  visibility: visible;
+  opacity: 1;
+}
+body.modal-open .float {
+    right:72px;
+}
+#plus-logo {
+    width:30px;
+    margin-top:11.5px;
+}
+#detailsLabel {
+    color:black;
+}
+#detailsLabel:hover {
+    text-decoration:none;
+}
+#reviewsLabel {
+    color:black;
+}
+#reviewsLabel:hover {
+    text-decoration:none;
+}
+#ratingsLabel {
+    color:black;
+}
+#ratingsLabel:hover {
+    text-decoration:none;
+}
+#joinersBlock {
+    margin-top:15px;
+}
+#descriptionBlock {
+    margin:15px 0 100px 0;
+}
+#postReviewBlock {
+    margin-top:15px;
+    display:none;
+}
+#postRatingBlock {
+    margin-top:15px;
+    display:none;
+}
+#ratingsBlock {
+    margin:15px 0 100px 0;
+}
+#reviewsBlock {
+    margin:15px 0 100px 0;
+    display:none;
+}
+#reviewCard:target {
+    border:1px #FFC000 solid;
+}
+#joiners-modalContent {
+    font-size:15px;
+    height: 450px;
+    overflow-y: auto;
+}
+
+.rating {
+    float:left;
+  }
+  
+  .rating:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+    clip:rect(0,0,0,0);
+  }
+  
+  .rating:not(:checked) > label {
+    float:right;
+    width:1em;
+    padding:0 .1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:200%;
+    line-height:1.2;
+    color:gray;
+  }
+  
+  .rating:not(:checked) > label:before {
+    content: '★ ';
+  }
+  
+  .rating > input:checked ~ label {
+    color: gold;
+  }
+  
+  .rating:not(:checked) > label:hover,
+  .rating:not(:checked) > label:hover ~ label {
+    color: gold;
+  }
+  
+  .rating > label:active {
+    position:relative;
+    top:2px;
+    left:2px;
+  }

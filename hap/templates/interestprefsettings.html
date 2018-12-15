@@ -10,6 +10,22 @@
             <span class="navbar-toggler-icon"></span>
         </button>
     {% endblock navbarToggler %}
+    {% block flashMessage %}
+        <div id="alert-box" class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    {% endblock flashMessage %}
     {% block navbarRightComponent %}
         <div class="dropdown">
             <button id="gear-logo" class="btn btn-outline-warning" type="button" data-toggle="dropdown">
@@ -31,6 +47,7 @@
                 </div>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a id="navbar-account" class="dropdown-item" href='{{ url_for("account", username=current_user.username) }}'>Profile</a>
                 <a id="navbar-settings" class="dropdown-item" href='{{ url_for("acc_info_settings") }}'>Settings</a>
                 <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
             </div>
@@ -65,6 +82,31 @@
                 </div>
                 <div class="col" style="padding-top:50px;">
                     <div class="container-fluid" id="settings-rightDisplayBox">
+                        <form method="POST" action="" onsubmit="submit.disabled=true;return true;">
+                            <div id="interests-modalContent" style="height:500px;">
+                                <div class="container-fluid">
+                                    {{ formOne.hidden_tag() }}
+                                    <div class="container-fluid">
+                                        <div class="row" id="interest-panel">
+                                            {% for d in display %}
+                                                {% if d.user_id is not defined %}
+                                                    <div class="col-md-auto" style="margin:10px -10px;">
+                                                        <button type="button" class="btn btn-outline-warning followBtn interestBtn" id="{{ d.id }}">{{ d.categoryName }}</button>
+                                                    </div>
+                                                {% elif d.user_id == current_user.userId %}
+                                                    <div class="col-md-auto" style="margin:10px -10px;">
+                                                        <button type="button" class="btn btn-warning unfollowBtn interestBtn" id="{{ d.id }}">{{ d.categoryName }}</button>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="float-right">
+                                {{ formOne.submit(class="btn btn-success", value="Follow") }}
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

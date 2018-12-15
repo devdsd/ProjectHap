@@ -9,6 +9,7 @@ function readURL(input) {
       var reader = new FileReader();
       
       reader.onload = function (e) {
+          $('#eventBanner-preview').attr('src', e.target.result);
           $('#image-preview').attr('src', e.target.result);
           $('#profpic-preview').attr('src', e.target.result);
           $('#settingsProfPic').attr('src', e.target.result);
@@ -17,6 +18,10 @@ function readURL(input) {
       reader.readAsDataURL(input.files[0]);
   }
 }
+
+$("#eventBanner-preview").change(function(){
+  readURL(this);
+});
 
 $("#imageFile").change(function(){
   readURL(this);
@@ -93,7 +98,6 @@ function count_up(obj) {
 });
 
 $(document).ready(function() {
-
   var followedInterests = new Array();
 
   var elements = document.getElementsByClassName("interestBtn");
@@ -185,6 +189,111 @@ $(document).ready(function() {
 
 });
 
+$(document).ready(function() {
+  $('.joinBtn').funcToggle('click', function() {
+    var eventId = $(this).attr('event_id');
+    var bottomBlock = $(this).attr('bottom_block');
+
+    req = $.ajax({
+      url : '/event/' + eventId + '/bottomblockaction=bb' + bottomBlock + '/join',
+      type : 'POST',
+      data : { event_id : parseInt(eventId) }
+    });
+
+    $(this).html('Unjoin')
+    $(this).addClass('unjoinBtn').removeClass('joinBtn');
+    $(this).addClass('btn-outline-secondary').removeClass('btn-outline-success');
+    
+    
+  }, function() {
+    var eventId = $(this).attr('event_id');
+    var bottomBlock = $(this).attr('bottom_block');
+
+    req = $.ajax({
+      url : '/event/' + eventId + '/bottomblockaction=bb' + bottomBlock + '/unjoin',
+      type : 'POST',
+      data : { event_id : parseInt(eventId) }
+    });
+
+    $(this).html('Join')
+    $(this).addClass('joinBtn').removeClass('unjoinBtn');
+    $(this).addClass('btn-outline-success').removeClass('btn-outline-secondary');
+  
+  });
+  
+  $('.unjoinBtn').funcToggle('click', function() {
+    var eventId = $(this).attr('event_id');
+    var bottomBlock = $(this).attr('bottom_block');
+
+    req = $.ajax({
+      url : '/event/' + eventId + '/bottomblockaction=bb' + bottomBlock + '/unjoin',
+      type : 'POST',
+      data : { event_id : parseInt(eventId) }
+    });
+
+    $(this).html('Join')
+    $(this).addClass('joinBtn').removeClass('unjoinBtn');
+    $(this).addClass('btn-outline-success').removeClass('btn-outline-secondary');
+  
+  }, function() {
+    var eventId = $(this).attr('event_id');
+    var bottomBlock = $(this).attr('bottom_block');
+
+    req = $.ajax({
+      url : '/event/' + eventId + '/bottomblockaction=bb' + bottomBlock + '/join',
+      type : 'POST',
+      data : { event_id : parseInt(eventId) }
+    });
+
+    $(this).html('Unjoin')
+    $(this).addClass('unjoinBtn').removeClass('joinBtn');
+    $(this).addClass('btn-outline-secondary').removeClass('btn-outline-success');
+  
+  });  
+
+});
+
+$(document).ready(function() {
+  $("#rateSubmit").click(function(e) 
+  {
+      e.preventDefault();
+      if ($("#ratingForm :radio:checked").length == 0) {
+          return false;
+      } else {
+          var rateNum = $('input:radio[name=rating]:checked').val();
+          var eventId = $(this).attr("event_id");
+          console.log(rateNum);
+          console.log(eventId);
+          req = $.ajax({
+            url : '/event/' + eventId + '/rate',
+            type : 'POST',
+            data : { event_id : eventId, rate : rateNum }
+          });
+
+      }
+  });
+});
+
+$(document).ready(function() {
+  $("#rateEdit").click(function(e) 
+  {
+      e.preventDefault();
+      if ($("#ratingForm :radio:checked").length == 0) {
+          return false;
+      } else {
+          var rateNum = $('input:radio[name=rating]:checked').val();
+          var eventId = $(this).attr("event_id");
+          console.log(rateNum);
+          console.log(eventId);
+          req = $.ajax({
+            url : '/event/' + eventId + '/editrate',
+            type : 'POST',
+            data : { event_id : eventId, rate : rateNum }
+          });
+
+      }
+  });
+});
 
 
 
@@ -192,59 +301,3 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-
-// $('.followBtn').funcToggle('click', function() {
-//   var id = $(this).attr('id');
-
-//   req = $.ajax({
-//     url : '/follow',
-//     type : 'POST',
-//     data : { category_id : id }
-//   });
-
-//   $(this).addClass('unfollowBtn').removeClass('followBtn');
-//   $(this).addClass('btn-warning').removeClass('btn-outline-warning');
-
-// }, function() {
-//   var id = $(this).attr('id');
-
-//   req = $.ajax({
-//     url : '/unfollow',
-//     type : 'POST',
-//     data : { category_id : id }
-//   });
-
-//   $(this).addClass('followBtn').removeClass('unfollowBtn');
-//   $(this).addClass('btn-outline-warning').removeClass('btn-warning');
-
-// });
-
-// $('.unfollowBtn').funcToggle('click', function() {
-//   var id = $(this).attr('id');
-
-//   req = $.ajax({
-//     url : '/unfollow',
-//     type : 'POST',
-//     data : { category_id : id }
-//   });
-
-//   $(this).addClass('followBtn').removeClass('unfollowBtn');
-//   $(this).addClass('btn-outline-warning').removeClass('btn-warning');
-
-// }, function() {
-//   var id = $(this).attr('id');
-
-//   req = $.ajax({
-//     url : '/follow',
-//     type : 'POST',
-//     data : { category_id : id }
-//   });
-
-//   $(this).addClass('unfollowBtn').removeClass('followBtn');
-//   $(this).addClass('btn-warning').removeClass('btn-outline-warning');
-
-// });

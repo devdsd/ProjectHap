@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, TextField, IntegerField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, TextField, IntegerField, SelectField, RadioField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from wtforms.fields.html5 import DateField
 from wtforms_components import TimeField
@@ -65,6 +65,7 @@ class UpdateAccountForm(FlaskForm):
   username = StringField('Username', validators=[DataRequired(),Length(min=2, max=20)])
   email = StringField('Email', validators=[DataRequired(), Email()])
   picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+
   submit = SubmitField('Update')
 
   def validate_username(self, username):
@@ -88,7 +89,8 @@ class UpdateEventForm(FlaskForm):
   imageFile = FileField("Profile Picture", validators=[FileAllowed(["jpg", "png"])])
   fee = IntegerField("Fee", validators=[NumberRange(max=1000000)])
   location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
-  submit = SubmitField('Update Event')
+
+  submit = SubmitField('Update')
 
 class CreateEventForm(FlaskForm):
   eventName = StringField('Event Name', validators=[DataRequired(), Length(min=2, max=80)])
@@ -100,19 +102,58 @@ class CreateEventForm(FlaskForm):
   fee = IntegerField("Fee", validators=[NumberRange(max=1000000)])
   location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
   categoryoption = SelectField('Choose a Category of Event', coerce=int, choices=[(category.catId, category.categoryName) for category in Categories.query.all()])
-  submit = SubmitField('Post Event')
 
-class ReviewForm(FlaskForm):
-  reviewbody = TextAreaField("Write your comment here ... ")
-  submit = SubmitField("Post")
-    
+  submit = SubmitField('Post')
+
 class DeleteEventForm(FlaskForm):
   eventName = StringField('Event Name', validators=[Length(min=2, max =80)])
   confirm_eventName = StringField('Confirm Event Name', validators=[DataRequired(), Length(min=2, max =80), EqualTo('eventName')])
-  submit = SubmitField("Delete Event")
 
-class JoinEventForm(FlaskForm):
-  submit = SubmitField("Join Event")
+  submit = SubmitField("Delete")
 
-class UnjoinEventForm(FlaskForm):
-  submit = SubmitField("Unjoin Event")
+class PostReviewForm(FlaskForm):
+  review = TextAreaField('Review Event', validators=[DataRequired()])
+
+  submit = SubmitField("Post")
+
+class PostRateForm(FlaskForm):
+  rating = RadioField('Rate Event', coerce=int, choices=[(1, "Poor"), (2, "Fair"), (3, "Average"), (4, "Good"), (5, "Excellent")], validators=[DataRequired()])
+
+  submit = SubmitField("Rate")
+
+class UpdateRateForm(FlaskForm):
+  rating = RadioField('Rate Event', coerce=int, choices=[(1, "Poor"), (2, "Fair"), (3, "Average"), (4, "Good"), (5, "Excellent")], validators=[DataRequired()])
+
+  submit = SubmitField("Update")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

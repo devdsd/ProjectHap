@@ -10,20 +10,21 @@ review_rel_table = db.Table('review_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.userId')),
     db.Column('event_id', db.Integer, db.ForeignKey('events.eventId')),
     db.Column('review', db.Text, nullable=True),
-    db.Column('dateCreated' ,db.DateTime, nullable=False, default=datetime.utcnow)
+    db.Column('dateReviewed', db.DateTime, nullable=False, default=datetime.utcnow)
 )
 
 rate_rel_table = db.Table('rate_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.userId')),
     db.Column('event_id', db.Integer, db.ForeignKey('events.eventId')),
     db.Column('rate', db.Integer, nullable=True),
-    db.Column('dateCreated' ,db.DateTime, nullable=False, default=datetime.utcnow)
+    db.Column('dateRated', db.DateTime, nullable=False, default=datetime.utcnow)
 )
 
 
 join_rel_table = db.Table('join_rel_table',
     db.Column('user_id', db.Integer, db.ForeignKey('users.userId')),
-    db.Column('event_id', db.Integer, db.ForeignKey('events.eventId'))
+    db.Column('event_id', db.Integer, db.ForeignKey('events.eventId')),
+    db.Column('dateJoined', db.DateTime, nullable=False, default=datetime.utcnow)
 )
 
 userhasinterest_rel_table = db.Table('userhasinterest_rel_table',
@@ -62,6 +63,9 @@ class Users(db.Model, UserMixin):
 
     def get_id(self):
         return unicode(self.userId)
+
+    def get_username(self):
+        return unicode(self.username)
 
     def __repr__(self):
         return "Users({}, {}, {}, {}, {})".format(self.firstName, self.lastName, self.email, self.username, self.password)

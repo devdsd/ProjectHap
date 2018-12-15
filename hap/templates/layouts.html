@@ -48,20 +48,7 @@
                 </div>
             </nav>
         </div>
-        <div id="alert-box" class="container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
+        {% block flashMessage %}{% endblock flashMessage %}
         {% block content %}{% endblock content %}
         <script type="text/javascript" src='{{ url_for("static", filename="js/main.js") }}'></script>
         <script type="text/javascript" src='{{ url_for("static", filename="js/bootstrap.bundle.js") }}'></script>

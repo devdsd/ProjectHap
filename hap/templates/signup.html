@@ -2,8 +2,24 @@
     {% block bodyStyle %}
         <body style="background-color:#FFC000;">
     {% endblock bodyStyle %}
+    {% block flashMessage %}
+        <div id="alert-box" class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    {% endblock flashMessage %}
     {% block content %}
-        <div class="container">
+        <div class="container" style="margin-bottom:100px;">
             <form method="POST" action="">
                 <div id="signup-basicAccInfo" class="forms" style="background-color:white;width:600px;display:{{ basicAccInfoDisplay }}">
                     {{ formOne.hidden_tag() }}
