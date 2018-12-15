@@ -15,14 +15,15 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 # app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+# app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
 # app.config['MAIL_PORT'] = 2525
-app.config['MAIL_PORT'] = 587
+app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = True
 # app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 # app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_USERNAME'] = 'embie04@gmail.com'
-app.config['MAIL_PASSWORD'] = 'littlecuties'
+app.config['MAIL_USERNAME'] = '6d4a7e8b79b139'
+app.config['MAIL_PASSWORD'] = '87183f92a8e9f1'
 mail = Mail(app)
 
 from hap import routes

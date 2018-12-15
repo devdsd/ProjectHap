@@ -83,7 +83,7 @@
                         <div class="form-group">
                             {{ formOne.submit(class="btn btn-success", style="color:white;height:32px;font-size:13px;") }}
                             <small class="text-muted ml-2">
-                                <a href="#" style="font-size:12px;">Forgot Password?</a>
+                                <a href="{{ url_for('reset_request') }}">Forgot Password?</a>
                             </small>
                         </div>
                     </form>
