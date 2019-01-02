@@ -65,26 +65,26 @@
                                         <div class="modal show" id="signupModals" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;padding-right:17px;">
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-md-auto">
-                                                                <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
-                                                            </div>
-                                                            <div class="col">
-                                                                <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Set up your account</h5>
-                                                            </div>
-                                                        </div>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
                                                     <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
                                                         <div class="modal-body" id="setupAcc-modalContent">
+                                                            <div class="pt-3 text-right" style="margin-top:-25px;">
+                                                                <small class="text-muted">
+                                                                    2/2
+                                                                </small>
+                                                            </div>
+                                                            <div class="row align-items-center" style="margin:0 0 20px 0;padding:0 0 0 70px;">
+                                                                <div class="col-md-auto" style="overflow:hidden;">
+                                                                    <img src='{{ url_for("static", filename="assets/gettingstarted-rabbit.svg") }}' style="width:200px;">
+                                                                </div>
+                                                                <div class="col-md-auto">
+                                                                    <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;font-size:25px;text-align:center;">Setup your account</p>
+                                                                </div>
+                                                            </div>
                                                             <div class="container-fluid">
                                                                 {{ formOne.hidden_tag() }}
                                                                 <fieldset class="form-group">
                                                                     <label>Your Profile Picture</label>
-                                                                    <div class="container-fluid" style="border-bottom:1px lightgray solid;border-top:1px lightgray solid;margin:4px 0 20px 0;padding:40px 0 40px 0">
+                                                                    <div class="container-fluid" style="border-top:1px lightgray solid;margin:4px 0 20px 0;padding:40px 0 40px 0">
                                                                         <div class="row">
                                                                             <div class="col-md-auto">
                                                                                 <div class="form-group">
@@ -106,8 +106,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <a class="btn btn-outline-secondary" href='{{ url_for("interests") }}' role="button">Back</a>
-                                                            {{ formOne.submit(class="btn btn-success") }}
+                                                            <a class="btn btn-secondary" href='{{ url_for("interests") }}' role="button" style="width:70px;border-radius:100px;">Back</a>
+                                                            {{ formOne.submit(id="gettingstarted-btn", class="btn btn-success", style="width:90px;border-radius:100px;color:white;") }}
                                                         </div>
                                                     </form>
                                                 </div>

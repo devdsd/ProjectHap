@@ -35,7 +35,7 @@ class UserInterestForm(FlaskForm):
 class SetUpAccount(FlaskForm):
   profPic = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
 
-  submit = SubmitField('Hop In')
+  submit = SubmitField('Skip')
 
 class LoginForm(FlaskForm):
   usernameOrEmail = StringField('Username or Email Address', validators=[DataRequired()])
@@ -117,12 +117,12 @@ class PostReviewForm(FlaskForm):
   submit = SubmitField("Post")
 
 class PostRateForm(FlaskForm):
-  rating = RadioField('Rate Event', coerce=int, choices=[(1, "Poor"), (2, "Fair"), (3, "Average"), (4, "Good"), (5, "Excellent")], validators=[DataRequired()])
+  rating = RadioField('Rate Event', coerce=int, choices=[(1, "Excellent"), (2, "Good"), (3, "Average"), (4, "Fair"), (5, "Poor")], validators=[DataRequired()])
 
   submit = SubmitField("Rate")
 
 class UpdateRateForm(FlaskForm):
-  rating = RadioField('Rate Event', coerce=int, choices=[(1, "Poor"), (2, "Fair"), (3, "Average"), (4, "Good"), (5, "Excellent")], validators=[DataRequired()])
+  rating = RadioField('Rate Event', coerce=int, choices=[(1, "Excellent"), (2, "Good"), (3, "Average"), (4, "Fair"), (5, "Poor")], validators=[DataRequired()])
 
   submit = SubmitField("Update")
 

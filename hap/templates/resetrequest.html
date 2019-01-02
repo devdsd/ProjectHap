@@ -1,10 +1,29 @@
 {% extends 'layouts.html' %}
 	{% block bodyStyle %}
-		<body style="background-color:#FFC000;">
+		<body style="overflow:hidden;">
 	{% endblock bodyStyle %}
+	{% block navbarAdjust %}
+		<div id="homefeed-navbar-noscroll" class="container-fluid">
+	{% endblock navbarAdjust %}
+	{% block flashMessage %}
+		<div id="alert-box" class="container">
+			{% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+					{% for category, message in messages %}
+						<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+							{{ message }}
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+		</div>
+	{% endblock flashMessage %}
 	{% block content %}
-		<div class="container">
-			<div class="forms" style="background-color:white;width:420px;">
+		<div class="container" style="margin:70px auto 100px auto;">
+			<div class="forms" style="background-color:white;width:600px;border:1px lightgray solid;">
 				<div class="row align-items-center">
 					<div class="col-md-auto">
 						<img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0;">

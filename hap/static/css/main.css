@@ -39,14 +39,16 @@ input:not(type=submit) {
 }
 #homeContent-signup {
     margin-top:10px;
-    width:88%;
+    width:100%;
     color:white;
+    border-radius:100px;
 }
 #homeContent-login {
     margin-top:10px;
-    width:88%;
-    border:1px #FFC000 solid;
-    color:black;
+    width:100%;
+    border:1px #28a745 solid;
+    color:#28a745;
+    border-radius:100px;
 }
 #homeContent-login:hover {
     color:white;
@@ -212,7 +214,6 @@ input:not(type=submit) {
 #setupAcc-modalContent {
     font-size:15px;
     height: 250px;
-    overflow-y: auto;
     height:500px;
 }
 #interests-modalContent {
@@ -225,6 +226,15 @@ input:not(type=submit) {
     position:fixed;
     z-index:2;
     padding:0 17%;
+    border-bottom:1px lightgray solid;
+    width:100%;
+    top:-0.5px;
+    background:white;
+}
+#homefeed-navbar-noscroll {
+    position:fixed;
+    z-index:2;
+    padding:0 16.8%;
     border-bottom:1px lightgray solid;
     width:100%;
     top:-0.5px;
@@ -373,6 +383,8 @@ body.modal-open .float {
     font-size:15px;
     height: 450px;
     overflow-y: auto;
+    overflow-x:hidden;
+    padding:0;
 }
 
 .rating {
@@ -433,4 +445,8 @@ body.modal-open .float {
     line-height:1.2;
     content: '★ ';
     color:gray;
+}
+.joinersModal-col {
+    padding:15px 0;
+    border-bottom:1px lightgray solid;
 }

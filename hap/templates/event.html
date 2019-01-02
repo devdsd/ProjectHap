@@ -1,7 +1,4 @@
 {% extends 'layouts.html' %}
-    {% block bodyStyle %}
-        <body>
-    {% endblock bodyStyle %}
     {% block navbarAdjust %}
         <div id="homefeed-navbar" class="container-fluid">
     {% endblock navbarAdjust %}
@@ -67,7 +64,7 @@
                                 <div class="row justify-content-md-center">
                                     <div class="col-md-auto">
                                         <div class="card" style="width:565px;margin-top:20px;border:1px lightgray solid;">
-                                            <img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file) }}' alt="Event Banner" style="height:200px;object-fit:cover;">
+                                            <img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file) }}' alt="Event Banner" style="height:200px;object-fit:cover;border-bottom:1px lightgray solid;">
                                             <div class="card-body" style="padding-bottom:10px;">
                                                 <div class="row align-items-center">
                                                     <div class="col-md-auto" style="border-right:1px lightgray solid;width:80px;">
@@ -419,7 +416,7 @@
                                                 <hr>
                                                 <div class="container-fluid" style="padding:0 12px;">
                                                     <div class="row" style="margin-bottom:25px;">
-                                                        {% for joiner in joiners %}
+                                                        {% for joiner in joinerProfPics %}
                                                             {% if loop.index < 11 %}
                                                                 <div class="col-md-auto" style="margin:0 2.5px;padding:0;width:27.5px;">
                                                                     <a href='{{ url_for("account", username=joiner.username) }}'><img src='{{url_for("static", filename="images/" + joiner.image_file_sm)}}' class="rounded-circle" style="width:25px;height:25px;object-fit:cover;"></a>
@@ -444,15 +441,15 @@
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body" id="joiners-modalContent">
-                                                                <div class="row" style="padding:0 10px;">
-                                                                    {% for joiner in joiners %}
-                                                                        <div class="col" style="padding:15px 0;border-bottom:1px lightgray solid;">
-                                                                            <div class="container" style="padding:0;margin:0;">
-                                                                                <div class="row" style="margin:0;padding:0;">
-                                                                                    <div class="col-md-auto" style="width:15%;">
+                                                                <div id="joinersModal-row" class="row">
+                                                                    {% for joiner in joiners.items %}
+                                                                        <div class="col joinersModal-col">
+                                                                            <div class="container-fluid">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-auto">
                                                                                         <a href='{{ url_for("account", username=joiner.username) }}'><img src='{{url_for("static", filename="images/" + joiner.image_file_sm)}}' class="rounded-circle" style="width:48px;height:48px;object-fit:cover;"></a>
                                                                                     </div>
-                                                                                    <div class="col-md-auto" style="width:85%;">
+                                                                                    <div class="col align-self-center" style="text-overflow:ellipsis;">
                                                                                         <a href='{{ url_for("account", username=joiner.username) }}' style="color:black;"><strong>{{ joiner.firstName }} {{ joiner.lastName }}</strong></a>
                                                                                     </div>
                                                                                 </div>
@@ -461,9 +458,65 @@
                                                                         <div class="w-100"></div>
                                                                     {% endfor %}
                                                                 </div>
-                                                            </div>
-                                                            <div class="modal-footer">
+                                                                <div class="container-fluid" style="margin:10px 0 5px 0;">
+                                                                    <button id="joiners-seeMore" type="button" class="btn btn-outline-secondary btn-lg btn-block" style="border-radius:100px;">See more</button>
+                                                                </div>
+                                                                <script>
+                                                                    $(document).ready(function() {
+                                                                        function UrlExists(url, cb){
+                                                                            jQuery.ajax({
+                                                                                url:      url,
+                                                                                dataType: 'text',
+                                                                                type:     'GET',
+                                                                                complete:  function(xhr){
+                                                                                    if(typeof cb === 'function')
+                                                                                    cb.apply(this, [xhr.status]);
+                                                                                }
+                                                                            });
+                                                                        }
 
+                                                                        var page_num = 2;
+
+                                                                        $("#joiners-seeMore").click(function() {
+                                                                            UrlExists("/event/1/bottomblockaction=bb1/page=" + page_num, function(status){
+                                                                                if(status === 404){
+                                                                                    $("#joiners-seeMore").hide();
+                                                                                }
+                                                                                else {
+                                                                                    fetch("/event/1/bottomblockaction=bb1/page=" + page_num).then(function(response) {
+                                                                                        response.json().then(function(data) {
+                                                                                            let content_html = "";
+                                                                                    
+                                                                                            for(let joiner of data.joiners) {
+                                                                                                var joiner_username = joiner.username;
+                                                                                                var joiner_imageFile = joiner.image_file_sm;
+
+                                                                                                var account_url = "{{ url_for('account', username='joinerUsername') }}".replace('joinerUsername', joiner_username);
+                                                                                                var imageFile_url = "{{ url_for('static', filename='images/joinerImageFile') }}".replace('joinerImageFile', joiner_imageFile);
+
+                                                                                                content_html += '<div class="col joinersModal-col"><div class="container-fluid"><div class="row"><div class="col-md-auto"><a href=' 
+                                                                                                                + account_url + '><img src='
+                                                                                                                + imageFile_url + ' class="rounded-circle" style="width:48px;height:48px;object-fit:cover;"></a></div><div class="col align-self-center" style="text-overflow:ellipsis;"><a href='
+                                                                                                                + account_url + ' style="color:black;"><strong>'
+                                                                                                                + joiner.firstName + ' '
+                                                                                                                + joiner.lastName + '</strong></a></div></div></div></div><div class="w-100"></div>';
+                                                                                            }
+                                                                                            
+                                                                                            $("#joinersModal-row").append(content_html);
+                                                                                            page_num++;
+                                                                                    
+                                                                                            UrlExists("/event/1/bottomblockaction=bb1/page=" + page_num, function(status){
+                                                                                                if(status === 404){
+                                                                                                    $("#joiners-seeMore").hide();
+                                                                                                }
+                                                                                            });
+                                                                                        });
+                                                                                    });
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                    });
+                                                                </script>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -569,7 +622,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group" style="padding:0 12px;">
-                                                            {{ formThree.submit(id="rateEdit", class="btn btn-outline-success btn-sm float-right", event_id=event.eventId) }}
+                                                            {{ formThree.submit(id="rateUpdate", class="btn btn-outline-success btn-sm float-right", event_id=event.eventId) }}
                                                         </div>
                                                     {% else %}
                                                         {{ formTwo.hidden_tag() }}

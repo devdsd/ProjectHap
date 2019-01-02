@@ -1,0 +1,84 @@
+{% extends 'layouts.html' %}
+    {% block bodyStyle %}
+        <body style="overflow:hidden;">
+    {% endblock bodyStyle %}
+    {% block navbarAdjust %}
+        <div id="homefeed-navbar-noscroll" class="container-fluid">
+    {% endblock navbarAdjust %}
+    {% block flashMessage %}
+        <div id="alert-box" class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    {% endblock flashMessage %}
+    {% block content %}
+        <div class="container" style="margin:70px auto 100px auto;">
+            <form method="POST" action="">
+                <div class="forms" style="background-color:white;width:600px;border:1px lightgray solid;">
+                    {{ formOne.hidden_tag() }}
+                    <div class="pt-3 text-right" style="margin-top:-35px;">
+                        <small class="text-muted">
+                            1/3
+                        </small>
+                    </div>
+                    <div class="row align-items-center" style="margin-bottom:20px;">
+                        <div class="col-md-auto" style="overflow:hidden;">
+                            <img src='{{ url_for("static", filename="assets/signup-rabbit1.svg") }}' style="width:150px;">
+                        </div>
+                        <div class="col">
+                            <p class="h4" style="color:#FFC000;font-size:25px;text-align:center;">Create your account</p>
+                        </div>
+                    </div>
+                    <fieldset class="form-group">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <div class="form-row">
+                                <div class="col">
+                                    {% if formOne.firstName.errors %}
+                                        {{ formOne.firstName(class="form-control form-control-lg is-invalid", placeholder="First name") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in formOne.firstName.errors %}
+                                                <span> {{ error }} </span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ formOne.firstName(class="form-control form-control-lg", placeholder="First name") }}
+                                    {% endif %}
+                                </div>
+                                <div class="col">
+                                    {% if formOne.lastName.errors %}
+                                        {{ formOne.lastName(class="form-control form-control-lg is-invalid", placeholder="Last name") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in formOne.lastName.errors %}
+                                                <span> {{ error }} </span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ formOne.lastName(class="form-control form-control-lg", placeholder="Last name") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group text-right">
+                        {{ formOne.submit(class="btn btn-warning btn-lg btn-block", style="border-radius:100px;color:white;", value="Next") }}
+                    </div>
+                    <div class="border-top pt-3">
+                        <small class="text-muted">
+                            Already have an account? <a class="ml-2" href='{{ url_for("login") }}'>Log in here</a>
+                        </small>
+                    </div>
+                </div>
+            </form>
+        </div>
+	{% endblock content %}

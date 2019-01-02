@@ -21,23 +21,21 @@ def save_picture(form_picture, size):
     i.save(picture_path)
     
     return picture_fn
-
+    
 @app.route('/', methods=["GET","POST"])
 @app.route('/home', methods=["GET","POST"])
 def home():
     if current_user.is_authenticated:
         formTwo = CreateEventForm()
-        # eventParticipants = Events.query.filter(Events.joinrel.any(userId=current_user.userId))
-        reviews = db.session.query(review_rel_table.c.review, Users.firstName, Users.lastName).filter(review_rel_table.c.event_id == Events.eventId).filter(Users.userId == review_rel_table.c.user_id).order_by(review_rel_table.c.dateReviewed.desc()).all()
-
+        
         if current_user.numberOfLogins == 0:
             return redirect(url_for("setup_acc"))
 
-        userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).all()
-        events = Events.query.all()
+        eventBatchPage = request.args.get("page", 1, type=int)
+        userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page=eventBatchPage, per_page=2)
 
         display = []
-        for c, event in enumerate(userFeedEvents):
+        for c, event in enumerate(userFeedEvents.items):
             dict = {}
             
             dict["event_id"] = event.eventId
@@ -49,7 +47,6 @@ def home():
             dict["event_date_dayName"] = event.eventDate.strftime("%a")
             dict["event_date_month"] = event.eventDate.strftime("%b")
             dict["event_startTime"] = event.eventStartTime.strftime("%I %p")
-            dict["event_endTime"] = event.eventEndTime
             
             display.append(dict)
 
@@ -144,17 +141,56 @@ def home():
 def about():
     return render_template('about.html', title='About Hap')
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
+@app.route('/signup/i/1', methods=['GET', 'POST'])
+def signup1():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    formOne = BasicAccountInfoForm()
+    
+    formOne.username.data = "johndoe"
+    formOne.email.data = "johndoe@demo.com"
+    formOne.password.data = "temporary"
+    formOne.confirm_password.data = "temporary"
+
+    if formOne.validate_on_submit():
+        return redirect(url_for("signup2", formFirstName=formOne.firstName.data, formLastName=formOne.lastName.data))
+
+    return render_template('signup1.html', title='Sign Up', formOne=formOne)
+
+@app.route('/signup/i/2/fname=<formFirstName>&lname=<formLastName>', methods=['GET', 'POST'])
+def signup2(formFirstName, formLastName):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
 
     formOne = BasicAccountInfoForm()
 
+    formOne.firstName.data = formFirstName
+    formOne.lastName.data = formLastName
+    formOne.password.data = "temporary"
+    formOne.confirm_password.data = "temporary"
+
+    if formOne.validate_on_submit():
+        return redirect(url_for("signup3", formFirstName=formOne.firstName.data, formLastName=formOne.lastName.data, formUsername=formOne.username.data, formEmail=formOne.email.data))
+
+    return render_template('signup2.html', title='Sign Up', formOne=formOne)
+
+@app.route('/signup/i/3/fname=<formFirstName>&lname=<formLastName>&username=<formUsername>&email=<formEmail>', methods=['GET', 'POST'])
+def signup3(formFirstName, formLastName, formUsername, formEmail):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    formOne = BasicAccountInfoForm()
+
+    formOne.firstName.data = formFirstName
+    formOne.lastName.data = formLastName
+    formOne.username.data = formUsername
+    formOne.email.data = formEmail
+
     if formOne.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(formOne.password.data).decode('utf-8')
 
-        user = Users(firstName=formOne.firstName.data, lastName=formOne.lastName.data, username=formOne.username.data, email=formOne.email.data, password=hashed_password)
+        user = Users(firstName=formOne.firstName.data, lastName=formOne.lastName.data, username=formOne.username.data, email= formOne.email.data, password=hashed_password)
 
         db.session.add(user)
         db.session.commit()
@@ -163,7 +199,7 @@ def signup():
 
         return redirect(url_for('interests'))
 
-    return render_template('signup.html', title='Sign Up', formOne=formOne)
+    return render_template('signup3.html', title='Sign Up', formOne=formOne)
 
 @app.route('/interests', methods=['GET', 'POST'])
 @login_required
@@ -196,7 +232,7 @@ def interests():
     if formOne.validate_on_submit():
         return redirect(url_for('setup_acc'))
 
-    return render_template('gettingstartedinterests.html', title='Getting Started', formOne=formOne, display=display, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+    return render_template('gettingstarted1.html', title='Getting Started', formOne=formOne, display=display, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
 
 @app.route('/follow', methods=['POST'])
 @login_required
@@ -250,7 +286,7 @@ def setup_acc():
         return redirect(url_for('home'))
 
     profilePic = url_for("static", filename="images/" + current_user.image_file)
-    return render_template('gettingstartedsetupacc.html', title='Getting Started', formOne=formOne, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+    return render_template('gettingstarted2.html', title='Getting Started', formOne=formOne, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -408,7 +444,7 @@ def acc_info_settings():
 
     leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['key.svg','security_settings','Security'],['controls.svg','interest_pref_settings','Interest Preferences']]
     profilePic = url_for("static", filename="images/" + current_user.image_file)
-    return render_template("accinfosettings.html", title="Settings", formOne=formOne, leftPanelItems=leftPanelItems, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
+    return render_template("settings1.html", title="Settings", formOne=formOne, leftPanelItems=leftPanelItems, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
 
 @app.route("/settings/security", methods=["GET", "POST"])
 @login_required
@@ -418,7 +454,7 @@ def security_settings():
 
     leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['key.svg','security_settings','Security'],['controls.svg','interest_pref_settings','Interest Preferences']]
 
-    return render_template("securitysettings.html", title="Settings", leftPanelItems=leftPanelItems, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
+    return render_template("settings2.html", title="Settings", leftPanelItems=leftPanelItems, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
 
 @app.route("/settings/interestpreferences", methods=["GET", "POST"])
 @login_required
@@ -456,7 +492,33 @@ def interest_pref_settings():
 
         return redirect(url_for("acc_info_settings"))
 
-    return render_template("interestprefsettings.html", title="Settings", formOne=formOne, display=display, leftPanelItems=leftPanelItems, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
+    return render_template("settings3.html", title="Settings", formOne=formOne, display=display, leftPanelItems=leftPanelItems, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
+
+@app.route("/event/<int:event_id>/bottomblockaction=bb1/page=<int:joinersPage>", methods=["GET", "POST"])
+@login_required
+def event_joiners(event_id, joinersPage):
+    if current_user.numberOfLogins == 0:
+        return redirect(url_for("setup_acc"))
+
+    event = Events.query.get_or_404(event_id)
+
+    joiners = db.session.query(Users.userId, Users.username, Users.image_file_sm, Users.firstName, Users.lastName, join_rel_table.c.dateJoined).filter(join_rel_table.c.event_id==event_id).filter(join_rel_table.c.user_id==Users.userId).order_by(join_rel_table.c.dateJoined.desc()).paginate(page=joinersPage, per_page=5)
+
+    joinerList = []
+
+    for joiner in joiners.items:
+        joinerObj = {}
+
+        joinerObj["userId"] = joiner.userId
+        joinerObj["username"] = joiner.username
+        joinerObj["image_file_sm"] = joiner.image_file_sm
+        joinerObj["firstName"] = joiner.firstName
+        joinerObj["lastName"] = joiner.lastName
+        joinerObj["dateJoined"] = joiner.dateJoined
+        
+        joinerList.append(joinerObj)  
+
+    return jsonify({"joiners" : joinerList})
 
 @app.route("/event/<int:event_id>/bottomblockaction=bb<int:bottomBlock>", methods=["GET", "POST"])
 @login_required
@@ -467,7 +529,10 @@ def event(event_id, bottomBlock):
     event = Events.query.get_or_404(event_id)
     eventCategory = Categories.query.filter(Categories.eventhascategory.any(eventId=event_id)).first()
 
-    joiners = db.session.query(Users.userId, Users.username, Users.image_file_sm, Users.firstName, Users.lastName, join_rel_table.c.dateJoined).filter(join_rel_table.c.event_id==event_id).filter(join_rel_table.c.user_id==Users.userId).order_by(join_rel_table.c.dateJoined.asc()).all()
+    joinersPage = request.args.get("page", 1, type=int) 
+    joinerProfPics = db.session.query(Users.username, Users.image_file_sm).filter(join_rel_table.c.event_id==event_id).filter(join_rel_table.c.user_id==Users.userId).order_by(join_rel_table.c.dateJoined.desc()).limit(11).all()
+    joiners = db.session.query(Users.userId, Users.username, Users.image_file_sm, Users.firstName, Users.lastName, join_rel_table.c.dateJoined).filter(join_rel_table.c.event_id==event_id).filter(join_rel_table.c.user_id==Users.userId).order_by(join_rel_table.c.dateJoined.desc()).paginate(page=joinersPage, per_page=5)
+
     reviewPosts = db.session.query(review_rel_table.c.review, review_rel_table.c.dateReviewed, Users.firstName, Users.lastName, Users.image_file_sm, Users.username).filter(review_rel_table.c.event_id == event.eventId).filter(Users.userId == review_rel_table.c.user_id).order_by(review_rel_table.c.dateReviewed.desc()).all()
     ratingPosts = db.session.query(rate_rel_table.c.rate, rate_rel_table.c.dateRated, Users.firstName, Users.lastName, Users.image_file_sm, Users.username).filter(rate_rel_table.c.event_id == event.eventId).filter(Users.userId == rate_rel_table.c.user_id).order_by(rate_rel_table.c.dateRated.desc()).all()
 
@@ -482,7 +547,7 @@ def event(event_id, bottomBlock):
             formThree.rating.default = ratedEvent.rate
             formThree.process() 
 
-        return render_template("event.html", title=event.eventName, event=event, formOne=formOne, formTwo=formTwo, formThree=formThree, joinedEvent=joinedEvent, ratedEvent=ratedEvent, joiners=joiners, reviewPosts=reviewPosts, ratingPosts=ratingPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
+        return render_template("event.html", title=event.eventName, event=event, formOne=formOne, formTwo=formTwo, formThree=formThree, joinedEvent=joinedEvent, ratedEvent=ratedEvent, joiners=joiners, joinerProfPics=joinerProfPics, reviewPosts=reviewPosts, ratingPosts=ratingPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
 
     else:
         formTwo = DeleteEventForm()
@@ -534,7 +599,7 @@ def event(event_id, bottomBlock):
             formThree.fee.data = event.fee
             formThree.location.data = event.location
 
-        return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formTwo=formTwo, joiners=joiners, reviewPosts=reviewPosts, ratingPosts=ratingPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
+        return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formTwo=formTwo, joiners=joiners, joinerProfPics=joinerProfPics, reviewPosts=reviewPosts, ratingPosts=ratingPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
 
 @app.route("/event/<int:event_id>/bottomblockaction=bb<int:bottomBlock>/join", methods=["GET", "POST"])
 @login_required
@@ -625,9 +690,9 @@ def rate_event(event_id):
 
         return redirect(url_for("event", event_id=event_id, bottomBlock=3))
 
-@app.route("/event/<int:event_id>/editrate", methods=["GET", "POST"])
+@app.route("/event/<int:event_id>/updaterate", methods=["GET", "POST"])
 @login_required
-def edit_rate_event(event_id):
+def update_rate_event(event_id):
     if current_user.numberOfLogins == 0:
         return redirect(url_for("setup_acc"))
 

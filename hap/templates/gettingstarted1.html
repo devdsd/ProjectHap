@@ -65,21 +65,21 @@
                                         <div class="modal show" id="signupModals" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;padding-right:17px;">
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <div class="row align-items-center">
-                                                            <div class="col-md-auto">
-                                                                <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
-                                                            </div>
-                                                            <div class="col">
-                                                                <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Choose your interests</h5>
-                                                            </div>
-                                                        </div>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
                                                     <form method="POST" action="" onsubmit="submit.disabled=true;return true;">
                                                         <div class="modal-body" id="interests-modalContent" style="height:500px;">
+                                                            <div class="pt-3 text-right" style="margin-top:-25px;">
+                                                                <small class="text-muted">
+                                                                    1/2
+                                                                </small>
+                                                            </div>
+                                                            <div class="row align-items-center" style="margin:0 0 20px 0;padding:0 0 0 70px;">
+                                                                <div class="col-md-auto" style="overflow:hidden;">
+                                                                    <img src='{{ url_for("static", filename="assets/gettingstarted-rabbit.svg") }}' style="width:200px;">
+                                                                </div>
+                                                                <div class="col-md-auto">
+                                                                    <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;font-size:25px;text-align:center;">Choose your interests</p>
+                                                                </div>
+                                                            </div>
                                                             <div class="container-fluid">
                                                                 {{ formOne.hidden_tag() }}
                                                                 <div class="container-fluid">
@@ -87,11 +87,11 @@
                                                                         {% for d in display %}
                                                                             {% if d.user_id is not defined %}
                                                                                 <div class="col-md-auto" style="margin:10px -10px;">
-                                                                                    <button type="button" class="btn btn-outline-warning followBtn interestBtn" id="{{ d.id }}">{{ d.categoryName }}</button>
+                                                                                    <button type="button" class="btn btn-outline-warning followBtn interestBtn" id="{{ d.id }}" style="border-radius:100px;">{{ d.categoryName }}</button>
                                                                                 </div>
                                                                             {% elif d.user_id == current_user.userId %}
                                                                                 <div class="col-md-auto" style="margin:10px -10px;">
-                                                                                    <button type="button" class="btn btn-warning unfollowBtn interestBtn" id="{{ d.id }}">{{ d.categoryName }}</button>
+                                                                                    <button type="button" class="btn btn-warning unfollowBtn interestBtn" id="{{ d.id }}" style="border-radius:100px;">{{ d.categoryName }}</button>
                                                                                 </div>
                                                                             {% endif %}
                                                                         {% endfor %}
@@ -100,7 +100,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            {{ formOne.submit(class="btn btn-success") }}
+                                                            {{ formOne.submit(class="btn btn-success", style="width:90px;border-radius:100px;color:white;") }}
                                                         </div>
                                                     </form>
                                                 </div>
