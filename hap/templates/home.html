@@ -207,6 +207,54 @@
                                         </div>
                                     {% endfor %}
                                 </div>
+                                <div class="container-fluid" style="margin:10px 0 5px 0;">
+                                    <button id="events-seeMore" type="button" class="btn btn-outline-secondary btn-lg btn-block" style="border-radius:100px;">See more</button>
+                                </div>
+                                <script>
+                                    $(document).ready(function() {
+                                        function UrlExists(url, cb){
+                                            jQuery.ajax({
+                                                url:      url,
+                                                dataType: 'text',
+                                                type:     'GET',
+                                                complete:  function(xhr){
+                                                    if(typeof cb === 'function')
+                                                    cb.apply(this, [xhr.status]);
+                                                }
+                                            });
+                                        }
+
+                                        var page_num = 2;
+
+                                        $("#events-seeMore").click(function() {
+                                            UrlExists("/home/eventpopulate=" + page_num, function(status){
+                                                if(status === 404){
+                                                    $("#events-seeMore").hide();
+                                                }
+                                                else {
+                                                    fetch("/home/eventpopulate=" + page_num).then(function(response) {
+                                                        response.json().then(function(data) {
+                                                            let content_html = "";
+                                                    
+                                                            for(let event of data.events) {
+                                                                {# code #}
+                                                            }
+                                                            
+                                                            $("#displayEvents-cont").append(content_html);
+                                                            page_num++;
+                                                    
+                                                            UrlExists("/home/eventpopulate=" + page_num, function(status){
+                                                                if(status === 404){
+                                                                    $("#events-seeMore").hide();
+                                                                }
+                                                            });
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
                             </div>
                         </div>
                         <div class="col">
