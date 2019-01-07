@@ -5,7 +5,6 @@
     {% block navbarAdjust %}
         <div class="container-fluid" style="position:fixed;z-index:2;padding:0 17%;border-bottom:1px lightgray solid;top:-0.5px;background:white;">
     {% endblock navbarAdjust %}
-
     {% block navbarToggler %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -32,11 +31,28 @@
                 </div>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a id="navbar-account" class="dropdown-item" href='{{ url_for("account", username=current_user.username) }}'>Profile</a>
                 <a id="navbar-settings" class="dropdown-item" href='{{ url_for("acc_info_settings") }}'>Settings</a>
                 <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
             </div>
         </div>
     {% endblock navbarRightComponent %}
+    {% block flashMessage %}
+        <div id="alert-box" class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    {% endblock flashMessage %}
     {% block content %}
         <div class="container-fluid" style="padding:0 auto;border-bottom:1px lightgray solid;">
             <div id="profile-header">
@@ -44,7 +60,7 @@
                     <div class="col">
                         <div class="media">
                             <img src="{{ profilePic }}" class="rounded mx-auto d-block" style="margin:25px;height:135px;width:135px;object-fit:cover;background:gray;border:1px lightgray solid;">
-                            <div class="media-body" style="margin:25px;">
+                            <div class="media-body" style="margin:25px 25px 0 25px;">
                                 <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><h3 class="account-heading">{{ user.firstName }} {{ user.lastName }}</h3></a>
                                 <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><p class="text-secondary">{{ user.username }}</p></a>
                                 <p> Interest: 
@@ -81,10 +97,10 @@
                 </div>
                 <div id="profileBody-navbar">
                     <div class="bodyNavbar-container">
-                        <a href='{{ url_for("account_events", username=user.username) }}' class="bodyNavbar-elements" style="text-decoration:{{ navbarCreatedEventsUnderline }}">Created Events</a>
+                        <a href='{{ url_for("account_events", username=user.username) }}' class="bodyNavbar-elements" style="border-bottom:{{ navbarCreatedEventsUnderline }}">Created Events</a>
                     </div>
                     <div class="bodyNavbar-container">
-                        <a href='{{ url_for("joined_events", username=user.username) }}' class="bodyNavbar-elements" style="text-decoration:{{ navbarJoinedEventsUnderline }}">Joined Events</a>
+                        <a href='{{ url_for("joined_events", username=user.username) }}' class="bodyNavbar-elements" style="border-bottom:{{ navbarJoinedEventsUnderline }}">Joined Events</a>
                     </div>
                 </div>
             </div>
@@ -99,7 +115,7 @@
                         {% endif %}
                             <div class="col-md-auto">
                                 <div class="card" style="width:286.67185974121px;height:300px;margin:5px 0;">
-                                    <a href='{{ url_for("event", event_id=event.eventId) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file_sm) }}' alt="Card image cap" style="height:120px;object-fit:cover;"></a>
+                                    <a href='{{ url_for("event", event_id=event.eventId, bottomBlock=1) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file_sm) }}' alt="Card image cap" style="height:120px;object-fit:cover;"></a>
                                     <div class="card-body" style="height:100px;">
                                         <div class="row align-items-center">
                                             <div class="col-md-auto" style="width:70px;border-right:1px lightgray solid;">
@@ -127,7 +143,7 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                                        <a href='{{ url_for("event", event_id=event.eventId) }}' class="h5" style="color:black;font-size:17.5px;">{{ event.eventName }}</a>
+                                                        <a href='{{ url_for("event", event_id=event.eventId, bottomBlock=1) }}' class="h5" style="color:black;font-size:17.5px;">{{ event.eventName }}</a>
                                                     </div>
                                                     <div class="w-100"></div>
                                                     <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">

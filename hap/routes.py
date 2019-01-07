@@ -1,11 +1,12 @@
 import os, binascii
 from PIL import Image
-from hap import app, db, bcrypt
+from hap import app, db, bcrypt, mail
 from flask import render_template, url_for, flash, redirect, request, abort, jsonify, session
 from hap.forms import *
 from hap.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 from flask import request
+from flask_mail import Message
 
 
 def save_picture(form_picture, size):
@@ -21,6 +22,45 @@ def save_picture(form_picture, size):
     
     return picture_fn
 
+@app.route("/home/eventpopulate=<int:eventsPage>", methods=["GET", "POST"])
+@login_required
+def populate_events(eventsPage):
+    if current_user.numberOfLogins == 0:
+        return redirect(url_for("setup_acc"))
+
+    userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page=eventsPage, per_page=2)
+
+    eventList = []
+    for c, event in enumerate(userFeedEvents.items):
+        dict = {}
+        
+        dict["event_id"] = event.eventId
+        dict["category_id"] = event.category_id
+        dict["event_name"] = event.eventName
+        dict["event_location"] = event.location
+        dict["event_imgFile"] = event.image_file
+        dict["event_date_dayNum"] = event.eventDate.strftime("%d")
+        dict["event_date_dayName"] = event.eventDate.strftime("%a")
+        dict["event_date_month"] = event.eventDate.strftime("%b")
+        dict["event_startTime"] = event.eventStartTime.strftime("%I %p")
+        
+        eventList.append(dict)
+
+    for x, event in enumerate(eventList):
+        selectEvent = Events.query.filter_by(eventId=event["event_id"]).first()
+
+        event["host_id"] = selectEvent.host.userId
+        event["host_username"] = selectEvent.host.username
+        event["host_firstName"] = selectEvent.host.firstName
+        event["host_lastName"] = selectEvent.host.lastName
+
+        joined = db.session.query(join_rel_table).filter(join_rel_table.c.user_id==current_user.userId, join_rel_table.c.event_id==event["event_id"]).first()
+    
+        if joined:
+            event["joined"] = "True"
+
+    return jsonify({"events" : eventList})
+
 @app.route('/', methods=["GET","POST"])
 @app.route('/home', methods=["GET","POST"])
 def home():
@@ -29,17 +69,16 @@ def home():
         
         if current_user.numberOfLogins == 0:
             return redirect(url_for("setup_acc"))
-        page = request.args.get('page', 1, type=int)
-        userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.user_id, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page=page, per_page=2).items
-        # userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.user_id, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page, per_page=2)
-        # print "print This: {}".format(userFeedEvents)
-        display = []
 
-        for c, event in enumerate(userFeedEvents):
+        eventBatchPage = request.args.get("page", 1, type=int)
+        userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page=eventBatchPage, per_page=2)
+
+        display = []
+        for c, event in enumerate(userFeedEvents.items):
             dict = {}
+            
             dict["event_id"] = event.eventId
             dict["category_id"] = event.category_id
-            dict["user_id"] = event.userId
             dict["event_name"] = event.eventName
             dict["event_location"] = event.location
             dict["event_imgFile"] = event.image_file
@@ -47,17 +86,21 @@ def home():
             dict["event_date_dayName"] = event.eventDate.strftime("%a")
             dict["event_date_month"] = event.eventDate.strftime("%b")
             dict["event_startTime"] = event.eventStartTime.strftime("%I %p")
-            dict["event_endTime"] = event.eventEndTime
-
+            
             display.append(dict)
 
         for x, event in enumerate(display):
             selectEvent = Events.query.filter_by(eventId=event["event_id"]).first()
+
             event["host_id"] = selectEvent.host.userId
             event["host_username"] = selectEvent.host.username
             event["host_firstName"] = selectEvent.host.firstName
             event["host_lastName"] = selectEvent.host.lastName
 
+            joined = db.session.query(join_rel_table).filter(join_rel_table.c.user_id==current_user.userId, join_rel_table.c.event_id==event["event_id"]).first()
+        
+            if joined:
+                event["joined"] = "True"
 
         if formTwo.validate_on_submit():
             picture_file = ""
@@ -138,17 +181,56 @@ def home():
 def about():
     return render_template('about.html', title='About Hap')
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
+@app.route('/signup/i/1', methods=['GET', 'POST'])
+def signup1():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    formOne = BasicAccountInfoForm()
+    
+    formOne.username.data = "johndoe"
+    formOne.email.data = "johndoe@demo.com"
+    formOne.password.data = "temporary"
+    formOne.confirm_password.data = "temporary"
+
+    if formOne.validate_on_submit():
+        return redirect(url_for("signup2", formFirstName=formOne.firstName.data, formLastName=formOne.lastName.data))
+
+    return render_template('signup1.html', title='Sign Up', formOne=formOne)
+
+@app.route('/signup/i/2/fname=<formFirstName>&lname=<formLastName>', methods=['GET', 'POST'])
+def signup2(formFirstName, formLastName):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
 
     formOne = BasicAccountInfoForm()
 
+    formOne.firstName.data = formFirstName
+    formOne.lastName.data = formLastName
+    formOne.password.data = "temporary"
+    formOne.confirm_password.data = "temporary"
+
+    if formOne.validate_on_submit():
+        return redirect(url_for("signup3", formFirstName=formOne.firstName.data, formLastName=formOne.lastName.data, formUsername=formOne.username.data, formEmail=formOne.email.data))
+
+    return render_template('signup2.html', title='Sign Up', formOne=formOne)
+
+@app.route('/signup/i/3/fname=<formFirstName>&lname=<formLastName>&username=<formUsername>&email=<formEmail>', methods=['GET', 'POST'])
+def signup3(formFirstName, formLastName, formUsername, formEmail):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    formOne = BasicAccountInfoForm()
+
+    formOne.firstName.data = formFirstName
+    formOne.lastName.data = formLastName
+    formOne.username.data = formUsername
+    formOne.email.data = formEmail
+
     if formOne.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(formOne.password.data).decode('utf-8')
 
-        user = Users(firstName=formOne.firstName.data, lastName=formOne.lastName.data, username=formOne.username.data, email=formOne.email.data, password=hashed_password)
+        user = Users(firstName=formOne.firstName.data, lastName=formOne.lastName.data, username=formOne.username.data, email= formOne.email.data, password=hashed_password)
 
         db.session.add(user)
         db.session.commit()
@@ -157,7 +239,7 @@ def signup():
 
         return redirect(url_for('interests'))
 
-    return render_template('signup.html', title='Sign Up', formOne=formOne)
+    return render_template('signup3.html', title='Sign Up', formOne=formOne)
 
 @app.route('/interests', methods=['GET', 'POST'])
 @login_required
@@ -190,7 +272,7 @@ def interests():
     if formOne.validate_on_submit():
         return redirect(url_for('setup_acc'))
 
-    return render_template('gettingstartedinterests.html', title='Getting Started', formOne=formOne, display=display, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+    return render_template('gettingstarted1.html', title='Getting Started', formOne=formOne, display=display, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
 
 @app.route('/follow', methods=['POST'])
 @login_required
@@ -240,10 +322,11 @@ def setup_acc():
 
         db.session.commit()
 
+        flash("Welcome to Hap!", "success")
         return redirect(url_for('home'))
 
     profilePic = url_for("static", filename="images/" + current_user.image_file)
-    return render_template('gettingstartedsetupacc.html', title='Getting Started', formOne=formOne, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
+    return render_template('gettingstarted2.html', title='Getting Started', formOne=formOne, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -297,19 +380,19 @@ def account(username):
         events = Events.query.filter_by(user_id=current_user.userId).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=current_user.userId).count()
         joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline", userInterests=userInterests)
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="2px #FFC000 solid;", userInterests=userInterests)
     else:
-        selectUser = Users.query.filter_by(username=username).first()
-        if selectUser:
-            user = Users.query.get_or_404(selectUser.userId)
+        user = Users.query.filter_by(username=username).first()
+        if user:
             userInterests = db.session.query(Categories.categoryName).filter(userhasinterest_rel_table.c.user_id==user.userId).filter(userhasinterest_rel_table.c.category_id==Categories.catId).all()
             profilePic = url_for("static", filename="images/" + user.image_file_sm)
             events = Events.query.filter_by(user_id=user.userId).order_by(Events.dateCreated.desc())
             createdEventsCount = Events.query.filter_by(user_id=user.userId).count()
             joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=user.userId)).count()
-            return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline", userInterests=userInterests)
+            
+            return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="2px #FFC000 solid;", userInterests=userInterests)
         
-        elif selectUser is None:
+        elif user is None:
             return redirect(url_for("home"))
 
 @app.route("/<username>/accountevents")
@@ -325,15 +408,20 @@ def account_events(username):
         events = Events.query.filter_by(user_id=current_user.userId).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=current_user.userId).count()
         joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline", userInterests=userInterests)
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="2px #FFC000 solid;", userInterests=userInterests)
     else:
-        user = Users.query.get_or_404(username)
-        userInterests = db.session.query(Categories.categoryName).filter(userhasinterest_rel_table.c.user_id==user.userId).filter(userhasinterest_rel_table.c.category_id==Categories.catId).all()
-        profilePic = url_for("static", filename="images/" + user.image_file_sm)
-        events = Events.query.filter_by(user_id=user.userId).order_by(Events.dateCreated.desc())
-        createdEventsCount = Events.query.filter_by(user_id=user.userId).count()
-        joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=user.userId)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="underline", userInterests=userInterests)
+        user = Users.query.filter_by(username=username).first()
+        if user:
+            userInterests = db.session.query(Categories.categoryName).filter(userhasinterest_rel_table.c.user_id==user.userId).filter(userhasinterest_rel_table.c.category_id==Categories.catId).all()
+            profilePic = url_for("static", filename="images/" + user.image_file_sm)
+            events = Events.query.filter_by(user_id=user.userId).order_by(Events.dateCreated.desc())
+            createdEventsCount = Events.query.filter_by(user_id=user.userId).count()
+            joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=user.userId)).count()
+            
+            return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarCreatedEventsUnderline="2px #FFC000 solid;", userInterests=userInterests)
+
+        elif user is None:
+            return redirect(url_for("home"))
 
 @app.route("/<username>/joinedevents")
 @login_required
@@ -348,15 +436,20 @@ def joined_events(username):
         events = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).order_by(Events.dateCreated.desc())
         createdEventsCount = Events.query.filter_by(user_id=current_user.userId).count()
         joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarJoinedEventsUnderline="underline", userInterests=userInterests)
+        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarJoinedEventsUnderline="2px #FFC000 solid;", userInterests=userInterests)
     else:
-        user = Users.query.get_or_404(username)
-        userInterests = db.session.query(Categories.categoryName).filter(userhasinterest_rel_table.c.user_id==user.userId).filter(userhasinterest_rel_table.c.category_id==Categories.catId).all()
-        profilePic = url_for("static", filename="images/" + user.image_file_sm)
-        events = Events.query.filter(Events.joinrel.any(userId=user.userId)).order_by(Events.dateCreated.desc())
-        createdEventsCount = Events.query.filter_by(user_id=user.userId).count()
-        joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=user.userId)).count()
-        return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarJoinedEventsUnderline="underline", userInterests=userInterests)
+        user = Users.query.filter_by(username=username).first()
+        if user:
+            userInterests = db.session.query(Categories.categoryName).filter(userhasinterest_rel_table.c.user_id==user.userId).filter(userhasinterest_rel_table.c.category_id==Categories.catId).all()
+            profilePic = url_for("static", filename="images/" + user.image_file_sm)
+            events = Events.query.filter(Events.joinrel.any(userId=user.userId)).order_by(Events.dateCreated.desc())
+            createdEventsCount = Events.query.filter_by(user_id=user.userId).count()
+            joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=user.userId)).count()
+            
+            return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, navbarJoinedEventsUnderline="2px #FFC000 solid;", userInterests=userInterests)
+
+        elif user is None:
+            return redirect(url_for("home"))
 
 @app.route("/settings/accountinfo", methods=["GET", "POST"])
 @login_required
@@ -391,7 +484,7 @@ def acc_info_settings():
 
     leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['key.svg','security_settings','Security'],['controls.svg','interest_pref_settings','Interest Preferences']]
     profilePic = url_for("static", filename="images/" + current_user.image_file)
-    return render_template("accinfosettings.html", title="Settings", formOne=formOne, leftPanelItems=leftPanelItems, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
+    return render_template("settings1.html", title="Settings", formOne=formOne, leftPanelItems=leftPanelItems, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
 
 @app.route("/settings/security", methods=["GET", "POST"])
 @login_required
@@ -401,7 +494,7 @@ def security_settings():
 
     leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['key.svg','security_settings','Security'],['controls.svg','interest_pref_settings','Interest Preferences']]
 
-    return render_template("securitysettings.html", title="Settings", leftPanelItems=leftPanelItems, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
+    return render_template("settings2.html", title="Settings", leftPanelItems=leftPanelItems, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
 
 @app.route("/settings/interestpreferences", methods=["GET", "POST"])
 @login_required
@@ -410,111 +503,300 @@ def interest_pref_settings():
         return redirect(url_for("setup_acc"))
 
     leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['key.svg','security_settings','Security'],['controls.svg','interest_pref_settings','Interest Preferences']]
+    
+    userInterests = db.session.query(Categories.catId, Categories.categoryName, userhasinterest_rel_table.c.user_id).filter(Categories.catId==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Categories.catId.asc()).all()
+    categories = Categories.query.all()
+    
+    display = []
 
-    return render_template("interestprefsettings.html", title="Settings", leftPanelItems=leftPanelItems, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
+    for c, category in enumerate(categories):
+        dict = {}
+        dict["id"] = category.catId
+        dict["categoryName"] = category.categoryName
 
-@app.route("/event/<int:event_id>", methods=["GET", "POST"])
+        display.append(dict)
+
+    for x, interest in enumerate(userInterests):
+        for y, category in enumerate(categories):
+            if category.catId == interest.catId:
+                dict = {}
+                dict["id"] = interest.catId
+                dict["categoryName"] = interest.categoryName
+                dict["user_id"] = interest.user_id
+                display[y] = dict
+
+    formOne = UserInterestForm()
+
+    if formOne.validate_on_submit():
+        flash("Categories followed successfully.", "success")
+
+        return redirect(url_for("acc_info_settings"))
+
+    return render_template("settings3.html", title="Settings", formOne=formOne, display=display, leftPanelItems=leftPanelItems, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
+
+@app.route("/event/<int:event_id>/bottomblockaction=bb1/page=<int:joinersPage>", methods=["GET", "POST"])
 @login_required
-def event(event_id):
+def event_joiners(event_id, joinersPage):
     if current_user.numberOfLogins == 0:
         return redirect(url_for("setup_acc"))
 
     event = Events.query.get_or_404(event_id)
-    category = Categories.query.filter(Categories.eventhascategory.any(eventId=event_id)).first()
 
-    reviewbody = ReviewForm()
-    # print "1. Print this: {}".format(reviewbody.reviewbody.data)
+    joiners = db.session.query(Users.userId, Users.username, Users.image_file_sm, Users.firstName, Users.lastName, join_rel_table.c.dateJoined).filter(join_rel_table.c.event_id==event_id).filter(join_rel_table.c.user_id==Users.userId).order_by(join_rel_table.c.dateJoined.desc()).paginate(page=joinersPage, per_page=5)
 
-    if reviewbody.reviewbody.data is not None:
-        # print "NAA ko sa REVIEW BODY"
-        statement = review_rel_table.insert().values(user_id=current_user.userId, event_id=event.eventId, review=reviewbody.reviewbody.data)
+    joinerList = []
+
+    for joiner in joiners.items:
+        joinerObj = {}
+
+        joinerObj["userId"] = joiner.userId
+        joinerObj["username"] = joiner.username
+        joinerObj["image_file_sm"] = joiner.image_file_sm
+        joinerObj["firstName"] = joiner.firstName
+        joinerObj["lastName"] = joiner.lastName
+        joinerObj["dateJoined"] = joiner.dateJoined
+        
+        joinerList.append(joinerObj)  
+
+    return jsonify({"joiners" : joinerList})
+
+@app.route("/event/<int:event_id>/bottomblockaction=bb<int:bottomBlock>", methods=["GET", "POST"])
+@login_required
+def event(event_id, bottomBlock):
+    if current_user.numberOfLogins == 0:
+        return redirect(url_for("setup_acc"))
+
+    event = Events.query.get_or_404(event_id)
+    eventCategory = Categories.query.filter(Categories.eventhascategory.any(eventId=event_id)).first()
+
+    joinersPage = request.args.get("page", 1, type=int) 
+    joinerProfPics = db.session.query(Users.username, Users.image_file_sm).filter(join_rel_table.c.event_id==event_id).filter(join_rel_table.c.user_id==Users.userId).order_by(join_rel_table.c.dateJoined.desc()).limit(11).all()
+    joiners = db.session.query(Users.userId, Users.username, Users.image_file_sm, Users.firstName, Users.lastName, join_rel_table.c.dateJoined).filter(join_rel_table.c.event_id==event_id).filter(join_rel_table.c.user_id==Users.userId).order_by(join_rel_table.c.dateJoined.desc()).paginate(page=joinersPage, per_page=5)
+
+    reviewPosts = db.session.query(review_rel_table.c.review, review_rel_table.c.dateReviewed, Users.firstName, Users.lastName, Users.image_file_sm, Users.username).filter(review_rel_table.c.event_id == event.eventId).filter(Users.userId == review_rel_table.c.user_id).order_by(review_rel_table.c.dateReviewed.desc()).all()
+    ratingPosts = db.session.query(rate_rel_table.c.rate, rate_rel_table.c.dateRated, Users.firstName, Users.lastName, Users.image_file_sm, Users.username).filter(rate_rel_table.c.event_id == event.eventId).filter(Users.userId == rate_rel_table.c.user_id).order_by(rate_rel_table.c.dateRated.desc()).all()
+
+    if event.host != current_user:
+        formOne = PostReviewForm()
+        formTwo = PostRateForm()
+        formThree = UpdateRateForm()
+
+        joinedEvent = db.session.query(join_rel_table).filter(join_rel_table.c.user_id==current_user.userId, join_rel_table.c.event_id==event.eventId).first()
+        ratedEvent = db.session.query(rate_rel_table.c.rate).filter(rate_rel_table.c.user_id==current_user.userId, rate_rel_table.c.event_id==event.eventId).first()
+        if ratedEvent:
+            formThree.rating.default = ratedEvent.rate
+            formThree.process() 
+
+        return render_template("event.html", title=event.eventName, event=event, formOne=formOne, formTwo=formTwo, formThree=formThree, joinedEvent=joinedEvent, ratedEvent=ratedEvent, joiners=joiners, joinerProfPics=joinerProfPics, reviewPosts=reviewPosts, ratingPosts=ratingPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
+
+    else:
+        formTwo = DeleteEventForm()
+        formThree = UpdateEventForm()
+        formTwo.eventName.data = event.eventName
+
+        if formTwo.validate_on_submit():
+            statement = review_rel_table.delete().where(review_rel_table.c.event_id==event.eventId)
+                
+            db.session.execute(statement)
+            db.session.delete(event)
+            db.session.commit()
+            flash("Your event has been deleted.", "success")
+
+            return redirect(url_for('home'))
+        
+        elif formTwo.confirm_eventName.data:
+            flash("Your event has been deleted.", "danger")
+
+            return redirect(url_for('event', event_id=event.eventId, bottomBlock=1))
+
+        if formThree.validate_on_submit():
+            if formThree.imageFile.data:
+                imageFile = save_picture(formThree.imageFile.data, 1000)
+                imageFilesm = save_picture(formThree.imageFile.data, 500)
+                event.image_file = imageFile
+                event.image_file_sm = imageFilesm
+
+            event.eventName = formThree.eventName.data
+            event.eventDescription = formThree.eventDescription.data
+            event.eventDate = formThree.eventDate.data
+            event.eventStartTime = formThree.startTime.data
+            event.eventEndTime = formThree.endTime.data
+            event.fee = formThree.fee.data
+            event.location = formThree.location.data 
+
+            db.session.commit()
+
+            flash("Your event has been updated.", "success")
+
+            return redirect(url_for('event', event_id=event.eventId, bottomBlock=1))
+
+        if request.method == "GET":
+            formThree.eventName.data = event.eventName
+            formThree.eventDescription.data = event.eventDescription
+            formThree.eventDate.data = event.eventDate
+            formThree.startTime.data = event.eventStartTime
+            formThree.endTime.data = event.eventEndTime
+            formThree.fee.data = event.fee
+            formThree.location.data = event.location
+
+        return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formTwo=formTwo, joiners=joiners, joinerProfPics=joinerProfPics, reviewPosts=reviewPosts, ratingPosts=ratingPosts, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", eventCategory=eventCategory, bottomBlock=bottomBlock)
+
+@app.route("/event/<int:event_id>/bottomblockaction=bb<int:bottomBlock>/join", methods=["GET", "POST"])
+@login_required
+def join_event(event_id, bottomBlock):
+    if request.method == 'GET':
+        if current_user.numberOfLogins == 0:
+            return redirect(url_for("setup_acc"))
+
+        return redirect(url_for("event", event_id=event_id, bottomBlock=1))
+
+    elif request.method == 'POST': 
+        req = request.form['event_id']
+
+        lookRow = db.session.query(join_rel_table).filter(join_rel_table.c.user_id==current_user.userId, join_rel_table.c.event_id==req).first()
+
+        if lookRow is None:
+            statement =  join_rel_table.insert().values(user_id=current_user.userId, event_id=req)
+
+            db.session.execute(statement)
+            db.session.commit()
+
+        return jsonify({'result' : 'success'})
+
+@app.route("/event/<int:event_id>/bottomblockaction=bb<int:bottomBlock>/unjoin", methods=["GET", "POST"])
+@login_required
+def unjoin_event(event_id, bottomBlock):
+    if request.method == 'GET':
+        if current_user.numberOfLogins == 0:
+            return redirect(url_for("setup_acc"))
+        
+        return redirect(url_for("event", event_id=event_id, bottomBlock=bottomBlock))
+
+    elif request.method == 'POST': 
+        statement = join_rel_table.delete().where(join_rel_table.c.user_id==current_user.userId).where(join_rel_table.c.event_id==request.form['event_id'])
+                    
         db.session.execute(statement)
         db.session.commit()
 
-        # print "2. Print this: {}".format(event.id)
+        return jsonify({'result' : 'success'})
 
-        return redirect(url_for("event", event_id=event.eventId))
+@app.route("/event/<int:event_id>/review", methods=["GET", "POST"])
+@login_required
+def review_event(event_id):
+    if current_user.numberOfLogins == 0:
+        return redirect(url_for("setup_acc"))
 
-    reviews = db.session.query(review_rel_table.c.review, Users.firstName, Users.lastName).filter(review_rel_table.c.event_id == event.eventId).filter(Users.userId == review_rel_table.c.user_id).order_by(review_rel_table.c.dateCreated.desc()).all()
-    # reviews = Events.query.join(review_rel_table).join(Users).filter(review_rel_table.c.user_id == current_user.id and review_rel_table.c.event_id == event.id).all()
-    # print "3. Print this: {}".format(reviews)
+    event = Events.query.get_or_404(event_id)
 
-    formFour = DeleteEventForm()
-    formThree = UpdateEventForm()
+    if request.method == 'GET':
+        if current_user.numberOfLogins == 0:
+            return redirect(url_for("setup_acc"))
+        
+        return redirect(url_for("event", event_id=event.eventId, bottomBlock=2))
 
-    formFour.eventName.data = event.eventName
+    if request.method == 'POST':
+        formOne = PostReviewForm()
 
-    if formFour.validate_on_submit():
-        db.session.delete(event)
+        if formOne.review.data:
+            statement = review_rel_table.insert().values(user_id=current_user.userId, event_id=event.eventId, review=formOne.review.data)
+            
+            db.session.execute(statement)
+            db.session.commit()
+
+            return redirect(url_for("event", event_id=event_id, bottomBlock=2))
+
+@app.route("/event/<int:event_id>/rate", methods=["GET", "POST"])
+@login_required
+def rate_event(event_id):
+    if current_user.numberOfLogins == 0:
+        return redirect(url_for("setup_acc"))
+
+    event = Events.query.get_or_404(event_id)
+
+    if request.method == 'GET':
+        if current_user.numberOfLogins == 0:
+            return redirect(url_for("setup_acc"))
+        
+        return redirect(url_for("event", event_id=event.eventId, bottomBlock=3))
+
+    if request.method == 'POST':
+        eventReq = request.form['event_id']
+        rateReq = request.form['rate']
+
+        statement = rate_rel_table.insert().values(user_id=current_user.userId, event_id=eventReq, rate=rateReq)
+        
+        db.session.execute(statement)
         db.session.commit()
-        flash("Your event has been deleted.", "success")
 
+        return redirect(url_for("event", event_id=event_id, bottomBlock=3))
+
+@app.route("/event/<int:event_id>/updaterate", methods=["GET", "POST"])
+@login_required
+def update_rate_event(event_id):
+    if current_user.numberOfLogins == 0:
+        return redirect(url_for("setup_acc"))
+
+    event = Events.query.get_or_404(event_id)
+
+    if request.method == 'GET':
+        if current_user.numberOfLogins == 0:
+            return redirect(url_for("setup_acc"))
+        
+        return redirect(url_for("event", event_id=event.eventId, bottomBlock=3))
+
+    if request.method == 'POST':
+        eventReq = request.form['event_id']
+        rateReq = request.form['rate']
+
+        statementOne = rate_rel_table.delete().where(rate_rel_table.c.user_id==current_user.userId).where(rate_rel_table.c.event_id==eventReq)
+        statementTwo = rate_rel_table.insert().values(user_id=current_user.userId, event_id=eventReq, rate=rateReq)
+
+        db.session.execute(statementOne)
+        db.session.execute(statementTwo)
+        db.session.commit()
+
+        return redirect(url_for("event", event_id=event_id, bottomBlock=3))
+
+def send_reset_email(userId):
+    token = userId.get_reset_token()
+    msg = Message("Password Reset Request", sender="noreply@demo.com", recipients=[userId.email])
+    # msg.body = f'''To reset your password, visit the following link: {url_for('reset_token', token=token, _external=True)}. If you did not make this request then simply ignore, Thank You.'''
+    # msg.body = "To reset your password, visit the following link: {url_for('{}', token=token, _external=True)}. If you did not make this request then simply ignore, Thank You.".format('reset_token')
+    msg.body = '''To reset your password, visit the following link:
+{}.
+
+If you did not make this request then simply ignore, Thank You.
+    '''.format(url_for('reset_token', token=token, _external=True))
+
+    mail.send(msg)
+
+@app.route("/reset_password", methods=["GET", "POST"])
+def reset_request():
+    if current_user.is_authenticated:
         return redirect(url_for('home'))
-        
-    elif formFour.confirm_eventName.data:
-        flash("Delete event unsuccessful.", "danger")
-        return redirect(url_for('event', event_id=event.eventId))
-    
-    if formThree.validate_on_submit():
-        if formThree.imageFile.data:
-            imageFile = save_picture(formThree.imageFile.data, 1000)
-            imageFilesm = save_picture(formThree.imageFile.data, 500)
-            event.image_file = imageFile
-            event.image_file_sm = imageFilesm
-        event.eventName = formThree.eventName.data
-        event.eventDescription = formThree.eventDescription.data
-        event.eventDate = formThree.eventDate.data
-        event.eventStartTime = formThree.startTime.data
-        event.eventEndTime = formThree.endTime.data
-        event.fee = formThree.fee.data
-        event.location = formThree.location.data  
+
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = Users.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash("An email has been sent with instructions to reset your password.", "info")
+        return redirect(url_for("login"))
+    return render_template("resetrequest.html", title="Reset Password", form=form)
+
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    user = Users.verify_reset_token(token)
+    if user is None:
+        flash("That is invalid or expired token.", "warning")
+        return redirect(url_for('resetrequest'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user.password = hashed_password
         db.session.commit()
-        flash("Your Event has been updated.", "success")
-        return redirect(url_for('event', event_id=event.id))
-
-    if request.method == "GET":
-        formThree.eventName.data = event.eventName
-        formThree.eventDescription.data = event.eventDescription
-        formThree.eventDate.data = event.eventDate
-        formThree.startTime.data = event.eventStartTime
-        formThree.endTime.data = event.eventEndTime
-        formThree.fee.data = event.fee
-        formThree.location.data = event.location
-
-    if event.host != current_user:
-        joinedEvents = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).all()
-
-        bool = False
-        for joinedEvent in joinedEvents:
-            if joinedEvent.eventId == event.eventId:
-                bool = True
-        
-        if bool == True:
-            formTwo = UnjoinEventForm()
-            
-            if formTwo.validate_on_submit():
-                bool = False
-
-                statement = join_rel_table.delete().where(join_rel_table.c.user_id==current_user.userId).where(join_rel_table.c.event_id==event.eventId)
-                
-                db.session.execute(statement)
-                db.session.commit()
-
-                return redirect(url_for("event", event_id=event.eventId))
-            
-            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formTwo, formButtonClass="danger", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", reviewbody=reviewbody, reviews=reviews, category=category)
-
-        else:
-            formOne = JoinEventForm()
-
-            if formOne.validate_on_submit():
-                statement = join_rel_table.insert().values(event_id=event.eventId, user_id=current_user.userId)
-
-                db.session.execute(statement)
-                db.session.commit()
-
-                return redirect(url_for("event", event_id=event.eventId))
-
-            return render_template("event.html", title=event.eventName, event=event, formOneOrTwo=formOne, formButtonClass="warning", homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", reviewbody=reviewbody, reviews=reviews, category=category)
-
-    return render_template("event.html", title=event.eventName, event=event, formThree=formThree, formFour=formFour, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", reviewbody=reviewbody, reviews=reviews, category=category)
+        flash("Your password has been update! You are now able to log in", "success")
+        return redirect(url_for('login'))
+    return render_template("resettoken.html", title="Reset Password", form=form)

@@ -1,0 +1,136 @@
+{% extends 'layouts.html' %}
+    {% block bodyStyle %}
+        <body class="modal-open" style="padding-right:17px;">
+    {% endblock bodyStyle %}
+    {% block navbarAdjust %}
+        <div id="homefeed-navbar" class="container-fluid">
+    {% endblock navbarAdjust %}
+    {% block navbarToggler %}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    {% endblock navbarToggler %}
+    {% block navbarRightComponent %}
+        <div class="dropdown">
+            <div class="dropdown">
+                <button id="gear-logo" class="btn btn-outline-warning" data-toggle="dropdown">
+                    <div style="width:17px;margin-bottom:-5px;">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                            viewBox="150 -150 500 500" style="enable-background:new 150 -150 500 500;" xml:space="preserve">
+                            <style type="text/css">
+                                .st0{fill:#FFC000;}
+                            </style>
+                            <path class="st0" d="M621.6,62.2l-60.1-9.8c-3.4-11.6-8-22.6-13.7-33.1l35.1-50c2.8-4,2.3-9.4-1.1-12.8l-38.9-38.9
+                                c-3.5-3.5-8.9-3.9-12.9-1L480.7-48c-10.5-5.8-21.6-10.4-33.3-13.9l-10.5-59.8c-0.8-4.8-5-8.3-9.9-8.3h-55c-4.9,0-9.1,3.5-9.9,8.4
+                                l-9.7,59.6c-11.7,3.4-22.8,8-33.4,13.7L270-83.5c-4-2.8-9.4-2.4-12.9,1.1l-38.9,38.9c-3.4,3.4-3.9,8.8-1.1,12.8l34.6,49.5
+                                c-5.8,10.6-10.5,21.8-14,33.6l-59.3,9.9c-4.8,0.8-8.3,5-8.3,9.9v55c0,4.9,3.5,9,8.2,9.9l59.3,10.5c3.5,11.8,8.1,23,13.9,33.6l-35,49
+                                c-2.8,4-2.4,9.4,1.1,12.9l38.9,38.9c3.4,3.4,8.8,3.9,12.8,1.1l49.6-34.7c10.5,5.8,21.7,10.4,33.5,13.8l9.9,59.6
+                                c0.8,4.8,5,8.4,9.9,8.4h55c4.9,0,9-3.5,9.9-8.3l10.6-59.9c11.7-3.5,22.8-8.2,33.3-14l49.9,35c4,2.8,9.4,2.3,12.8-1.1l38.9-38.9
+                                c3.5-3.5,3.9-8.9,1-12.9l-35.6-49.4c5.7-10.4,10.3-21.5,13.7-33.1l60.2-10.5c4.8-0.8,8.3-5,8.3-9.9v-55
+                                C630,67.2,626.4,63,621.6,62.2z M400,180c-44.1,0-80-35.9-80-80s35.9-80,80-80s80,35.9,80,80S444.1,180,400,180z"/>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </div>
+    {% endblock navbarRightComponent %}
+    {% block content %}
+        <div style="padding-left: calc(100vw - 100%);">
+            <div id="home-container">
+                <div class="row justify-content-md-center">
+                    <div class="col">
+                        <div class="leftBox">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="middlebox">
+                            <div id="create-panel" class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        <button id="plus-logo" type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#createEventModal">
+                                            <div style="width:17px;margin-bottom:-5px;">
+                                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                    viewBox="119 -119.5 438.5 438.5" style="enable-background:new 119 -119.5 438.5 438.5;" xml:space="preserve">
+                                                    <style type="text/css">
+                                                        .st0{fill:#FFC000;}
+                                                    </style>
+                                                    <path class="st0" d="M542.7,130c0,7.9-2.9,14.7-8.6,20.4c-5.8,5.7-12.6,8.6-20.4,8.6l-116.2,0l0,116.1c0,7.9-2.9,14.7-8.6,20.4
+                                                c-5.7,5.7-12.5,8.6-20.4,8.6l-58.1,0c-7.9,0-14.7-2.9-20.4-8.6c-5.7-5.8-8.6-12.6-8.6-20.4l0-116.1l-116.2,0
+                                                c-7.9,0-14.7-2.9-20.4-8.6c-5.7-5.7-8.6-12.6-8.6-20.4l0-58.1c0-7.9,2.9-14.7,8.6-20.4c5.7-5.7,12.6-8.6,20.4-8.6l116.2,0l0-116.2
+                                                c0-7.9,2.9-14.7,8.6-20.4c5.7-5.7,12.6-8.6,20.4-8.6l58.1,0c7.9,0,14.7,2.9,20.4,8.6c5.7,5.7,8.6,12.6,8.6,20.4l0,116.2l116.1,0
+                                                c7.9,0,14.7,2.9,20.4,8.6c5.7,5.7,8.6,12.6,8.6,20.4L542.7,130z"/>
+                                                </svg>
+                                            </div>
+                                        </button>
+                                        <div class="modal show" id="signupModals" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display:block;padding-right:17px;">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
+                                                        <div class="modal-body" id="setupAcc-modalContent">
+                                                            <div class="pt-3 text-right" style="margin-top:-25px;">
+                                                                <small class="text-muted">
+                                                                    2/2
+                                                                </small>
+                                                            </div>
+                                                            <div class="row align-items-center" style="margin:0 0 20px 0;padding:0 0 0 70px;">
+                                                                <div class="col-md-auto" style="overflow:hidden;">
+                                                                    <img src='{{ url_for("static", filename="assets/gettingstarted-rabbit.svg") }}' style="width:200px;">
+                                                                </div>
+                                                                <div class="col-md-auto">
+                                                                    <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;font-size:25px;text-align:center;">Setup your account</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="container-fluid">
+                                                                {{ formOne.hidden_tag() }}
+                                                                <fieldset class="form-group">
+                                                                    <label>Your Profile Picture</label>
+                                                                    <div class="container-fluid" style="border-top:1px lightgray solid;margin:4px 0 20px 0;padding:40px 0 40px 0">
+                                                                        <div class="row">
+                                                                            <div class="col-md-auto">
+                                                                                <div class="form-group">
+                                                                                    {{ formOne.profPic(class="form-control-file") }}
+                                                                                    {% if formOne.profPic.errors %}
+                                                                                        {% for error in formOne.profPic.errors %}
+                                                                                            <span class="text-danger"> {{ error }} </span></br>
+                                                                                        {% endfor %}
+                                                                                    {% endif %}
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <img class="rounded mx-auto d-block" id="profpic-preview" style="height:200px;width:200px;object-fit:cover;background:gray;border:1px lightgray solid;">
+                                                                                <script>document.getElementById("profpic-preview").src = '{{ profilePic }}';</script>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a class="btn btn-secondary" href='{{ url_for("interests") }}' role="button" style="width:70px;border-radius:100px;">Back</a>
+                                                            {{ formOne.submit(id="gettingstarted-btn", class="btn btn-success", style="width:90px;border-radius:100px;color:white;") }}
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width:100%;height:100%;padding:0 10px;">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="rightBox">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock content %}
+    {% block backdrop %}
+        <div class="modal-backdrop show"></div>
+    {% endblock backdrop %}

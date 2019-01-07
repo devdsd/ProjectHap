@@ -18,21 +18,15 @@
         <link rel="stylesheet" type="text/css" href='{{ url_for("static", filename="css/bootstrap.min.css") }}'>
         <link rel="shortcut icon" href='{{ url_for("static", filename="assets/hap-logo.ico") }}'>
     </head>
-    {% block bodyStyle %}
-    {% endblock bodyStyle %}
-        {% if current_user.is_authenticated %}
-            {% block navbarAdjust %}{% endblock navbarAdjust %}
-        {% else %}
-            <div class="container-fluid" style="padding:0 17%;border-bottom:1px lightgray solid;background:white;padding-top:1.7px;padding-bottom:1px;">
-        {% endif %}
+    {% block bodyStyle %}{% endblock bodyStyle %}
+        {% block navbarAdjust %}{% endblock navbarAdjust %}
             <nav class="navbar navbar-expand-lg navbar-light" style="background:transparent;">
-                {% block navbarToggler %}
-                {% endblock navbarToggler %}
+                {% block navbarToggler %}{% endblock navbarToggler %}
                 <a class="navbar-brand" href='{{ url_for("home") }}'>
-                    <img src='{{ url_for("static", filename="assets/hap-nameplate.svg") }}' style="width:55px;margin:-10px 0 -10px 0;">
+                    <img src='{{ url_for("static", filename="assets/hap-nameplate.svg") }}' style="width:47px;margin:-10px 0 -10px 0;">
                 </a>
                 <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="margin-bottom:-5px;">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="margin-bottom:-10px;">
                         <li class="nav-item">
                             {% if current_user.is_authenticated %}
                                 <a class="nav-link" href='{{ url_for("home") }}'><img src='{{ url_for("static", filename="assets/home-logo.svg") }}' style="width:25px;margin:0 11.5px;padding-bottom:5px;border-bottom:2px {{ homeNavbarLogoBorderBottom }} solid;"></a>
@@ -48,20 +42,7 @@
                 </div>
             </nav>
         </div>
-        <div id="alert-box" class="container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
+        {% block flashMessage %}{% endblock flashMessage %}
         {% block content %}{% endblock content %}
         <script type="text/javascript" src='{{ url_for("static", filename="js/main.js") }}'></script>
         <script type="text/javascript" src='{{ url_for("static", filename="js/bootstrap.bundle.js") }}'></script>
