@@ -29,11 +29,12 @@ def home():
         
         if current_user.numberOfLogins == 0:
             return redirect(url_for("setup_acc"))
-
-        userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.user_id, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).all()
-        events = Events.query.all()
-
+        page = request.args.get('page', 1, type=int)
+        userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.user_id, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page=page, per_page=2).items
+        # userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.user_id, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page, per_page=2)
+        # print "print This: {}".format(userFeedEvents)
         display = []
+
         for c, event in enumerate(userFeedEvents):
             dict = {}
             dict["event_id"] = event.eventId
