@@ -138,7 +138,7 @@ def home():
             return redirect(url_for("home"))
 
 
-        return render_template("home.html", title="Home", formTwo=formTwo, homeNavbarLogoBorderBottom="#FFC000", profileNavbarLogoBorderBottom="white", display=display)
+        return render_template("home.html", title="Home", formTwo=formTwo, homeNavbarLogoBorderBottom="#FFC000", profileNavbarLogoBorderBottom="white", display=display, joinBtn="joinBtn", unjoinBtn="unjoinBtn")
 
     formOne = LoginForm()
 
@@ -583,6 +583,7 @@ def event(event_id, bottomBlock):
 
         joinedEvent = db.session.query(join_rel_table).filter(join_rel_table.c.user_id==current_user.userId, join_rel_table.c.event_id==event.eventId).first()
         ratedEvent = db.session.query(rate_rel_table.c.rate).filter(rate_rel_table.c.user_id==current_user.userId, rate_rel_table.c.event_id==event.eventId).first()
+        
         if ratedEvent:
             formThree.rating.default = ratedEvent.rate
             formThree.process() 
@@ -716,19 +717,19 @@ def rate_event(event_id):
     if request.method == 'GET':
         if current_user.numberOfLogins == 0:
             return redirect(url_for("setup_acc"))
-        
-        return redirect(url_for("event", event_id=event.eventId, bottomBlock=3))
-
-    if request.method == 'POST':
-        eventReq = request.form['event_id']
-        rateReq = request.form['rate']
-
-        statement = rate_rel_table.insert().values(user_id=current_user.userId, event_id=eventReq, rate=rateReq)
-        
-        db.session.execute(statement)
-        db.session.commit()
 
         return redirect(url_for("event", event_id=event_id, bottomBlock=3))
+
+    if request.method == 'POST':
+        formOne = PostRateForm()
+
+        if formOne.rating.data:
+            statement = rate_rel_table.insert().values(user_id=current_user.userId, event_id=event.eventId, rate=formOne.rating.data)
+            
+            db.session.execute(statement)
+            db.session.commit()
+
+            return redirect(url_for("event", event_id=event_id, bottomBlock=3))
 
 @app.route("/event/<int:event_id>/updaterate", methods=["GET", "POST"])
 @login_required
@@ -741,21 +742,21 @@ def update_rate_event(event_id):
     if request.method == 'GET':
         if current_user.numberOfLogins == 0:
             return redirect(url_for("setup_acc"))
-        
-        return redirect(url_for("event", event_id=event.eventId, bottomBlock=3))
-
-    if request.method == 'POST':
-        eventReq = request.form['event_id']
-        rateReq = request.form['rate']
-
-        statementOne = rate_rel_table.delete().where(rate_rel_table.c.user_id==current_user.userId).where(rate_rel_table.c.event_id==eventReq)
-        statementTwo = rate_rel_table.insert().values(user_id=current_user.userId, event_id=eventReq, rate=rateReq)
-
-        db.session.execute(statementOne)
-        db.session.execute(statementTwo)
-        db.session.commit()
 
         return redirect(url_for("event", event_id=event_id, bottomBlock=3))
+
+    if request.method == 'POST':
+        formOne = UpdateRateForm()
+
+        if formOne.rating.data:
+            statementOne = rate_rel_table.delete().where(rate_rel_table.c.user_id==current_user.userId).where(rate_rel_table.c.event_id==event.eventId)
+            statementTwo = rate_rel_table.insert().values(user_id=current_user.userId, event_id=event.eventId, rate=formOne.rating.data)
+
+            db.session.execute(statementOne)
+            db.session.execute(statementTwo)
+            db.session.commit()
+
+            return redirect(url_for("event", event_id=event_id, bottomBlock=3))
 
 def send_reset_email(userId):
     token = userId.get_reset_token()
