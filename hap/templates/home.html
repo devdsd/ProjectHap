@@ -206,7 +206,103 @@
                                             </div>
                                         </div>
                                     {% endfor %}
+                                    
                                 </div>
+                                <div class="container-fluid" style="margin:10px 0 5px 0;">
+                                    <button id="events-seeMore" type="button" class="btn btn-outline-secondary btn-lg btn-block" style="border-radius:100px;">See more</button>
+                                </div>
+                                <script>
+                                    $(document).ready(function() {
+                                        function UrlExists(url, cb){
+                                            jQuery.ajax({
+                                                url:      url,
+                                                dataType: 'text',
+                                                type:     'GET',
+                                                complete:  function(xhr){
+                                                    if(typeof cb === 'function')
+                                                    cb.apply(this, [xhr.status]);
+                                                }
+                                            });
+                                        }
+
+                                        var page_num = 2;
+                                        console.log(page_num);
+
+                                        $("#events-seeMore").click(function() {
+                                            UrlExists("/home/eventpopulate=" + page_num, function(status){
+                                                if(status === 404){
+                                                    $("#events-seeMore").hide();
+                                                }
+                                                else {
+                                                    fetch("/home/eventpopulate=" + page_num).then(function(response) {
+                                                        response.json().then(function(data) {
+                                                            let content_html = "";
+                                                    
+                                                            for(let event of data.events) {
+                                                                var event_id = event.event_id;
+                                                                var category_id = event.category_id;
+                                                                var event_name = event.event_name;
+                                                                var event_location = event.location;
+                                                                var event_imgFile = event.image_file;
+                                                                var event_date_dayNum = event.event_date_dayNum;
+                                                                var event_date_month = event.event_date_month;
+                                                                var event_date_dayName = event.event_date_dayName;
+                                                                var event_startTime = event.event_startTime;
+
+                                                                var host_id = event.host_id;
+                                                                var host_username = event.host_username;
+                                                                var host_firstName = event.host_firstName;
+                                                                var host_lastName = event.host_lastName;
+                                                                var joined = event.joined;
+
+                                                                var event_date_month_upper = "{{ eventDate_month|upper }}".replace('eventDate_month', event_date_month);
+                                                                var event_url = "{{ url_for('event', event_id=1, bottomBlock='1') }}".replace('eventId', event_id);
+                                                                var imageFile_url = "{{ url_for('static', filename='images/imgFile') }}".replace('imgFile', event_imgFile);
+                                                                var account_url = "{{ url_for('account', username='hostUsername') }}".replace('hostUsername', host_username);
+                                                                var if_hostId = '{% if host_id == current_user.userId %}'.replace('host_id', host_id);
+                                                                var else_hostId = '{% else %}';
+                                                                var endif_hostId = '{% endif %}';
+                                                                var if_not_hostId = '{% if host_id != current_user.userId %}'.replace('host_id', host_id);
+                                                                var if_joined_undefined = '{% if event_joined is not defined %}'.replace('event_joined', joined);
+                                                            
+                                                                content_html += '<div class="card" style="width:565px;margin-bottom:20px;border:1px lightgray solid;"><a href='
+                                                                                + event_url + '><img class="card-img-top" src='
+                                                                                + imageFile_url + ' alt="Event Banner" style="height:200px;object-fit:cover;border-bottom:1px lightgray solid;"></a><div class="card-body"><div class="row align-items-center"><div class="col-md-auto" style="border-right:1px lightgray solid;width:80px;"><div style="width:50px;"><svg version="1.1" id="calendar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"viewBox="-55 147 500 500" style="enable-background:new -55 147 500 500;" xml:space="preserve"><style type="text/css">.rectColorGray{fill:#808080;stroke:#D3D3D3;stroke-miterlimit:10;}.fillNone{fill:none;}.fontBlack{fill:black;}.fontArial{font-family:Arial, Helvetica, sans-serif;font-weight:bold;}.fontSize{font-size:150px;}.fontColorWhite{fill:#FFFFFF;}.fontSizeTwo{font-size:100px;}</style><path id="calendar_block" class="rectColorGray" d="M361.9,197.4v-33.3h-18v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3h-18.1v33.3H40.9v-33.3H22.8v33.3h-45.8V628h430.6V197.4H361.9z M381.5,585H3.2V343.8h378.4V585z"/><rect x="3.2" y="407" class="fillNone" width="378.4" height="121"/><text id="day" transform="matrix(1 0 0 1 98 521.5586)" class="fontBlack fontArial fontSize">'
+                                                                                + event_date_dayNum + '</text><rect x="-22.9" y="240" class="fillNone" width="430.6" height="96"/> <text transform="matrix(1 0 0 1 79 311.5986)" class="fontColorWhite fontArial fontSizeTwo">'
+                                                                                + event_date_month_upper + '</text></svg></div></div><div class="col" style="width:350px;"><div class="row"><div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><a href='
+                                                                                + event_url + ' class="h5" style="color:black;font-size:17.5px;">'
+                                                                                + event_name + '</a></div><div class="w-100"></div><div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span style="font-size:13.5px;"><span style="color:red;">'
+                                                                                + event_date_dayName + '</span> '
+                                                                                + event_startTime + ' | at '
+                                                                                + event_location + '</span></div><div class="w-100"></div><div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span class="text-muted" style="font-size:13.5px;">Hosted by '
+                                                                                + if_hostId + 'you{% else %}<a href='
+                                                                                + account_url + ' style="color:gray;">'
+                                                                                + host_firstName + ' '
+                                                                                + host_lastName + '</a>'
+                                                                                + endif_hostId + '</span></div></div></div><div class="col-md-auto" style="width:120px;">'
+                                                                                + if_not_hostId
+                                                                                + if_joined_undefined + '<button type="button" class="btn btn-outline-success joinBtn btn-sm" style="width:70px;" event_id="'
+                                                                                + event_id + '" bottom_block="1">Join</button>'
+                                                                                + else_hostId + '<button type="button" class="btn btn-outline-secondary unjoinBtn btn-sm" style="width:70px;" event_id="'
+                                                                                + event_id + '" bottom_block="1">Unjoin</button>{% endif %}{% endif %}</div></div></div></div>';
+                                                            }
+                                                            
+                                                            $("#displayEvents-cont").append(content_html);
+                                                            page_num++;
+                                                            console.log(page_num);
+                                                    
+                                                            UrlExists("/home/eventpopulate=" + page_num, function(status){
+                                                                if(status === 404){
+                                                                    $("#events-seeMore").hide();
+                                                                }
+                                                            });
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
                             </div>
                         </div>
                         <div class="col">

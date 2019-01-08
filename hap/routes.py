@@ -21,7 +21,46 @@ def save_picture(form_picture, size):
     i.save(picture_path)
     
     return picture_fn
+
+@app.route("/home/eventpopulate=<int:eventsPage>", methods=["GET", "POST"])
+@login_required
+def populate_events(eventsPage):
+    if current_user.numberOfLogins == 0:
+        return redirect(url_for("setup_acc"))
+
+    userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page=eventsPage, per_page=2)
+
+    eventList = []
+    for c, event in enumerate(userFeedEvents.items):
+        dict = {}
+        
+        dict["event_id"] = event.eventId
+        dict["category_id"] = event.category_id
+        dict["event_name"] = event.eventName
+        dict["event_location"] = event.location
+        dict["event_imgFile"] = event.image_file
+        dict["event_date_dayNum"] = event.eventDate.strftime("%d")
+        dict["event_date_dayName"] = event.eventDate.strftime("%a")
+        dict["event_date_month"] = event.eventDate.strftime("%b")
+        dict["event_startTime"] = event.eventStartTime.strftime("%I %p")
+        
+        eventList.append(dict)
+
+    for x, event in enumerate(eventList):
+        selectEvent = Events.query.filter_by(eventId=event["event_id"]).first()
+
+        event["host_id"] = selectEvent.host.userId
+        event["host_username"] = selectEvent.host.username
+        event["host_firstName"] = selectEvent.host.firstName
+        event["host_lastName"] = selectEvent.host.lastName
+
+        joined = db.session.query(join_rel_table).filter(join_rel_table.c.user_id==current_user.userId, join_rel_table.c.event_id==event["event_id"]).first()
     
+        if joined:
+            event["joined"] = "True"
+
+    return jsonify({"events" : eventList})
+
 @app.route('/', methods=["GET","POST"])
 @app.route('/home', methods=["GET","POST"])
 def home():
@@ -97,6 +136,7 @@ def home():
         elif formTwo.eventName.data:
             flash("Create event unsuccessful.", "danger")
             return redirect(url_for("home"))
+
 
         return render_template("home.html", title="Home", formTwo=formTwo, homeNavbarLogoBorderBottom="#FFC000", profileNavbarLogoBorderBottom="white", display=display)
 
