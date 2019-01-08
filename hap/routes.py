@@ -526,6 +526,8 @@ def event(event_id, bottomBlock):
     if current_user.numberOfLogins == 0:
         return redirect(url_for("setup_acc"))
 
+    # eventPage = request.args.get('page', 1, type=int)
+    # event = Events.query.get_or_404(event_id).paginate(page=eventPage, per_page=5)
     event = Events.query.get_or_404(event_id)
     eventCategory = Categories.query.filter(Categories.eventhascategory.any(eventId=event_id)).first()
 
