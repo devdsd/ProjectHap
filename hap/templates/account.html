@@ -1,9 +1,9 @@
 {% extends 'layouts.html' %}
     {% block bodyStyle %}
-        <body>
+        <body style="background:#fff9f2;">
     {% endblock bodyStyle %}
     {% block navbarAdjust %}
-        <div class="container-fluid" style="position:fixed;z-index:2;padding:0 17%;border-bottom:1px lightgray solid;top:-0.5px;background:white;">
+        <div id="account-navbar" class="container-fluid">
     {% endblock navbarAdjust %}
     {% block navbarToggler %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,53 +54,101 @@
         </div>
     {% endblock flashMessage %}
     {% block content %}
-        <div class="container-fluid" style="padding:0 auto;border-bottom:1px lightgray solid;">
+        <div class="container-fluid" style="margin-top:-10px;padding:0 auto;border-bottom:1px lightgray solid;background:white;">
             <div id="profile-header">
                 <div class="row">
                     <div class="col">
                         <div class="media">
-                            <img src="{{ profilePic }}" class="rounded mx-auto d-block" style="margin:25px;height:135px;width:135px;object-fit:cover;background:gray;border:1px lightgray solid;">
-                            <div class="media-body" style="margin:25px 25px 0 25px;">
+                            {% if user == current_user %}
+                                <div class="profPic-cont">
+                                    <img src="{{ profilePic }}" class="prof-pic mx-auto d-block" style="border:1px lightgray solid;border-radius:50%;margin:25px;height:180px;width:180px;object-fit:cover;background:gray;">
+                                    <div class="profPic-hover">
+                                        <img data-toggle="modal" data-target="#exampleModalCenter" class="profPic-editBtn" src='{{ url_for("static", filename="assets/editBtn-profPic.svg") }}' style="width:50px;">
+                                    </div>
+                                </div>
+                                <div class="modal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalCenterTitle" style="padding-left:10px;">Change Profile Picture</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body" style="height:350px;">
+                                                    <div class="container-fluid">
+                                                        {{ formOne.hidden_tag() }}
+                                                        <fieldset class="form-group">
+                                                            <div class="container-fluid">
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <img class="rounded mx-auto d-block" id="changeProfPic-preview" style="height:250px;width:250px;object-fit:cover;background:gray;border:1px lightgray solid;">
+                                                                        <script>document.getElementById("changeProfPic-preview").src = '{{ changeProfilePic }}';</script>
+                                                                    </div>
+                                                                    <div class="col-md-auto" style="margin:30px 30px 0 auto;">
+                                                                        <div class="form-group">
+                                                                            {{ formOne.profilePic(class="form-control-file") }}
+                                                                            {% if formOne.profilePic.errors %}
+                                                                                {% for error in formOne.profilePic.errors %}
+                                                                                    <span class="text-danger"> {{ error }} </span></br>
+                                                                                {% endfor %}
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius:100px;">Close</button>
+                                                    {{ formOne.submit(id="changeProfPic-btn", class="btn btn-success", style="width:90px;border-radius:100px;color:white;") }}
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <img src="{{ profilePic }}" class="prof-pic mx-auto d-block" style="border:1px lightgray solid;border-radius:50%;margin:25px;height:180px;width:180px;object-fit:cover;background:gray;">
+                            {% endif %}
+                            <div class="media-body" style="margin:50px 25px 0 25px;">
                                 <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><h3 class="account-heading">{{ user.firstName }} {{ user.lastName }}</h3></a>
                                 <a class="profile-ids" href='{{ url_for("account", username=user.username) }}'><p class="text-secondary">{{ user.username }}</p></a>
-                                <p> Interest: 
-                                    <small style="color: gray;">  
-                                        {% for interest in userInterests %}
-                                            {% if loop.length == 1 %}
-                                                {{ interest.categoryName }}
-                                            {% elif loop.index == loop.length %}
-                                                and {{ interest.categoryName }}
-                                            {% else %}
-                                                {{ interest.categoryName }},&nbsp;
-                                            {% endif %}
-                                        {% endfor %} 
-                                    </small> 
-                                </p>
                             </div>
                         </div> 
-                    </div>
-                    <div class="col-md-auto" style="width:385px;">
-                        <div class="container-fluid">
-                            <div class="row justify-content-md-center" style="margin-top:25px;">
-                                <div class="col-md-auto" style="width:115px;border-left:1px lightgray solid;border-right:1px lightgray solid;">
-                                    <span style="font-size:30px;">{{ createdEventsCount }}</span><br><span style="font-size:12px;">Created Events</span>
-                                </div>
-                                <div class="col-md-auto" style="width:115px;border-right:1px lightgray solid;">
-                                    <span style="font-size:30px;">{{ joinedEventsCount }}</span><br><span style="font-size:12px;">Joined Events</span>
-                                </div>
-                                <div class="col-md-auto" style="width:115px;border-right:1px lightgray solid;">
-                                    <span style="font-size:30px;">{{ joinedEventsCount }}</span><br><span style="font-size:12px;">Joined Events</span>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div id="profileBody-navbar">
                     <div class="bodyNavbar-container">
-                        <a href='{{ url_for("account_events", username=user.username) }}' class="bodyNavbar-elements" style="border-bottom:{{ navbarCreatedEventsUnderline }}">Created Events</a>
+                        <div class="row" style="height:36.45px;border-bottom:{{ navbarCreatedEventsUnderline }}">
+                            <div class="col-md-auto" style="margin:0;padding:0;">
+                                <a href='{{ url_for("account_events", username=user.username) }}' class="bodyNavbar-elements" style="font-size:15px;">Created Events</a>
+                            </div>
+                            <div class="col-md-auto" style="margin:0 0 0 10px;padding:0;">
+                                <span class="badge badge-pill badge-warning" style="color:white;">{{ createdEventsCount }}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bodyNavbar-container">
-                        <a href='{{ url_for("joined_events", username=user.username) }}' class="bodyNavbar-elements" style="border-bottom:{{ navbarJoinedEventsUnderline }}">Joined Events</a>
+                    <div class="bodyNavbar-container" style="margin:5px 40px 0 35px;">
+                        <div class="row" style="height:36.45px;border-bottom:{{ navbarJoinedEventsUnderline }}">
+                            <div class="col-md-auto" style="margin:0;padding:0;">
+                                <a href='{{ url_for("joined_events", username=user.username) }}' class="bodyNavbar-elements" style="font-size:15px;">Joined Events</a>
+                            </div>
+                            <div class="col-md-auto" style="margin:0 0 0 10px;padding:0;">
+                                <span class="badge badge-pill badge-warning" style="color:white;">{{ joinedEventsCount }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bodyNavbar-container" style="margin:5px 40px 0 35px;">
+                        <div class="row" style="height:36.45px;border-bottom:{{ navbarInterestsUnderline }}">
+                            <div class="col-md-auto" style="margin:0;padding:0;">
+                                <a href='{{ url_for("account_interests", username=user.username) }}' class="bodyNavbar-elements" style="font-size:15px;">Interests</a>
+                            </div>
+                            <div class="col-md-auto" style="margin:0 0 0 10px;padding:0;">
+                                <span class="badge badge-pill badge-warning" style="color:white;">{{ interestsCount }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -109,13 +157,17 @@
             <div id="profileBody-content">
                 <div class="row">
                     {% set count = 1 %}
-                    {% for event in events %}
+                    {% for d in display %}
                         {% if count > 3 %}
                             <div class="w-100"></div>
                         {% endif %}
                             <div class="col-md-auto">
-                                <div class="card" style="width:286.67185974121px;height:300px;margin:5px 0;">
-                                    <a href='{{ url_for("event", event_id=event.eventId, bottomBlock=1) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + event.image_file_sm) }}' alt="Card image cap" style="height:120px;object-fit:cover;"></a>
+                                {% if d.host_id == current_user.userId %}
+                                    <div class="card" style="width:286.67185974121px;height:233px;margin:5px 0;background:white;">
+                                {% else %}
+                                    <div class="card" style="width:286.67185974121px;height:300px;margin:5px 0;background:white;">
+                                {% endif %}
+                                    <a href='{{ url_for("event", event_id=d.event_id, bottomBlock=1) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + d.event_imgFile_sm) }}' alt="Card image cap" style="height:120px;object-fit:cover;"></a>
                                     <div class="card-body" style="height:100px;">
                                         <div class="row align-items-center">
                                             <div class="col-md-auto" style="width:70px;border-right:1px lightgray solid;">
@@ -134,33 +186,37 @@
                                                         <path id="calendar_block" class="rectColorGray" d="M361.9,197.4v-33.3h-18v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3
                                                         h-18.1v33.3H40.9v-33.3H22.8v33.3h-45.8V628h430.6V197.4H361.9z M381.5,585H3.2V343.8h378.4V585z"/>
                                                         <rect x="3.2" y="407" class="fillNone" width="378.4" height="121"/>
-                                                        <text id="day" transform="matrix(1 0 0 1 98 521.5586)" class="fontBlack fontArial fontSize">{{ event.eventDate.strftime("%d") }}</text>
+                                                        <text id="day" transform="matrix(1 0 0 1 98 521.5586)" class="fontBlack fontArial fontSize">{{ d.event_date_dayNum }}</text>
                                                         <rect x="-22.9" y="240" class="fillNone" width="430.6" height="96"/>
-                                                        <text transform="matrix(1 0 0 1 79 311.5986)" class="fontColorWhite fontArial fontSizeTwo">{{ event.eventDate.strftime("%b")|upper }}</text>
+                                                        <text transform="matrix(1 0 0 1 79 311.5986)" class="fontColorWhite fontArial fontSizeTwo">{{ d.event_date_month|upper }}</text>
                                                     </svg>
                                                 </div>
                                             </div>
                                             <div class="col">
                                                 <div class="row">
                                                     <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                                        <a href='{{ url_for("event", event_id=event.eventId, bottomBlock=1) }}' class="h5" style="color:black;font-size:17.5px;">{{ event.eventName }}</a>
+                                                        <a href='{{ url_for("event", event_id=d.event_id, bottomBlock=1) }}' class="h5" style="color:black;font-size:17.5px;">{{ d.event_name }}</a>
                                                     </div>
                                                     <div class="w-100"></div>
                                                     <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                                        <span style="font-size:13.5px;"><span style="color:red;">{{ event.eventDate.strftime("%a") }}</span> {{ event.eventStartTime.strftime("%I %p") }} | at {{ event.location }}</span>
+                                                        <span style="font-size:13.5px;"><span style="color:red;">{{ d.event_date_dayName }}</span> {{ d.event_startTime }} | at {{ d.event_location }}</span>
                                                     </div>
                                                     <div class="w-100"></div>
                                                     <div class="col" style="width:40px;height:25px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                                        <span class="text-muted" style="font-size:13.5px;">Hosted by {% if event.host == current_user %}you{% else %}<a href='{{ url_for("account", username=event.host.username) }}' style="color:gray;">{{ event.host.firstName }} {{ event.host.lastName }}</a>{% endif %}</span>
+                                                        <span class="text-muted" style="font-size:13.5px;">Hosted by {% if d.host_id == current_user.userId %}you{% else %}<a href='{{ url_for("account", username=d.host_username) }}' style="color:gray;">{{ d.host_firstName }} {{ d.host_lastName }}</a>{% endif %}</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr>      
-                                        {% if event.user_id == current_user.userId %}
-                                            
-                                        {% else %}
-                                        
+                                        {% if d.host_id != current_user.userId %}
+                                            <hr>
+                                            <div class="float-right">
+                                                    {% if d.joined is not defined %}
+                                                        <button type="button" class="btn btn-outline-success joinBtn btn-sm" style="width:80px;border-radius:100px;" event_id="{{ d.event_id }}" bottom_block="1">Join</button>
+                                                    {% else %}
+                                                        <button type="button" class="btn btn-outline-secondary unjoinBtn btn-sm" style="width:80px;border-radius:100px;" event_id="{{ d.event_id }}" bottom_block="1">Unjoin</button>
+                                                    {% endif %}
+                                            </div>
                                         {% endif %}
                                     </div>
                                 </div>

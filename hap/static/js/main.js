@@ -12,6 +12,7 @@ function readURL(input) {
           $('#eventBanner-preview').attr('src', e.target.result);
           $('#image-preview').attr('src', e.target.result);
           $('#profpic-preview').attr('src', e.target.result);
+          $('#changeProfPic-preview').attr('src', e.target.result);
           $('#settingsProfPic').attr('src', e.target.result);
       }
       
@@ -30,6 +31,11 @@ $("#imageFile").change(function(){
 $("#profPic").change(function(){
   readURL(this);
   document.getElementById("gettingstarted-btn").value = "Hop In";
+});
+
+$("#profilePic").change(function(){
+  readURL(this);
+  document.getElementById("changeProfPic-btn").value = "Save";
 });
 
 $("#picture").change(function(){
@@ -265,6 +271,10 @@ $(document).click(function() {
     $("#navbar-loginBox").addClass("show");
     $("#dropdownMenuButton").attr("aria-expanded", "true");
   }
+});
+
+$(document).ready(function() {
+  $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 });
 
 

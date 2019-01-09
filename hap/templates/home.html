@@ -1,17 +1,9 @@
 {% extends 'layouts.html' %}
     {% block bodyStyle %}
-        {% if current_user.is_authenticated %}
-            <body>
-        {% else %}
-            <body style="overflow:hidden;">
-        {% endif %}
+        <body style="background:#fff9f2;">
     {% endblock bodyStyle %}
     {% block navbarAdjust %}
-        {% if current_user.is_authenticated %}
-            <div id="homefeed-navbar" class="container-fluid">
-        {% else %}
-            <div id="homefeed-navbar-noscroll" class="container-fluid">
-        {% endif %}
+        <div id="homefeed-navbar" class="container-fluid">
     {% endblock navbarAdjust %}
     {% block navbarToggler %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,136 +12,63 @@
     {% endblock navbarToggler %}
     {% block navbarRightComponent %}
         <div id="navbar-dropdown" class="dropdown {{ dropdownAppearance }}">
-            {% if current_user.is_authenticated %}
-                <div class="dropdown">
-                    <button id="gear-logo" class="btn btn-outline-warning" data-toggle="dropdown">
-                        <div style="width:17px;margin-bottom:-5px;">
-                            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                viewBox="150 -150 500 500" style="enable-background:new 150 -150 500 500;" xml:space="preserve">
-                                <style type="text/css">
-                                    .st0{fill:#FFC000;}
-                                </style>
-                                <path class="st0" d="M621.6,62.2l-60.1-9.8c-3.4-11.6-8-22.6-13.7-33.1l35.1-50c2.8-4,2.3-9.4-1.1-12.8l-38.9-38.9
-                                    c-3.5-3.5-8.9-3.9-12.9-1L480.7-48c-10.5-5.8-21.6-10.4-33.3-13.9l-10.5-59.8c-0.8-4.8-5-8.3-9.9-8.3h-55c-4.9,0-9.1,3.5-9.9,8.4
-                                    l-9.7,59.6c-11.7,3.4-22.8,8-33.4,13.7L270-83.5c-4-2.8-9.4-2.4-12.9,1.1l-38.9,38.9c-3.4,3.4-3.9,8.8-1.1,12.8l34.6,49.5
-                                    c-5.8,10.6-10.5,21.8-14,33.6l-59.3,9.9c-4.8,0.8-8.3,5-8.3,9.9v55c0,4.9,3.5,9,8.2,9.9l59.3,10.5c3.5,11.8,8.1,23,13.9,33.6l-35,49
-                                    c-2.8,4-2.4,9.4,1.1,12.9l38.9,38.9c3.4,3.4,8.8,3.9,12.8,1.1l49.6-34.7c10.5,5.8,21.7,10.4,33.5,13.8l9.9,59.6
-                                    c0.8,4.8,5,8.4,9.9,8.4h55c4.9,0,9-3.5,9.9-8.3l10.6-59.9c11.7-3.5,22.8-8.2,33.3-14l49.9,35c4,2.8,9.4,2.3,12.8-1.1l38.9-38.9
-                                    c3.5-3.5,3.9-8.9,1-12.9l-35.6-49.4c5.7-10.4,10.3-21.5,13.7-33.1l60.2-10.5c4.8-0.8,8.3-5,8.3-9.9v-55
-                                    C630,67.2,626.4,63,621.6,62.2z M400,180c-44.1,0-80-35.9-80-80s35.9-80,80-80s80,35.9,80,80S444.1,180,400,180z"/>
-                            </svg>
-                        </div>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a id="navbar-account" class="dropdown-item" href='{{ url_for("account", username=current_user.username) }}'>Profile</a>
-                        <a id="navbar-settings" class="dropdown-item" href='{{ url_for("acc_info_settings") }}'>Settings</a>
-                        <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
+            <div class="dropdown">
+                <button id="gear-logo" class="btn btn-outline-warning" data-toggle="dropdown">
+                    <div style="width:17px;margin-bottom:-5px;">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                            viewBox="150 -150 500 500" style="enable-background:new 150 -150 500 500;" xml:space="preserve">
+                            <style type="text/css">
+                                .st0{fill:#FFC000;}
+                            </style>
+                            <path class="st0" d="M621.6,62.2l-60.1-9.8c-3.4-11.6-8-22.6-13.7-33.1l35.1-50c2.8-4,2.3-9.4-1.1-12.8l-38.9-38.9
+                                c-3.5-3.5-8.9-3.9-12.9-1L480.7-48c-10.5-5.8-21.6-10.4-33.3-13.9l-10.5-59.8c-0.8-4.8-5-8.3-9.9-8.3h-55c-4.9,0-9.1,3.5-9.9,8.4
+                                l-9.7,59.6c-11.7,3.4-22.8,8-33.4,13.7L270-83.5c-4-2.8-9.4-2.4-12.9,1.1l-38.9,38.9c-3.4,3.4-3.9,8.8-1.1,12.8l34.6,49.5
+                                c-5.8,10.6-10.5,21.8-14,33.6l-59.3,9.9c-4.8,0.8-8.3,5-8.3,9.9v55c0,4.9,3.5,9,8.2,9.9l59.3,10.5c3.5,11.8,8.1,23,13.9,33.6l-35,49
+                                c-2.8,4-2.4,9.4,1.1,12.9l38.9,38.9c3.4,3.4,8.8,3.9,12.8,1.1l49.6-34.7c10.5,5.8,21.7,10.4,33.5,13.8l9.9,59.6
+                                c0.8,4.8,5,8.4,9.9,8.4h55c4.9,0,9-3.5,9.9-8.3l10.6-59.9c11.7-3.5,22.8-8.2,33.3-14l49.9,35c4,2.8,9.4,2.3,12.8-1.1l38.9-38.9
+                                c3.5-3.5,3.9-8.9,1-12.9l-35.6-49.4c5.7-10.4,10.3-21.5,13.7-33.1l60.2-10.5c4.8-0.8,8.3-5,8.3-9.9v-55
+                                C630,67.2,626.4,63,621.6,62.2z M400,180c-44.1,0-80-35.9-80-80s35.9-80,80-80s80,35.9,80,80S444.1,180,400,180z"/>
+                        </svg>
                     </div>
-                </div>
-            {% else %}
-                <button style="color:white;border-radius:100px;width:90px;" class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="{{ ariaExpansionBool }}">
-                    <span style="font-size:13px;margin-right:-5px;">Log In&nbsp;&nbsp;</span>
                 </button>
-                <div class="dropdown-menu {{ dropdownAppearance }}" id="navbar-loginBox">
-                    <form class="px-4 py-3" method="POST" action="">
-                        {{ formOne.hidden_tag() }}
-                        <fieldset class="form-group">
-                            <div class="form-group">
-                                <label style="font-size:13px;">Username or Email Address</label>
-                                {% if formOne.usernameOrEmail.errors %}
-                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg is-invalid", style="height:40px;") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in formOne.usernameOrEmail.errors %}
-                                            <span> {{ error }} </span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ formOne.usernameOrEmail(class="form-control form-control-lg", style="height:40px;") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-group">
-                                <label style="font-size:13px;">Password</label>
-                                {% if formOne.password.errors %}
-                                    {{ formOne.password(class="form-control form-control-lg is-invalid", style="height:40px;") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in formOne.password.errors %}
-                                            <span> {{ error }} </span>
-                                        {% endfor %}
-                                    </div>
-                                {% else %}
-                                    {{ formOne.password(class="form-control form-control-lg", style="height:40px;") }}
-                                {% endif %}
-                            </div>
-                            <div class="form-check">
-                                <div>
-                                    {{ formOne.remember(class="form-check-input") }}
-                                </div>
-                                <div>
-                                    <label>Remember Password</label>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    {{ formOne.submit(class="btn btn-success btn-sm", style="border-radius:100px;width:90px;") }}
-                                </div>
-                                <div class="col text-right">
-                                    <small class="text-muted ml-2">
-                                        <a href="{{ url_for('reset_request') }}" style="font-size:12px;">Forgot Password?</a>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a id="navbar-account" class="dropdown-item" href='{{ url_for("account", username=current_user.username) }}'>Profile</a>
+                    <a id="navbar-settings" class="dropdown-item" href='{{ url_for("acc_info_settings") }}'>Settings</a>
+                    <a id="navbar-logout" class="dropdown-item" href='{{ url_for("logout") }}'>Log Out</a>
                 </div>
-            {% endif %}
+            </div>
         </div>
     {% endblock navbarRightComponent %}
-    {% block flashMessage %}
-        {% if not current_user.is_authenticated %}
-            <div id="alert-box" class="container">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-            </div>
-        {% endif %}
-    {% endblock flashMessage %}
     {% block content %}
-        {% if current_user.is_authenticated %}
-            <div style="padding-left: calc(100vw - 100%);">
-                <div id="home-container">
-                    <div class="row justify-content-md-center">
-                        <div class="col">
-                            <div class="leftBox">
-                            </div>
+        <div style="padding-left: calc(100vw - 100%);">
+            <div id="home-container">
+                <div class="row justify-content-md-center">
+                    <div class="col">
+                        <div class="leftBox">
                         </div>
-                        <div class="col-6">
-                            <div class="middlebox">
-                                <div class="container-fluid">
-                                    {% with messages = get_flashed_messages(with_categories=true) %}
-                                        {% if messages %}
-                                            {% for category, message in messages %}
-                                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                                                    {{ message }}
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                    {% endwith %}
-                                </div>
-                                <div id="displayEvents-cont" style="padding:0 10px;">
+                    </div>
+                    <div class="col-6">
+                        <div class="middlebox">
+                            <div class="container-fluid">
+                                {% with messages = get_flashed_messages(with_categories=true) %}
+                                    {% if messages %}
+                                        {% for category, message in messages %}
+                                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                                {{ message }}
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                            <div id="displayEvents-cont" style="padding:0 10px;">
+                                {% if display|length == 0 %}
+                                    <div class="card" style="width:565px;margin-bottom:20px;border:1px lightgray solid;">
+                                        Follow interests to see the events that you want.
+                                    </div>
+                                {% else %}
                                     {% for d in display %}
                                         <div class="card" style="width:565px;margin-bottom:20px;border:1px lightgray solid;">
                                             <a href='{{ url_for("event", event_id=d.event_id, bottomBlock=1) }}'><img class="card-img-top" src='{{ url_for("static", filename="images/" + d.event_imgFile) }}' alt="Event Banner" style="height:200px;object-fit:cover;border-bottom:1px lightgray solid;"></a>
@@ -206,349 +125,254 @@
                                             </div>
                                         </div>
                                     {% endfor %}
-                                </div>
+                                {% endif %}
+                            </div>
+                            {% if display|length != 0 %}
                                 <div class="container-fluid" style="margin:10px 0 5px 0;">
-                                    <button id="events-seeMore" type="button" class="btn btn-outline-secondary btn-lg btn-block">See more</button>
+                                    <nav aria-label="...">
+                                        <ul class="pagination pagination-sm justify-content-center">
+                                            {% if eventBatchPage == 1 %}
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">
+                                                        Previous
+                                                    </span>
+                                                </li>
+                                            {% else %}
+                                                <li id="previous-paginationPage" class="page-item">
+                                                    <a class="page-link"  href='{{ url_for("home", eventBatchPage=(eventBatchPage-1)) }}'>
+                                                        Previous
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                            <li id="first-paginationPage" class="page-item active" aria-current="page">
+                                                <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage)) }}'>
+                                                    {{ eventBatchPage }}
+                                                </a>
+                                            </li>
+                                            <li id="second-paginationPage" class="page-item">
+                                                <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+1)) }}'>
+                                                    {{ eventBatchPage + 1 }}
+                                                </a>
+                                            </li>
+                                            <li id="third-paginationPage" class="page-item">
+                                                <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+2)) }}'>
+                                                    {{ eventBatchPage + 2 }}
+                                                </a>
+                                            </li>
+                                            <li id="next-paginationPage" class="page-item">
+                                                <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+1)) }}'>
+                                                    Next
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                                 <script>
-                                    $(document).ready(function() {
-                                        function UrlExists(url, cb){
-                                            jQuery.ajax({
-                                                url:      url,
-                                                dataType: 'text',
-                                                type:     'GET',
-                                                complete:  function(xhr){
-                                                    if(typeof cb === 'function')
-                                                    cb.apply(this, [xhr.status]);
-                                                }
-                                            });
-                                        }
-
-                                        var page_num = 2;
-
-                                        $("#events-seeMore").click(function() {
-                                            UrlExists("/home/eventpopulate=" + page_num, function(status){
-                                                if(status === 404){
-                                                    $("#events-seeMore").hide();
-                                                }
-                                                else {
-                                                    fetch("/home/eventpopulate=" + page_num).then(function(response) {
-                                                        response.json().then(function(data) {
-                                                            let content_html = "";
-                                                    
-                                                            for(let event of data.events) {
-                                                                var event_id = event.event_id;
-                                                                var category_id = event.category_id;
-                                                                var event_name = event.event_name;
-                                                                var event_location = event.event_location;
-                                                                var event_imgFile = event.event_imgFile;
-                                                                var event_date_dayNum = event.event_date_dayNum;
-                                                                var event_date_month = event.event_date_month;
-                                                                var event_date_dayName = event.event_date_dayName;
-                                                                var event_startTime = event.event_startTime;
-
-                                                                var host_id = event.host_id;
-                                                                var host_username = event.host_username;
-                                                                var host_firstName = event.host_firstName;
-                                                                var host_lastName = event.host_lastName;
-                                                                var joined = event.joined;
-                                                                
-                                                                var event_date_month_upper = "{{ eventDate_month|upper }}".replace('eventDate_month', event_date_month);
-                                                                var event_url = "{{ url_for('event', event_id=1, bottomBlock='1') }}".replace('1', event_id);
-                                                                var imageFile_url = "{{ url_for('static', filename='images/imgFile') }}".replace('imgFile', event_imgFile);
-                                                                var account_url = "{{ url_for('account', username='hostUsername') }}".replace('hostUsername', host_username);
-                                                                
-                                                                content_html += '<div class="card" style="width:565px;margin-bottom:20px;border:1px lightgray solid;"><a href="'
-                                                                                + event_url + '"><img class="card-img-top" src="'
-                                                                                + imageFile_url + '" alt="Event Banner" style="height:200px;object-fit:cover;border-bottom:1px lightgray solid;"></a><div class="card-body"><div class="row align-items-center"><div class="col-md-auto" style="border-right:1px lightgray solid;width:80px;"><div style="width:50px;"><svg version="1.1" id="calendar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-55 147 500 500" style="enable-background:new -55 147 500 500;" xml:space="preserve"><style type="text/css">.rectColorGray{fill:#808080;stroke:#D3D3D3;stroke-miterlimit:10;}.fillNone{fill:none;}.fontBlack{fill:black;}.fontArial{font-family:Arial, Helvetica, sans-serif;font-weight:bold;}.fontSize{font-size:150px;}.fontColorWhite{fill:#FFFFFF;}.fontSizeTwo{font-size:100px;}</style><path id="calendar_block" class="rectColorGray" d="M361.9,197.4v-33.3h-18v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3h-18.1v33.3h-62.2v-33.3h-18.1v33.3H40.9v-33.3H22.8v33.3h-45.8V628h430.6V197.4H361.9z M381.5,585H3.2V343.8h378.4V585z"/><rect x="3.2" y="407" class="fillNone" width="378.4" height="121"/><text id="day" transform="matrix(1 0 0 1 98 521.5586)" class="fontBlack fontArial fontSize">'
-                                                                                + event_date_dayNum + '</text><rect x="-22.9" y="240" class="fillNone" width="430.6" height="96"/><text transform="matrix(1 0 0 1 79 311.5986)" class="fontColorWhite fontArial fontSizeTwo">'
-                                                                                + event_date_month_upper + '</text></svg></div></div><div class="col" style="width:350px;"><div class="row"><div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><a href="'
-                                                                                + event_url + '" class="h5" style="color:black;font-size:17.5px;">'
-                                                                                + event_name + '</a></div><div class="w-100"></div><div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span style="font-size:13.5px;"><span style="color:red;">'
-                                                                                + event_date_dayName + '</span> '
-                                                                                + event_startTime + ' | at '
-                                                                                + event_location + '</span></div><div class="w-100"></div><div class="col" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span class="text-muted" style="font-size:13.5px;">Hosted by '
-                                                                                + '{% if hostId == current_user.userId %}'.replace('hostId', host_id) + 'you{% else %}<a href="'
-                                                                                + account_url + '" style="color:gray;">'
-                                                                                + host_firstName + ' '
-                                                                                + host_lastName + '</a>{% endif %}</span></div></div></div><div class="col-md-auto" style="width:120px;">'
-                                                                                + '{% if hostId != current_user.userId %}'.replace('hostId', host_id)
-                                                                                + '{% if eventJoined is undefined %}'.replace('eventJoined', joined) + '<button type="button" class="btn btn-outline-success joinBtn btn-sm" style="width:80px;border-radius:100px;" event_id="'
-                                                                                + event_id + '" bottom_block="1">Join</button>{% else %}<button type="button" class="btn btn-outline-secondary unjoinBtn btn-sm" style="width:80px;border-radius:100px;" event_id="'
-                                                                                + event_id + '" bottom_block="1">Unjoin</button>{% endif %}{% endif %}</div></div></div></div>';
-                                                            }
-                                                            
-                                                            $("#displayEvents-cont").append(content_html);
-                                                            page_num++;
-                                                            
-                                                            UrlExists("/home/eventpopulate=" + page_num, function(status){
-                                                                if(status === 404){
-                                                                    $("#events-seeMore").hide();
-                                                                }
-                                                            });
-                                                        });
-                                                    });
-                                                }
-                                            });
+                                    function UrlExists(url, cb){
+                                        jQuery.ajax({
+                                            url:      url,
+                                            dataType: 'text',
+                                            type:     'GET',
+                                            complete:  function(xhr){
+                                                if(typeof cb === 'function')
+                                                cb.apply(this, [xhr.status]);
+                                            }
                                         });
+                                    }
+                                    UrlExists("/home/eventpopulate=" + {{ eventBatchPage + 1 }}, function(status){
+                                        if(status === 404){
+                                            $("#second-paginationPage").addClass("disabled");
+                                            $("#third-paginationPage").addClass("disabled");
+                                            $("#next-paginationPage").addClass("disabled");
+                                        }
                                     });
                                 </script>
-                            </div>
+                            {% endif %}
                         </div>
-                        <div class="col">
-                            <div class="rightBox">
-                            </div>
+                    </div>
+                    <div class="col">
+                        <div class="rightBox">
                         </div>
                     </div>
                 </div>
             </div>
-            <a id="createBtnFloat" class="float" data-toggle="modal" data-target="#createEventModal">
-                <img id="plus-logo" src='{{ url_for("static", filename="assets/plus-logo-white.svg") }}'>
-            </a>
-            <div class="label-container">
-                <div class="label-text">Create Event</div>
-            </div>
-            <div class="modal" id="createEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <div class="row align-items-center">
-                                <div class="col-md-auto">
-                                    <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
-                                </div>
-                                <div class="col">
-                                    <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Create Event</h5>
-                                </div>
+        </div>
+        <a id="createBtnFloat" class="float" data-toggle="modal" data-target="#createEventModal">
+            <img id="plus-logo" src='{{ url_for("static", filename="assets/plus-logo-white.svg") }}'>
+        </a>
+        <div class="label-container">
+            <div class="label-text">Create Event</div>
+        </div>
+        <div class="modal" id="createEventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-auto">
+                                <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
                             </div>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
+                            <div class="col">
+                                <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Create Event</h5>
+                            </div>
                         </div>
-                        <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
-                            <div class="modal-body" id="createEvent-modalContent">
-                                <div class="container-fluid">
-                                    {{ formTwo.hidden_tag() }}
-                                    <fieldset class="form-group">
-                                        <label>Event Banner</label>
-                                        <div class="container-fluid" style="border-bottom:1px lightgray solid;border-top:1px lightgray solid;margin:4px 0 20px 0;padding:40px 0 40px 0">
-                                            <div class="row">
-                                                <div class="col-md-auto">
-                                                    <div class="form-group">
-                                                        {{ formTwo.imageFile(class="form-control-file") }}
-                                                        {% if formTwo.imageFile.errors %}
-                                                            {% for error in formTwo.imageFile.errors %}
-                                                                <span class="text-danger"> {{ error }} </span></br>
-                                                            {% endfor %}
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <img class="card-img-top" id="image-preview" style="height:200px;object-fit:cover;background:gray;">
-                                                    <script>document.getElementById("image-preview").src = '{{ url_for("static", filename="images/uploadEventBanner-blankPreview.jpg") }}';</script>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Event Name</label>
-                                            <div id="count-cont" style="float:right;display:none;">
-                                                <span class="text-muted"><span id="countEventNameChar" style="color:red;">0</span>/80</span>
-                                            </div>
-                                            {% if formTwo.eventName.errors %}
-                                                {{ formTwo.eventName(class="form-control form-control-lg is-invalid", placeholder="Event name", onkeyup="count_up(this);") }}
-                                                <div class="invalid-feedback">
-                                                    {% for error in formTwo.eventName.errors %}
-                                                        <span> {{ error }} </span>
-                                                    {% endfor %}
-                                                </div>
-                                            {% else %}
-                                                {{ formTwo.eventName(class="form-control form-control-lg", placeholder="Event name", onkeyup="count_up(this);") }}
-                                            {% endif %}
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Event Description</label>
-                                            {% if formTwo.eventDescription.errors %}
-                                                {{ formTwo.eventDescription(class="form-control form-control-lg is-invalid", placeholder="Event description") }}
-                                                <div class="invalid-feedback">
-                                                    {% for error in formTwo.eventDescription.errors %}
-                                                        <span> {{ error }} </span>
-                                                    {% endfor %}
-                                                </div>
-                                            {% else %}
-                                                {{ formTwo.eventDescription(class="form-control form-control-lg", placeholder="Event description") }}
-                                            {% endif %}
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label>Event Date</label>
-                                                    {% if formTwo.eventDate.errors %}
-                                                        {{ formTwo.eventDate(class="form-control form-control-lg is-invalid") }}
-                                                        <div class="invalid-feedback">
-                                                            {% for error in formTwo.eventDate.errors %}
-                                                                <span> {{ error }} </span>
-                                                            {% endfor %}
-                                                        </div>
-                                                    {% else %}
-                                                        {{ formTwo.eventDate(class="form-control form-control-lg") }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label>Event Start Time</label>
-                                                    {% if formTwo.startTime.errors %}
-                                                        {{ formTwo.startTime(class="form-control form-control-lg is-invalid") }}
-                                                        <div class="invalid-feedback">
-                                                            {% for error in formTwo.startTime.errors %}
-                                                                <span> {{ error }} </span>
-                                                            {% endfor %}
-                                                        </div>
-                                                    {% else %}
-                                                        {{ formTwo.startTime(class="form-control form-control-lg") }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label>Event End Time</label>
-                                                    {% if formTwo.endTime.errors %}
-                                                        {{ formTwo.endTime(class="form-control form-control-lg is-invalid") }}
-                                                        <div class="invalid-feedback">
-                                                            {% for error in formTwo.endTime.errors %}
-                                                                <span> {{ error }} </span>
-                                                            {% endfor %}
-                                                        </div>
-                                                    {% else %}
-                                                        {{ formTwo.endTime(class="form-control form-control-lg") }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-auto" id="createEvent-fee">
-                                                <div class="form-group">
-                                                    <label>Event Fee</label>
-                                                    {% if formTwo.fee.errors %}
-                                                        {{ formTwo.fee(class="form-control form-control-lg is-invalid", placeholder="") }}
-                                                        <div class="invalid-feedback">
-                                                            {% for error in formTwo.fee.errors %}
-                                                                <span> {{ error }} </span>
-                                                            {% endfor %}
-                                                        </div>
-                                                    {% else %}
-                                                        {{ formTwo.fee(class="form-control form-control-lg", placeholder="") }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="form-group">
-                                                    <label>Event Location</label>
-                                                    {% if formTwo.location.errors %}
-                                                        {{ formTwo.location(class="form-control form-control-lg is-invalid", placeholder="") }}
-                                                        <div class="invalid-feedback">
-                                                            {% for error in formTwo.location.errors %}
-                                                                <span> {{ error }} </span>
-                                                            {% endfor %}
-                                                        </div>
-                                                    {% else %}
-                                                        {{ formTwo.location(class="form-control form-control-lg", placeholder="") }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ formTwo.categoryoption.label }}
-                                            {% if formTwo.categoryoption.errors %}
-                                                {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
-                                                <div class="invalid-feedback">
-                                                    {% for error in formTwo.categoryoption.errors %}
-                                                        <span> {{ error }} </span>
-                                                    {% endfor %}
-                                                </div>
-                                            {% else %}
-                                                {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
-                                            {% endif %}
-                                        </div>
-                                    </fieldset>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="close-updateEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                                {{ formTwo.submit(class="btn btn-success", style="color:white;") }}
-                            </div>
-                        </form>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </div>
-            </div>
-        {% else %}
-            <div class="container-fluid" style="margin:70px auto 0 auto;">
-                <div class="row align-items-center">
-                    <div class="col-sm">
-                        <svg version="1.1" id="layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                            viewBox="-86 255.7 423 330.2" style="enable-background:new -86 255.7 423 330.2;" xml:space="preserve">
-                            <style type="text/css">
-                                .st0{fill:#FFC000;}
-                            </style>
-                            <path id="XMLID_6_" class="st0" d="M192.8,384.1c0.4-5.7-1.8-11,0.5-21.5c2.1-9.5,6.5-16.6,10-21.3c-2.8-2.5-7.5-6.1-13.9-9.1
-                                c-21.9-10.2-38.1-0.7-50.9-12.3c-1-0.9-8.3-7.7-6.9-14.7c1.5-7,11.5-12.6,25.3-12.9c22.7-0.5,39.4,10,41.2,11.4
-                                c11.1,8.7,16.1,19.4,18.2,25c1.6-1,3.1-1.9,4.7-2.9c-2.5-5.8-9.1-18.9-23.6-28c-11.4-7.2-22.5-8.7-27.1-9.2
-                                c-6.7-0.8-12.4-0.5-16.5-0.1c-0.1-1.9-0.2-7.5,3.6-11.5c2.1-2.2,5-3.6,9.6-4.1c31.1-2.8,47.7,14.1,47.7,14.1
-                                c13,13.3,14.3,29.8,14.5,34.6c1.8-0.5,4.5-1.1,7.7-1.4c10.9-0.9,19.4,2.9,23.7,4.9c12.9,5.9,20.8,17.2,36.5,39.8
-                                c4,5.7,6.5,9.8,5.8,14.8c-1.4,10-14.5,15.8-15.7,16.4c-4.1,1.8-7.5,2.2-9.2,2.4c-7,0.9-19.5,2.1-37.9,2.6
-                                c3.3,10.4,7.3,26.8,6.9,46.8c-0.9,39-18.2,66.6-6.2,77.6c6.5,5.9,15.1,1.3,25,10.1c6.6,5.9,9.2,13.8,10.4,19.3
-                                c-13.1,0-26.3,0-39.4,0c-0.7-3.8-3.9-19.3-18.3-30c-10-7.5-20.4-8.8-24.9-9.2c0.6-0.6,9.5-9.4,7.1-21.8c-2-10.3-10.4-15.2-11.6-15.9
-                                c-2.1,0.4-4.2,0.8-6.2,1.2c2.5,1.3,8.2,4.8,10.5,11.2c3.5,9.7-1.8,22.3-13.7,29.7c7-0.1,16.4,0.8,26.2,5.3c5.5,2.5,12,5.5,16.9,12.5
-                                c4.5,6.6,5.4,13.3,5.6,16.9H-36.9c-14.4-4.7-18.8-12-20.3-15.6c-8.8-20,15.3-53.4,41.5-59.7c27.6-6.6,63.1,15.4,77,56.7
-                                c0.4-10.5,2.4-27,10.4-45c15.9-35.7,46.4-56.1,58-63.6C162.3,406.1,191.5,401.8,192.8,384.1z"/>
-                            <g>
-                                <defs>
-                                    <path id="SVGID_1_" d="M192.8,384.1c0.4-5.7-1.8-11,0.5-21.5c2.1-9.5,6.5-16.6,10-21.3c-2.8-2.5-7.5-6.1-13.9-9.1
-                                        c-21.9-10.2-38.1-0.7-50.9-12.3c-1-0.9-8.3-7.7-6.9-14.7c1.5-7,11.5-12.6,25.3-12.9c22.7-0.5,39.4,10,41.2,11.4
-                                        c11.1,8.7,16.1,19.4,18.2,25c1.6-1,3.1-1.9,4.7-2.9c-2.5-5.8-9.1-18.9-23.6-28c-11.4-7.2-22.5-8.7-27.1-9.2
-                                        c-6.7-0.8-12.4-0.5-16.5-0.1c-0.1-1.9-0.2-7.5,3.6-11.5c2.1-2.2,5-3.6,9.6-4.1c31.1-2.8,47.7,14.1,47.7,14.1
-                                        c13,13.3,14.3,29.8,14.5,34.6c1.8-0.5,4.5-1.1,7.7-1.4c10.9-0.9,19.4,2.9,23.7,4.9c12.9,5.9,20.8,17.2,36.5,39.8
-                                        c4,5.7,6.5,9.8,5.8,14.8c-1.4,10-14.5,15.8-15.7,16.4c-4.1,1.8-7.5,2.2-9.2,2.4c-7,0.9-19.5,2.1-37.9,2.6
-                                        c3.3,10.4,7.3,26.8,6.9,46.8c-0.9,39-18.2,66.6-6.2,77.6c6.5,5.9,15.1,1.3,25,10.1c6.6,5.9,9.2,13.8,10.4,19.3
-                                        c-13.1,0-26.3,0-39.4,0c-0.7-3.8-3.9-19.3-18.3-30c-10-7.5-20.4-8.8-24.9-9.2c0.6-0.6,9.5-9.4,7.1-21.8
-                                        c-2-10.3-10.4-15.2-11.6-15.9c-2.1,0.4-4.2,0.8-6.2,1.2c2.5,1.3,8.2,4.8,10.5,11.2c3.5,9.7-1.8,22.3-13.7,29.7
-                                        c7-0.1,16.4,0.8,26.2,5.3c5.5,2.5,12,5.5,16.9,12.5c4.5,6.6,5.4,13.3,5.6,16.9H-36.9c-14.4-4.7-18.8-12-20.3-15.6
-                                        c-8.8-20,15.3-53.4,41.5-59.7c27.6-6.6,63.1,15.4,77,56.7c0.4-10.5,2.4-27,10.4-45c15.9-35.7,46.4-56.1,58-63.6
-                                        C162.3,406.1,191.5,401.8,192.8,384.1z"/>
-                                </defs>
-                                <clipPath id="SVGID_2_">
-                                    <use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
-                                </clipPath>
-                                <g transform="matrix(1 0 0 1 0 0)" style="clip-path:url(#SVGID_2_);enable-background:new    ;">
-                                    <image style="overflow:visible;" width="5000" height="3513" id="XMLID_2_" xlink:href='{{ url_for("static", filename="assets/rabbit-imgs/rabbit-img1.jpg") }}' transform="matrix(8.318575e-002 0 0 8.318585e-002 -67.2713 269.5393)">
-                                    </image>
-                                </g>
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="col-sm">
-                        <div class="container-fluid">
-                            <div class="row justify-content-md-center">
-                                <div class="col-md-auto">
-                                    <div class="jumbotron jumbotron-fluid" style="text-align:center;background:transparent;">
-                                        <div class="container-fluid">
-                                            <p class="h4"><strong>Make it happen. Hop in!</strong></p>
-                                        </div>
-                                        <div style="display:flex;flex-direction:column;">
-                                            <a href='{{ url_for("signup1") }}'><button id="homeContent-signup" type="button" class="btn btn-warning">Sign Up</button></a>
-                                            <a href='{{ url_for("login") }}'><button id="homeContent-login" type="button" class="btn btn-outline-success">Log In</button></a>
+                    <form method="POST" action="" enctype="multipart/form-data" onsubmit="submit.disabled=true;return true;">
+                        <div class="modal-body" id="createEvent-modalContent">
+                            <div class="container-fluid">
+                                {{ formTwo.hidden_tag() }}
+                                <fieldset class="form-group">
+                                    <label>Event Banner</label>
+                                    <div class="container-fluid" style="border-bottom:1px lightgray solid;border-top:1px lightgray solid;margin:4px 0 20px 0;padding:40px 0 40px 0">
+                                        <div class="row">
+                                            <div class="col-md-auto">
+                                                <div class="form-group">
+                                                    {{ formTwo.imageFile(class="form-control-file") }}
+                                                    {% if formTwo.imageFile.errors %}
+                                                        {% for error in formTwo.imageFile.errors %}
+                                                            <span class="text-danger"> {{ error }} </span></br>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <img class="card-img-top" id="image-preview" style="height:200px;object-fit:cover;background:gray;">
+                                                <script>document.getElementById("image-preview").src = '{{ url_for("static", filename="images/uploadEventBanner-blankPreview.jpg") }}';</script>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="form-group">
+                                        <label>Event Name</label>
+                                        <div id="count-cont" style="float:right;display:none;">
+                                            <span class="text-muted"><span id="countEventNameChar" style="color:red;">0</span>/80</span>
+                                        </div>
+                                        {% if formTwo.eventName.errors %}
+                                            {{ formTwo.eventName(class="form-control form-control-lg is-invalid", placeholder="Event name", onkeyup="count_up(this);") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in formTwo.eventName.errors %}
+                                                    <span> {{ error }} </span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ formTwo.eventName(class="form-control form-control-lg", placeholder="Event name", onkeyup="count_up(this);") }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Event Description</label>
+                                        {% if formTwo.eventDescription.errors %}
+                                            {{ formTwo.eventDescription(class="form-control form-control-lg is-invalid", placeholder="Event description") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in formTwo.eventDescription.errors %}
+                                                    <span> {{ error }} </span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ formTwo.eventDescription(class="form-control form-control-lg", placeholder="Event description") }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label>Event Date</label>
+                                                {% if formTwo.eventDate.errors %}
+                                                    {{ formTwo.eventDate(class="form-control form-control-lg is-invalid") }}
+                                                    <div class="invalid-feedback">
+                                                        {% for error in formTwo.eventDate.errors %}
+                                                            <span> {{ error }} </span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    {{ formTwo.eventDate(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label>Event Start Time</label>
+                                                {% if formTwo.startTime.errors %}
+                                                    {{ formTwo.startTime(class="form-control form-control-lg is-invalid") }}
+                                                    <div class="invalid-feedback">
+                                                        {% for error in formTwo.startTime.errors %}
+                                                            <span> {{ error }} </span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    {{ formTwo.startTime(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label>Event End Time</label>
+                                                {% if formTwo.endTime.errors %}
+                                                    {{ formTwo.endTime(class="form-control form-control-lg is-invalid") }}
+                                                    <div class="invalid-feedback">
+                                                        {% for error in formTwo.endTime.errors %}
+                                                            <span> {{ error }} </span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    {{ formTwo.endTime(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-auto" id="createEvent-fee">
+                                            <div class="form-group">
+                                                <label>Event Fee</label>
+                                                {% if formTwo.fee.errors %}
+                                                    {{ formTwo.fee(class="form-control form-control-lg is-invalid", placeholder="") }}
+                                                    <div class="invalid-feedback">
+                                                        {% for error in formTwo.fee.errors %}
+                                                            <span> {{ error }} </span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    {{ formTwo.fee(class="form-control form-control-lg", placeholder="") }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label>Event Location</label>
+                                                {% if formTwo.location.errors %}
+                                                    {{ formTwo.location(class="form-control form-control-lg is-invalid", placeholder="") }}
+                                                    <div class="invalid-feedback">
+                                                        {% for error in formTwo.location.errors %}
+                                                            <span> {{ error }} </span>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    {{ formTwo.location(class="form-control form-control-lg", placeholder="") }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ formTwo.categoryoption.label }}
+                                        {% if formTwo.categoryoption.errors %}
+                                            {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in formTwo.categoryoption.errors %}
+                                                    <span> {{ error }} </span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ formTwo.categoryoption(class="form-control form-control-lg", placeholder="Category") }}
+                                        {% endif %}
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button id="close-updateEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                            {{ formTwo.submit(class="btn btn-success", style="color:white;") }}
+                        </div>
+                    </form>
                 </div>
             </div>
-            <nav class="navbar fixed-bottom navbar-light bg-light" style="border-top:1px lightgray solid;">
-                <div class="container" style="margin:0 auto;">
-                    <a id="home-about" class="navbar-brand" class="font-weight-light" href='{{ url_for("about") }}' style="font-size:12px;">About</a>
-                    <span class="navbar-brand" class="font-weight-light" style="color:gray;font-size:12px;">2018 Hap</span>
-                </div>
-            </nav>
-        {% endif %}
+        </div>
     {% endblock content %}
