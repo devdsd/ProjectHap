@@ -254,44 +254,6 @@ $(document).ready(function() {
 
 });
 
-$(document).ready(function() {
-  $("#rateSubmit").click(function(e) 
-  {
-    e.preventDefault();
-    if ($("#ratingForm :radio:checked").length == 0) {
-        return false;
-    } else {
-        var rateNum = $('input:radio[name=rating]:checked').val();
-        var eventId = $(this).attr("event_id");
-        console.log(rateNum);
-        console.log(eventId);
-        req = $.ajax({
-          url : '/event/' + eventId + '/rate',
-          type : 'POST',
-          data : { event_id : eventId, rate : rateNum }
-        });
-    }
-  });
-
-  $("#rateUpdate").click(function(e) 
-  {
-    e.preventDefault();
-    if ($("#ratingForm :radio:checked").length == 0) {
-        return false;
-    } else {
-        var rateNum = $('input:radio[name=rating]:checked').val();
-        var eventId = $(this).attr("event_id");
-        console.log(rateNum);
-        console.log(eventId);
-        req = $.ajax({
-          url : '/event/' + eventId + '/updaterate',
-          type : 'POST',
-          data : { event_id : eventId, rate : rateNum }
-        });
-    }
-  });
-});
-
 $(document).click(function() {
   if(this != $(".dropdown-menu")[0]) {
     $(".dropdown").removeClass("show");

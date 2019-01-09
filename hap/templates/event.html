@@ -103,9 +103,9 @@
                                                     {% if event.user_id != current_user.userId %}
                                                         <div class="col-md-auto" style="width:150px;padding-left:55px;">
                                                             {% if joinedEvent is none %}
-                                                                <button type="button" class="btn btn-outline-success btn-sm joinBtn" style="width:80px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Join</button>
+                                                                <button type="button" class="btn btn-outline-success btn-sm joinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Join</button>
                                                             {% else %}
-                                                                <button type="button" class="btn btn-outline-secondary btn-sm unjoinBtn" style="width:80px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Unjoin</button>
+                                                                <button type="button" class="btn btn-outline-secondary btn-sm unjoinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Unjoin</button>
                                                             {% endif %}
                                                         </div>
                                                     {% else %}
@@ -410,7 +410,7 @@
                             <div class="container" id="joinersBlock">
                                 <div class="row justify-content-md-center">
                                     <div class="col-md-auto">
-                                        <div class="card" style="width:565px;border:1px lightgray solid;">
+                                        <div class="card" style="width:565px;padding:0 5px;border:1px lightgray solid;">
                                             <div class="container-fluid" style="margin-top:10px;">
                                                 <strong>People who joined this event</strong>
                                                 <hr>
@@ -529,7 +529,7 @@
                             <div class="container" id="descriptionBlock">
                                 <div class="row justify-content-md-center">
                                     <div class="col-md-auto">
-                                        <div class="card" style="width:565px;border:1px lightgray solid;">
+                                        <div class="card" style="width:565px;padding:0 5px;border:1px lightgray solid;">
                                             <div class="container-fluid" style="margin-top:10px;">
                                                 <strong>Description</strong>
                                                 <hr>
@@ -545,7 +545,7 @@
                                 <div class="container" id="postReviewBlock">
                                     <div class="row justify-content-md-center">
                                         <div class="col-md-auto">
-                                            <div class="card" style="width:565px;padding-bottom:12px;border:1px lightgray solid;">
+                                            <div class="card" style="width:565px;padding:0 10px 12px 10px;border:1px lightgray solid;">
                                                 <form method="POST" action='{{ url_for("review_event", event_id=event.eventId) }}' onsubmit="submit.disabled=true;return true;">
                                                     <div class="form-group" style="padding:12px 12px 0 12px;">
                                                         {% if formOne.review.errors %}
@@ -560,7 +560,7 @@
                                                         {% endif %}
                                                     </div>
                                                     <div class="form-group" style="padding:0 12px;">
-                                                        {{ formOne.submit(class="btn btn-outline-success btn-sm float-right", event_id=event.eventId) }}
+                                                        {{ formOne.submit(class="btn btn-outline-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
                                                     </div>
                                                 </form>
                                             </div>
@@ -609,35 +609,36 @@
                                     <div class="row justify-content-md-center">
                                         <div class="col-md-auto">
                                             <div class="card" style="width:565px;padding-bottom:12px;border:1px lightgray solid;">
-                                                <form id="ratingForm" method="POST" action='' onsubmit="submit.disabled=true;return true;">
                                                     {% if ratedEvent %}
-                                                        {{ formThree.hidden_tag() }}
-                                                        <div class="row justify-content-md-center">
-                                                            <div class="col-md-auto" style="padding-top:10px;">
-                                                                <fieldset class="rating">
-                                                                    {% for rate in formThree.rating %}
-                                                                        {{ rate }}{{ rate.label }}
-                                                                    {% endfor %}
-                                                                </fieldset>
+                                                        <form id="ratingForm" method="POST" action='{{ url_for("update_rate_event", event_id=event.eventId, bottomBlock="3") }}' onsubmit="submit.disabled=true;return true;">
+                                                            {{ formThree.hidden_tag() }}
+                                                            <div class="row justify-content-md-center">
+                                                                <div class="col-md-auto" style="padding-top:10px;">
+                                                                    <fieldset class="rating">
+                                                                        {% for rate in formThree.rating %}
+                                                                            {{ rate }}{{ rate.label }}
+                                                                        {% endfor %}
+                                                                    </fieldset>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group" style="padding:0 12px;">
-                                                            {{ formThree.submit(id="rateUpdate", class="btn btn-outline-success btn-sm float-right", event_id=event.eventId) }}
-                                                        </div>
+                                                            <div class="form-group" style="padding:0 20px 0 0;">
+                                                                {{ formThree.submit(id="rateUpdate", class="btn btn-outline-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
+                                                            </div>
                                                     {% else %}
-                                                        {{ formTwo.hidden_tag() }}
-                                                        <div class="row justify-content-md-center">
-                                                            <div class="col-md-auto" style="padding-top:10px;">
-                                                                <fieldset class="rating">
-                                                                    {% for rate in formTwo.rating %}
-                                                                        {{ rate }}{{ rate.label }}
-                                                                    {% endfor %}
-                                                                </fieldset>
+                                                        <form id="ratingForm" method="POST" action='{{ url_for("rate_event", event_id=event.eventId, bottomBlock="3") }}' onsubmit="submit.disabled=true;return true;">
+                                                            {{ formTwo.hidden_tag() }}
+                                                            <div class="row justify-content-md-center">
+                                                                <div class="col-md-auto" style="padding-top:10px;">
+                                                                    <fieldset class="rating">
+                                                                        {% for rate in formTwo.rating %}
+                                                                            {{ rate }}{{ rate.label }}
+                                                                        {% endfor %}
+                                                                    </fieldset>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="form-group" style="padding:0 12px;">
-                                                            {{ formTwo.submit(id="rateSubmit", class="btn btn-outline-success btn-sm float-right", event_id=event.eventId) }}
-                                                        </div>
+                                                            <div class="form-group" style="padding:0 12px;">
+                                                                {{ formTwo.submit(id="rateSubmit", class="btn btn-outline-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
+                                                            </div>
                                                     {% endif %}
                                                 </form>
                                             </div>
@@ -655,8 +656,8 @@
                                                 {% else %}
                                                     <div class="container-fluid" style="padding:20px 0;border-bottom:1px lightgray solid;">
                                                 {% endif %}
-                                                    <div class="row">
-                                                        <div class="col-md-auto" style="width:15%;height:60px;padding:2px 0 0 35px;">
+                                                    <div class="row" style="margin:0;padding:0;">
+                                                        <div class="col-md-auto" style="width:15%;height:60px;padding-left:20px;">
                                                             <a href='{{ url_for("account", username=post.username) }}'><img src='{{url_for("static", filename="images/" + post.image_file_sm)}}' class="rounded-circle" style="width:48px;height:48px;object-fit:cover;"></a>
                                                         </div>
                                                         <div class="col-md-auto" style="width:85%;height:60px;">
@@ -683,9 +684,6 @@
                                                                 {% endif %}
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="container-fluid" style="width:100%;">
-                                                        
                                                     </div>
                                                 </div>
                                             {% endfor %}
