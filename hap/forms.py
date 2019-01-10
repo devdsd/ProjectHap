@@ -37,6 +37,11 @@ class SetUpAccount(FlaskForm):
 
   submit = SubmitField('Skip')
 
+class ChangeProfilePic(FlaskForm):
+  profilePic = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+
+  submit = SubmitField('Skip')
+
 class LoginForm(FlaskForm):
   usernameOrEmail = StringField('Username or Email Address', validators=[DataRequired()])
   password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=50)])
@@ -101,7 +106,7 @@ class CreateEventForm(FlaskForm):
   imageFile = FileField("Event Banner", validators=[FileAllowed(["jpg", "png"])])
   fee = IntegerField("Fee", validators=[NumberRange(max=1000000)])
   location = StringField('Location', validators=[DataRequired(), Length(min=2, max =75)])
-  categoryoption = SelectField('Choose a Category of Event', coerce=int, choices=[(category.catId, category.categoryName) for category in Categories.query.all()])
+  categoryoption = SelectField('Choose categories for your event', coerce=int, choices=[(category.catId, category.categoryName) for category in Categories.query.all()])
 
   submit = SubmitField('Post')
 

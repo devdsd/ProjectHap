@@ -1,4 +1,7 @@
 {% extends 'layouts.html' %}
+    {% block bodyStyle %}
+        <body>
+    {% endblock bodyStyle %}
     {% block navbarAdjust %}
         <div id="homefeed-navbar" class="container-fluid">
     {% endblock navbarAdjust %}
@@ -103,9 +106,9 @@
                                                     {% if event.user_id != current_user.userId %}
                                                         <div class="col-md-auto" style="width:150px;padding-left:55px;">
                                                             {% if joinedEvent is none %}
-                                                                <button type="button" class="btn btn-outline-success btn-sm joinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Join</button>
+                                                                <button type="button" class="btn btn-success btn-sm joinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Join</button>
                                                             {% else %}
-                                                                <button type="button" class="btn btn-outline-secondary btn-sm unjoinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Unjoin</button>
+                                                                <button type="button" class="btn btn-secondary btn-sm unjoinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Unjoin</button>
                                                             {% endif %}
                                                         </div>
                                                     {% else %}
@@ -169,8 +172,8 @@
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="modal-footer">
-                                                                                        <button id="close-deleteEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                                                                                        {{ formTwo.submit(class="btn btn-danger", style="color:white;") }}
+                                                                                        <button id="close-deleteEventModal" type="button" class="btn btn-dark" data-dismiss="modal" style="width:80px;border-radius:100px;">Close</button>
+                                                                                        {{ formTwo.submit(class="btn btn-danger", style="color:white;border-radius:100px;width:80px;") }}
                                                                                     </div>
                                                                                 </form>
                                                                             </div>
@@ -347,8 +350,8 @@
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="modal-footer">
-                                                                                        <button id="close-updateEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                                                                                        {{ formThree.submit(class="btn btn-success", style="color:white;") }}
+                                                                                        <button id="close-updateEventModal" type="button" class="btn btn-dark" data-dismiss="modal" style="width:80px;border-radius:100px;">Close</button>
+                                                                                        {{ formThree.submit(class="btn btn-success", style="color:white;width:80px;border-radius:100px;") }}
                                                                                     </div>
                                                                                 </form>
                                                                             </div>
@@ -410,26 +413,31 @@
                             <div class="container" id="joinersBlock">
                                 <div class="row justify-content-md-center">
                                     <div class="col-md-auto">
-                                        <div class="card" style="width:565px;padding:0 5px;border:1px lightgray solid;">
+                                        <div class="card" style="width:565px;border:1px lightgray solid;">
                                             <div class="container-fluid" style="margin-top:10px;">
-                                                <strong>People who joined this event</strong>
+                                                <strong style="margin:0 5px;">People who joined this event</strong>
                                                 <hr>
-                                                <div class="container-fluid" style="padding:0 12px;">
-                                                    <div class="row" style="margin-bottom:25px;">
-                                                        {% for joiner in joinerProfPics %}
-                                                            {% if loop.index < 11 %}
-                                                                <div class="col-md-auto" style="margin:0 2.5px;padding:0;width:27.5px;">
-                                                                    <a href='{{ url_for("account", username=joiner.username) }}'><img src='{{url_for("static", filename="images/" + joiner.image_file_sm)}}' class="rounded-circle" style="width:25px;height:25px;object-fit:cover;"></a>
-                                                                </div>
-                                                            {% elif loop.index == 11 %}
-                                                                <div class="col-md-auto" style="margin:0 2.5px;padding:0;width:27.5px;">
-                                                                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModalCenter" style="height:25px;width:35px;border-radius:10px;">
-                                                                        <img src='{{ url_for("static", filename="assets/more.svg") }}' style="width:20px;margin:-25px -20px -20px -20px;">
-                                                                    </button>
-                                                                </div>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </div>
+                                                {% if joinerProfPics|length == 0 %}
+                                                    <div class="container-fluid" style="margin:10px 5px 10px 5px;padding:0;">
+                                                        This event has no joiners yet.
+                                                {% else %}
+                                                    <div class="container-fluid" style="padding:0 12px;">
+                                                        <div class="row" style="margin-bottom:25px;">
+                                                            {% for joiner in joinerProfPics %}
+                                                                {% if loop.index < 11 %}
+                                                                    <div class="col-md-auto" style="margin:0 2.5px;padding:0;width:27.5px;">
+                                                                        <a href='{{ url_for("account", username=joiner.username) }}'><img src='{{url_for("static", filename="images/" + joiner.image_file_sm)}}' data-toggle="tooltip" data-placement="top" title="{{ joiner.firstName }} {{ joiner.lastName }}" class="rounded-circle" style="width:25px;height:25px;object-fit:cover;"></a>
+                                                                    </div>
+                                                                {% elif loop.index == 11 %}
+                                                                    <div class="col-md-auto" style="margin:0 2.5px;padding:0;width:27.5px;">
+                                                                        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#exampleModalCenter" style="height:25px;width:35px;border-radius:10px;">
+                                                                            <img src='{{ url_for("static", filename="assets/more.svg") }}' style="width:20px;margin:-25px -20px -20px -20px;">
+                                                                        </button>
+                                                                    </div>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                {% endif %}
                                                 </div>
                                                 <div class="modal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -459,7 +467,7 @@
                                                                     {% endfor %}
                                                                 </div>
                                                                 <div class="container-fluid" style="margin:10px 0 5px 0;">
-                                                                    <button id="joiners-seeMore" type="button" class="btn btn-outline-secondary btn-lg btn-block" style="border-radius:100px;">See more</button>
+                                                                    <button id="joiners-seeMore" type="button" class="btn btn-outline-dark btn-lg btn-block" style="border-radius:100px;margin:15px 0;">See more</button>
                                                                 </div>
                                                                 <script>
                                                                     $(document).ready(function() {
@@ -478,12 +486,12 @@
                                                                         var page_num = 2;
 
                                                                         $("#joiners-seeMore").click(function() {
-                                                                            UrlExists("/event/1/bottomblockaction=bb1/page=" + page_num, function(status){
+                                                                            UrlExists("/event/" +  {{ event.eventId }} + "/bottomblockaction=bb1/page=" + page_num, function(status){
                                                                                 if(status === 404){
                                                                                     $("#joiners-seeMore").hide();
                                                                                 }
                                                                                 else {
-                                                                                    fetch("/event/1/bottomblockaction=bb1/page=" + page_num).then(function(response) {
+                                                                                    fetch("/event/" +  {{ event.eventId }} + "/bottomblockaction=bb1/page=" + page_num).then(function(response) {
                                                                                         response.json().then(function(data) {
                                                                                             let content_html = "";
                                                                                     
@@ -505,7 +513,7 @@
                                                                                             $("#joinersModal-row").append(content_html);
                                                                                             page_num++;
                                                                                     
-                                                                                            UrlExists("/event/1/bottomblockaction=bb1/page=" + page_num, function(status){
+                                                                                            UrlExists("/event/" +  {{ event.eventId }} + "/bottomblockaction=bb1/page=" + page_num, function(status){
                                                                                                 if(status === 404){
                                                                                                     $("#joiners-seeMore").hide();
                                                                                                 }
@@ -560,7 +568,7 @@
                                                         {% endif %}
                                                     </div>
                                                     <div class="form-group" style="padding:0 12px;">
-                                                        {{ formOne.submit(class="btn btn-outline-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
+                                                        {{ formOne.submit(class="btn btn-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
                                                     </div>
                                                 </form>
                                             </div>
@@ -572,34 +580,40 @@
                                 <div class="row justify-content-md-center">
                                     <div class="col-md-auto">
                                         <div class="card" style="width:565px;">
-                                            {% for post in reviewPosts %}
-                                                {% if loop.last %}
-                                                    <div class="container-fluid" style="padding:20px 0;">
-                                                {% else %}
-                                                    <div class="container-fluid" style="padding:20px 0;border-bottom:1px lightgray solid;">
-                                                {% endif %}
-                                                    <div class="row">
-                                                        <div class="col-md-auto" style="width:15%;height:60px;padding:2px 0 0 35px;">
-                                                            <a href='{{ url_for("account", username=post.username) }}'><img src='{{url_for("static", filename="images/" + post.image_file_sm)}}' class="rounded-circle" style="width:48px;height:48px;object-fit:cover;"></a>
-                                                        </div>
-                                                        <div class="col-md-auto" style="width:85%;height:60px;">
-                                                            <a href='{{ url_for("account", username=post.username) }}' style="color:black;"><strong>{{ post.firstName }} {{ post.lastName }}</strong></a>
-                                                            <br>
-                                                            <span class="text-muted" style="font-size:12px;">{{ post.dateReviewed.strftime("%B") }} {{ post.dateReviewed.strftime("%m") }}, {{ post.dateReviewed.strftime("%Y") }} | {{ post.dateReviewed.strftime("%I") }}:{{ post.dateReviewed.strftime("%M") }} {{ post.dateReviewed.strftime("%p") }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-auto" style="width:15%;">
-                                                        </div>
-                                                        <div class="col-md-auto" style="width:85%;">
-                                                            {{ post.review }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="container-fluid" style="width:100%;">
-                                                        
-                                                    </div>
+                                            {% if reviewPosts|length == 0 %}
+                                                <div class="container-fluid" style="margin:5px 5px;">
+                                                    This event has no reviews yet.
                                                 </div>
-                                            {% endfor %}
+                                            {% else %}
+                                                {% for post in reviewPosts %}
+                                                    {% if loop.last %}
+                                                        <div class="container-fluid" style="padding:20px 0;">
+                                                    {% else %}
+                                                        <div class="container-fluid" style="padding:20px 0;border-bottom:1px lightgray solid;">
+                                                    {% endif %}
+                                                        <div class="row">
+                                                            <div class="col-md-auto" style="width:15%;height:60px;padding:2px 0 0 35px;">
+                                                                <a href='{{ url_for("account", username=post.username) }}'><img src='{{url_for("static", filename="images/" + post.image_file_sm)}}' class="rounded-circle" style="width:48px;height:48px;object-fit:cover;"></a>
+                                                            </div>
+                                                            <div class="col-md-auto" style="width:85%;height:60px;">
+                                                                <a href='{{ url_for("account", username=post.username) }}' style="color:black;"><strong>{{ post.firstName }} {{ post.lastName }}</strong></a>
+                                                                <br>
+                                                                <span class="text-muted" style="font-size:12px;">{{ post.dateReviewed.strftime("%B") }} {{ post.dateReviewed.strftime("%m") }}, {{ post.dateReviewed.strftime("%Y") }} | {{ post.dateReviewed.strftime("%I") }}:{{ post.dateReviewed.strftime("%M") }} {{ post.dateReviewed.strftime("%p") }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-auto" style="width:15%;">
+                                                            </div>
+                                                            <div class="col-md-auto" style="width:85%;">
+                                                                {{ post.review }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="container-fluid" style="width:100%;">
+                                                            <button id="reviewReply-btn" type="button" class="btn btn-outline-dark btn-sm float-right" style="width:80px;margin-right:5px;border-radius:100px;">Reply</button>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -622,7 +636,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" style="padding:0 20px 0 0;">
-                                                                {{ formThree.submit(id="rateUpdate", class="btn btn-outline-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
+                                                                {{ formThree.submit(id="rateUpdate", class="btn btn-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
                                                             </div>
                                                     {% else %}
                                                         <form id="ratingForm" method="POST" action='{{ url_for("rate_event", event_id=event.eventId, bottomBlock="3") }}' onsubmit="submit.disabled=true;return true;">
@@ -637,7 +651,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" style="padding:0 12px;">
-                                                                {{ formTwo.submit(id="rateSubmit", class="btn btn-outline-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
+                                                                {{ formTwo.submit(id="rateSubmit", class="btn btn-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
                                                             </div>
                                                     {% endif %}
                                                 </form>
@@ -650,43 +664,49 @@
                                 <div class="row justify-content-md-center">
                                     <div class="col-md-auto">
                                         <div class="card" style="width:565px;">
-                                            {% for post in ratingPosts %}
-                                                {% if loop.last %}
-                                                    <div class="container-fluid" style="padding:20px 0;">
-                                                {% else %}
-                                                    <div class="container-fluid" style="padding:20px 0;border-bottom:1px lightgray solid;">
-                                                {% endif %}
-                                                    <div class="row" style="margin:0;padding:0;">
-                                                        <div class="col-md-auto" style="width:15%;height:60px;padding-left:20px;">
-                                                            <a href='{{ url_for("account", username=post.username) }}'><img src='{{url_for("static", filename="images/" + post.image_file_sm)}}' class="rounded-circle" style="width:48px;height:48px;object-fit:cover;"></a>
+                                            {% if ratingPosts|length == 0 %}
+                                                <div class="container-fluid" style="margin:5px 5px;">
+                                                    This event has no ratings yet.
+                                                </div>
+                                            {% else %}
+                                                {% for post in ratingPosts %}
+                                                    {% if loop.last %}
+                                                        <div class="container-fluid" style="padding:20px 0;">
+                                                    {% else %}
+                                                        <div class="container-fluid" style="padding:20px 0;border-bottom:1px lightgray solid;">
+                                                    {% endif %}
+                                                        <div class="row" style="margin:0;padding:0;">
+                                                            <div class="col-md-auto" style="width:15%;height:60px;padding-left:20px;">
+                                                                <a href='{{ url_for("account", username=post.username) }}'><img src='{{url_for("static", filename="images/" + post.image_file_sm)}}' class="rounded-circle" style="width:48px;height:48px;object-fit:cover;"></a>
+                                                            </div>
+                                                            <div class="col-md-auto" style="width:85%;height:60px;">
+                                                                <a href='{{ url_for("account", username=post.username) }}' style="color:black;"><strong>{{ post.firstName }} {{ post.lastName }}</strong></a>
+                                                                <br>
+                                                                <span class="text-muted" style="font-size:12px;">{{ post.dateRated.strftime("%B") }} {{ post.dateRated.strftime("%m") }}, {{ post.dateRated.strftime("%Y") }} | {{ post.dateRated.strftime("%I") }}:{{ post.dateRated.strftime("%M") }} {{ post.dateRated.strftime("%p") }}</span>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-auto" style="width:85%;height:60px;">
-                                                            <a href='{{ url_for("account", username=post.username) }}' style="color:black;"><strong>{{ post.firstName }} {{ post.lastName }}</strong></a>
-                                                            <br>
-                                                            <span class="text-muted" style="font-size:12px;">{{ post.dateRated.strftime("%B") }} {{ post.dateRated.strftime("%m") }}, {{ post.dateRated.strftime("%Y") }} | {{ post.dateRated.strftime("%I") }}:{{ post.dateRated.strftime("%M") }} {{ post.dateRated.strftime("%p") }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-auto" style="width:15%;">
-                                                        </div>
-                                                        <div class="col-md-auto ratingSection" style="width:85%;">
-                                                            <div class="float-left">
-                                                                {% if post.rate == 5 %}
-                                                                    <label class="onStar">★</label><label class="offStar">★</label><label class="offStar">★</label><label class="offStar">★</label><label class="offStar">★</label>
-                                                                {% elif post.rate == 4 %}
-                                                                    <label class="onStar">★</label><label class="onStar">★</label><label class="offStar">★</label><label class="offStar">★</label><label class="offStar">★</label>
-                                                                {% elif post.rate == 3 %}
-                                                                    <label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="offStar">★</label><label class="offStar">★</label>
-                                                                {% elif post.rate == 2 %}
-                                                                    <label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="offStar">★</label>
-                                                                {% elif post.rate == 1 %}
-                                                                    <label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label>
-                                                                {% endif %}
+                                                        <div class="row">
+                                                            <div class="col-md-auto" style="width:15%;">
+                                                            </div>
+                                                            <div class="col-md-auto ratingSection" style="width:85%;">
+                                                                <div class="float-left">
+                                                                    {% if post.rate == 5 %}
+                                                                        <label class="onStar">★</label><label class="offStar">★</label><label class="offStar">★</label><label class="offStar">★</label><label class="offStar">★</label>
+                                                                    {% elif post.rate == 4 %}
+                                                                        <label class="onStar">★</label><label class="onStar">★</label><label class="offStar">★</label><label class="offStar">★</label><label class="offStar">★</label>
+                                                                    {% elif post.rate == 3 %}
+                                                                        <label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="offStar">★</label><label class="offStar">★</label>
+                                                                    {% elif post.rate == 2 %}
+                                                                        <label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="offStar">★</label>
+                                                                    {% elif post.rate == 1 %}
+                                                                        <label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label><label class="onStar">★</label>
+                                                                    {% endif %}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            {% endfor %}
+                                                {% endfor %}
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
