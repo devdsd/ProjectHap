@@ -193,7 +193,6 @@ $(document).ready(function() {
     $(this).addClass('btn-warning').removeClass('btn-outline-warning');
   
   });  
-
 });
 
 $(document).ready(function() {
@@ -209,7 +208,7 @@ $(document).ready(function() {
 
     $(this).html('Unjoin')
     $(this).addClass('unjoinBtn').removeClass('joinBtn');
-    $(this).addClass('btn-outline-secondary').removeClass('btn-outline-success');
+    $(this).addClass('btn-outline-secondary').removeClass('btn-primary');
     
     
   }, function() {
@@ -224,7 +223,7 @@ $(document).ready(function() {
 
     $(this).html('Join')
     $(this).addClass('joinBtn').removeClass('unjoinBtn');
-    $(this).addClass('btn-outline-success').removeClass('btn-outline-secondary');
+    $(this).addClass('btn-primary').removeClass('btn-outline-secondary');
   
   });
   
@@ -240,7 +239,7 @@ $(document).ready(function() {
 
     $(this).html('Join')
     $(this).addClass('joinBtn').removeClass('unjoinBtn');
-    $(this).addClass('btn-outline-success').removeClass('btn-outline-secondary');
+    $(this).addClass('btn-primary').removeClass('btn-outline-secondary');
   
   }, function() {
     var eventId = $(this).attr('event_id');
@@ -254,10 +253,9 @@ $(document).ready(function() {
 
     $(this).html('Unjoin')
     $(this).addClass('unjoinBtn').removeClass('joinBtn');
-    $(this).addClass('btn-outline-secondary').removeClass('btn-outline-success');
+    $(this).addClass('btn-outline-secondary').removeClass('btn-primary');
   
   });  
-
 });
 
 $(document).click(function() {
@@ -272,7 +270,6 @@ $(document).click(function() {
     $("#dropdownMenuButton").attr("aria-expanded", "true");
   }
 });
-
 $(document).ready(function() {
   $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 });

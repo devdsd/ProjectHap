@@ -1,6 +1,6 @@
 {% extends 'layouts.html' %}
     {% block bodyStyle %}
-        <body style="background:#fff9f2;">
+        <body>
     {% endblock bodyStyle %}
     {% block navbarAdjust %}
         <div id="homefeed-navbar" class="container-fluid">
@@ -106,9 +106,9 @@
                                                     {% if event.user_id != current_user.userId %}
                                                         <div class="col-md-auto" style="width:150px;padding-left:55px;">
                                                             {% if joinedEvent is none %}
-                                                                <button type="button" class="btn btn-outline-success btn-sm joinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Join</button>
+                                                                <button type="button" class="btn btn-success btn-sm joinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Join</button>
                                                             {% else %}
-                                                                <button type="button" class="btn btn-outline-secondary btn-sm unjoinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Unjoin</button>
+                                                                <button type="button" class="btn btn-secondary btn-sm unjoinBtn" style="width:80px;border-radius:100px;" event_id="{{ event.eventId }}" bottom_block="{{ bottomBlock }}">Unjoin</button>
                                                             {% endif %}
                                                         </div>
                                                     {% else %}
@@ -172,8 +172,8 @@
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="modal-footer">
-                                                                                        <button id="close-deleteEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                                                                                        {{ formTwo.submit(class="btn btn-danger", style="color:white;") }}
+                                                                                        <button id="close-deleteEventModal" type="button" class="btn btn-dark" data-dismiss="modal" style="width:80px;border-radius:100px;">Close</button>
+                                                                                        {{ formTwo.submit(class="btn btn-danger", style="color:white;border-radius:100px;width:80px;") }}
                                                                                     </div>
                                                                                 </form>
                                                                             </div>
@@ -350,8 +350,8 @@
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="modal-footer">
-                                                                                        <button id="close-updateEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                                                                                        {{ formThree.submit(class="btn btn-success", style="color:white;") }}
+                                                                                        <button id="close-updateEventModal" type="button" class="btn btn-dark" data-dismiss="modal" style="width:80px;border-radius:100px;">Close</button>
+                                                                                        {{ formThree.submit(class="btn btn-success", style="color:white;width:80px;border-radius:100px;") }}
                                                                                     </div>
                                                                                 </form>
                                                                             </div>
@@ -467,7 +467,7 @@
                                                                     {% endfor %}
                                                                 </div>
                                                                 <div class="container-fluid" style="margin:10px 0 5px 0;">
-                                                                    <button id="joiners-seeMore" type="button" class="btn btn-outline-secondary btn-lg btn-block" style="border-radius:100px;margin:15px 0;">See more</button>
+                                                                    <button id="joiners-seeMore" type="button" class="btn btn-outline-dark btn-lg btn-block" style="border-radius:100px;margin:15px 0;">See more</button>
                                                                 </div>
                                                                 <script>
                                                                     $(document).ready(function() {
@@ -486,12 +486,12 @@
                                                                         var page_num = 2;
 
                                                                         $("#joiners-seeMore").click(function() {
-                                                                            UrlExists("/event/1/bottomblockaction=bb1/page=" + page_num, function(status){
+                                                                            UrlExists("/event/" +  {{ event.eventId }} + "/bottomblockaction=bb1/page=" + page_num, function(status){
                                                                                 if(status === 404){
                                                                                     $("#joiners-seeMore").hide();
                                                                                 }
                                                                                 else {
-                                                                                    fetch("/event/1/bottomblockaction=bb1/page=" + page_num).then(function(response) {
+                                                                                    fetch("/event/" +  {{ event.eventId }} + "/bottomblockaction=bb1/page=" + page_num).then(function(response) {
                                                                                         response.json().then(function(data) {
                                                                                             let content_html = "";
                                                                                     
@@ -513,7 +513,7 @@
                                                                                             $("#joinersModal-row").append(content_html);
                                                                                             page_num++;
                                                                                     
-                                                                                            UrlExists("/event/1/bottomblockaction=bb1/page=" + page_num, function(status){
+                                                                                            UrlExists("/event/" +  {{ event.eventId }} + "/bottomblockaction=bb1/page=" + page_num, function(status){
                                                                                                 if(status === 404){
                                                                                                     $("#joiners-seeMore").hide();
                                                                                                 }
@@ -568,7 +568,7 @@
                                                         {% endif %}
                                                     </div>
                                                     <div class="form-group" style="padding:0 12px;">
-                                                        {{ formOne.submit(class="btn btn-outline-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
+                                                        {{ formOne.submit(class="btn btn-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
                                                     </div>
                                                 </form>
                                             </div>
@@ -609,7 +609,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="container-fluid" style="width:100%;">
-                                                            
+                                                            <button id="reviewReply-btn" type="button" class="btn btn-outline-dark btn-sm float-right" style="width:80px;margin-right:5px;border-radius:100px;">Reply</button>
                                                         </div>
                                                     </div>
                                                 {% endfor %}
@@ -636,7 +636,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" style="padding:0 20px 0 0;">
-                                                                {{ formThree.submit(id="rateUpdate", class="btn btn-outline-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
+                                                                {{ formThree.submit(id="rateUpdate", class="btn btn-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
                                                             </div>
                                                     {% else %}
                                                         <form id="ratingForm" method="POST" action='{{ url_for("rate_event", event_id=event.eventId, bottomBlock="3") }}' onsubmit="submit.disabled=true;return true;">
@@ -651,7 +651,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="form-group" style="padding:0 12px;">
-                                                                {{ formTwo.submit(id="rateSubmit", class="btn btn-outline-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
+                                                                {{ formTwo.submit(id="rateSubmit", class="btn btn-success btn-sm float-right", style="border-radius:100px;width:80px;", event_id=event.eventId) }}
                                                             </div>
                                                     {% endif %}
                                                 </form>

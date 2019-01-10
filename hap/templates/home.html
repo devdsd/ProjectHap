@@ -1,6 +1,6 @@
 {% extends 'layouts.html' %}
     {% block bodyStyle %}
-        <body style="background:#fff9f2;">
+        <body>
     {% endblock bodyStyle %}
     {% block navbarAdjust %}
         <div id="homefeed-navbar" class="container-fluid">
@@ -115,7 +115,7 @@
                                                     <div class="col-md-auto" style="width:120px;">
                                                         {% if d.host_id != current_user.userId %}
                                                             {% if d.joined is not defined %}
-                                                                <button type="button" class="btn btn-outline-success joinBtn btn-sm" style="width:80px;border-radius:100px;" event_id="{{ d.event_id }}" bottom_block="1">Join</button>
+                                                                <button type="button" class="btn btn-primary joinBtn btn-sm" style="width:80px;border-radius:100px;" event_id="{{ d.event_id }}" bottom_block="1">Join</button>
                                                             {% else %}
                                                                 <button type="button" class="btn btn-outline-secondary unjoinBtn btn-sm" style="width:80px;border-radius:100px;" event_id="{{ d.event_id }}" bottom_block="1">Unjoin</button>
                                                             {% endif %}
@@ -131,62 +131,129 @@
                                 <div class="container-fluid" style="margin:10px 0 5px 0;">
                                     <nav aria-label="...">
                                         <ul class="pagination pagination-sm justify-content-center">
-                                            {% if eventBatchPage == 1 %}
-                                                <li class="page-item disabled">
-                                                    <span class="page-link">
-                                                        Previous
-                                                    </span>
-                                                </li>
-                                            {% else %}
-                                                <li id="previous-paginationPage" class="page-item">
-                                                    <a class="page-link"  href='{{ url_for("home", eventBatchPage=(eventBatchPage-1)) }}'>
-                                                        Previous
+                                            {% if not populateCategory %}
+                                                {% if eventBatchPage == 1 %}
+                                                    <li class="page-item disabled">
+                                                        <span class="page-link">
+                                                            Previous
+                                                        </span>
+                                                    </li>
+                                                {% else %}
+                                                    <li id="previous-paginationPage" class="page-item">
+                                                        <a class="page-link"  href='{{ url_for("home", eventBatchPage=(eventBatchPage-1)) }}'>
+                                                            Previous
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                                <li id="first-paginationPage" class="page-item active" aria-current="page">
+                                                    <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage)) }}'>
+                                                        {{ eventBatchPage }}
                                                     </a>
                                                 </li>
+                                                <li id="second-paginationPage" class="page-item">
+                                                    <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+1)) }}'>
+                                                        {{ eventBatchPage + 1 }}
+                                                    </a>
+                                                </li>
+                                                <li id="third-paginationPage" class="page-item">
+                                                    <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+2)) }}'>
+                                                        {{ eventBatchPage + 2 }}
+                                                    </a>
+                                                </li>
+                                                <li id="next-paginationPage" class="page-item">
+                                                    <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+1)) }}'>
+                                                        Next
+                                                    </a>
+                                                </li>
+                                                <script>
+                                                    function UrlExists(url, cb){
+                                                        jQuery.ajax({
+                                                            url:      url,
+                                                            dataType: 'text',
+                                                            type:     'GET',
+                                                            complete:  function(xhr){
+                                                                if(typeof cb === 'function')
+                                                                cb.apply(this, [xhr.status]);
+                                                            }
+                                                        });
+                                                    }
+                                                    UrlExists("/home/eventpopulate=" + {{ eventBatchPage + 2 }}, function(status){
+                                                        if(status === 404){
+                                                            $("#third-paginationPage").addClass("disabled");
+                                                        }
+                                                    });
+                                                    UrlExists("/home/eventpopulate=" + {{ eventBatchPage + 1 }}, function(status){
+                                                        if(status === 404){
+                                                            $("#second-paginationPage").addClass("disabled");
+                                                            $("#third-paginationPage").addClass("disabled");
+                                                            $("#next-paginationPage").addClass("disabled");
+                                                        }
+                                                    });
+                                                </script>
+                                            {% else %}
+                                                {% if eventBatchPage == 1 %}
+                                                    <li class="page-item disabled">
+                                                        <span class="page-link">
+                                                            Previous
+                                                        </span>
+                                                    </li>
+                                                {% else %}
+                                                    <li id="previous-paginationPage" class="page-item">
+                                                        <a class="page-link"  href='{{ url_for("home", eventBatchPage=(eventBatchPage-1), populateCategory=populateCategory) }}'>
+                                                            Previous
+                                                        </a>
+                                                    </li>
+                                                {% endif %}
+                                                <li id="first-paginationPage" class="page-item active" aria-current="page">
+                                                    <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage), populateCategory=populateCategory) }}'>
+                                                        {{ eventBatchPage }}
+                                                    </a>
+                                                </li>
+                                                <li id="second-paginationPage" class="page-item">
+                                                    <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+1), populateCategory=populateCategory) }}'>
+                                                        {{ eventBatchPage + 1 }}
+                                                    </a>
+                                                </li>
+                                                <li id="third-paginationPage" class="page-item">
+                                                    <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+2), populateCategory=populateCategory) }}'>
+                                                        {{ eventBatchPage + 2 }}
+                                                    </a>
+                                                </li>
+                                                <li id="next-paginationPage" class="page-item">
+                                                    <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+1), populateCategory=populateCategory) }}'>
+                                                        Next
+                                                    </a>
+                                                </li>
+                                                <script>
+                                                    function UrlExists(url, cb){
+                                                        jQuery.ajax({
+                                                            url:      url,
+                                                            dataType: 'text',
+                                                            type:     'GET',
+                                                            complete:  function(xhr){
+                                                                if(typeof cb === 'function')
+                                                                cb.apply(this, [xhr.status]);
+                                                            }
+                                                        });
+                                                    }
+                                                    UrlExists("/home/cat=" + {{ populateCategory }} + "/eventpopulate=" + {{ eventBatchPage + 2 }}, function(status){
+                                                        if(status === 404){
+                                                            $("#third-paginationPage").addClass("disabled");
+                                                        }
+                                                    });
+                                                    UrlExists("/home/cat=" + {{ populateCategory }} + "/eventpopulate=" + {{ eventBatchPage + 1 }}, function(status){
+                                                        if(status === 404){
+                                                            $("#second-paginationPage").addClass("disabled");
+                                                            $("#third-paginationPage").addClass("disabled");
+                                                            $("#next-paginationPage").addClass("disabled");
+                                                        }
+                                                    });
+                                                </script>
                                             {% endif %}
-                                            <li id="first-paginationPage" class="page-item active" aria-current="page">
-                                                <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage)) }}'>
-                                                    {{ eventBatchPage }}
-                                                </a>
-                                            </li>
-                                            <li id="second-paginationPage" class="page-item">
-                                                <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+1)) }}'>
-                                                    {{ eventBatchPage + 1 }}
-                                                </a>
-                                            </li>
-                                            <li id="third-paginationPage" class="page-item">
-                                                <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+2)) }}'>
-                                                    {{ eventBatchPage + 2 }}
-                                                </a>
-                                            </li>
-                                            <li id="next-paginationPage" class="page-item">
-                                                <a class="page-link" href='{{ url_for("home", eventBatchPage=(eventBatchPage+1)) }}'>
-                                                    Next
-                                                </a>
-                                            </li>
+                                            
                                         </ul>
                                     </nav>
                                 </div>
-                                <script>
-                                    function UrlExists(url, cb){
-                                        jQuery.ajax({
-                                            url:      url,
-                                            dataType: 'text',
-                                            type:     'GET',
-                                            complete:  function(xhr){
-                                                if(typeof cb === 'function')
-                                                cb.apply(this, [xhr.status]);
-                                            }
-                                        });
-                                    }
-                                    UrlExists("/home/eventpopulate=" + {{ eventBatchPage + 1 }}, function(status){
-                                        if(status === 404){
-                                            $("#second-paginationPage").addClass("disabled");
-                                            $("#third-paginationPage").addClass("disabled");
-                                            $("#next-paginationPage").addClass("disabled");
-                                        }
-                                    });
-                                </script>
                             {% endif %}
                         </div>
                     </div>
@@ -207,14 +274,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <div class="row align-items-center">
-                            <div class="col-md-auto">
-                                <img src='{{ url_for("static", filename="assets/hap-logo.svg") }}' style="width:50px;margin:15px 0 15px 10px;">
-                            </div>
-                            <div class="col">
-                                <h5 class="modal-title" id="exampleModalCenterTitle" style="color:#FFC000;">Create Event</h5>
-                            </div>
-                        </div>
+                        <h5 class="modal-title" id="exampleModalCenterTitle" style="padding-left:10px;">Create Event</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -368,8 +428,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button id="close-updateEventModal" type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                            {{ formTwo.submit(class="btn btn-success", style="color:white;") }}
+                            <button id="close-updateEventModal" type="button" class="btn btn-secondary" data-dismiss="modal" style="width:80px;border-radius:100px;">Close</button>
+                            {{ formTwo.submit(class="btn btn-success", style="color:white;width:80px;border-radius:100px;") }}
                         </div>
                     </form>
                 </div>

@@ -102,6 +102,45 @@ def populate_events(eventBatchPage):
 
     return jsonify({"events" : eventList})
 
+@app.route("/home/cat=<int:catId>/eventpopulate=<int:eventBatchPage>", methods=["GET", "POST"])
+@login_required
+def cat_populate_events(catId, eventBatchPage):
+    if current_user.numberOfLogins == 0:
+        return redirect(url_for("setup_acc"))
+
+    userFeedEvents = db.session.query(eventhascategory_rel_table, Events.eventName, Events.location, Events.eventId, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==catId).order_by(Events.dateCreated.desc()).paginate(page=eventBatchPage, per_page=2)
+
+    eventList = []
+    for c, event in enumerate(userFeedEvents.items):
+        dict = {}
+        
+        dict["event_id"] = event.eventId
+        dict["category_id"] = event.category_id
+        dict["event_name"] = event.eventName
+        dict["event_location"] = event.location
+        dict["event_imgFile"] = event.image_file
+        dict["event_date_dayNum"] = event.eventDate.strftime("%d")
+        dict["event_date_dayName"] = event.eventDate.strftime("%a")
+        dict["event_date_month"] = event.eventDate.strftime("%b")
+        dict["event_startTime"] = event.eventStartTime.strftime("%I %p")
+        
+        eventList.append(dict)
+
+    for x, event in enumerate(eventList):
+        selectEvent = Events.query.filter_by(eventId=event["event_id"]).first()
+
+        event["host_id"] = selectEvent.host.userId
+        event["host_username"] = selectEvent.host.username
+        event["host_firstName"] = selectEvent.host.firstName
+        event["host_lastName"] = selectEvent.host.lastName
+
+        joined = db.session.query(join_rel_table).filter(join_rel_table.c.user_id==current_user.userId, join_rel_table.c.event_id==event["event_id"]).first()
+    
+        if joined:
+            event["joined"] = "True"
+
+    return jsonify({"events" : eventList})
+
 @app.route('/home/i/<int:eventBatchPage>', methods=["GET","POST"])
 def home(eventBatchPage):
     formTwo = CreateEventForm()
@@ -112,7 +151,17 @@ def home(eventBatchPage):
     if current_user.numberOfLogins == 0:
         return redirect(url_for("setup_acc"))
 
-    userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.host, Users.userId).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page=eventBatchPage, per_page=2)
+    populateCategory = request.args.get("populateCategory", type=int)
+    message = request.args.get("message", type=str)
+
+    if populateCategory:
+        userFeedEvents = db.session.query(eventhascategory_rel_table, Events.eventName, Events.location, Events.eventId, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==populateCategory).order_by(Events.dateCreated.desc()).paginate(page=eventBatchPage, per_page=2)
+
+        if message:
+            flash(message, "success")
+    
+    else:
+        userFeedEvents = db.session.query(eventhascategory_rel_table, userhasinterest_rel_table, Events.eventName, Events.location, Events.eventId, Events.image_file, Events.eventDate, Events.eventStartTime, Events.eventEndTime).filter(Users.userId==current_user.userId).filter(Events.eventId==eventhascategory_rel_table.c.event_id).filter(eventhascategory_rel_table.c.category_id==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Events.dateCreated.desc()).paginate(page=eventBatchPage, per_page=2)
 
     display = []
     for c, event in enumerate(userFeedEvents.items):
@@ -142,8 +191,6 @@ def home(eventBatchPage):
     
         if joined:
             event["joined"] = "True"
-
-    interestsDisplay = Categories.query.all()
 
     if formTwo.validate_on_submit():
         picture_file = ""
@@ -179,7 +226,7 @@ def home(eventBatchPage):
         flash("Create event unsuccessful.", "danger")
         return redirect(url_for("home", eventBatchPage=1))
 
-    return render_template("home.html", title="Home", formTwo=formTwo, homeNavbarLogoBorderBottom="#FFC000", profileNavbarLogoBorderBottom="white", display=display, interestsDisplay=interestsDisplay, eventBatchPage=eventBatchPage)
+    return render_template("home.html", title="Home", formTwo=formTwo, homeNavbarLogoBorderBottom="#FFC000", profileNavbarLogoBorderBottom="white", display=display, eventBatchPage=eventBatchPage, populateCategory=populateCategory)
 
 @app.route('/about')
 def about():
@@ -423,15 +470,19 @@ def account(username):
             picture_file_sm = ""
 
             if formOne.profilePic.data is not None:
+                oldProfPic = db.session.query(Users.image_file).filter(Users.userId==user.userId).first()
+
                 picture_file = save_picture(formOne.profilePic.data, 1000)
                 picture_file_sm = save_picture(formOne.profilePic.data, 500)
+
+                if oldProfPic != picture_file:
+                    flash("Profile picture updated.", "success")
 
                 setattr(user, 'image_file', picture_file)
                 setattr(user, 'image_file_sm', picture_file_sm)
 
             db.session.commit()
 
-            flash("Profile picture updated.", "success")
             return redirect(url_for('account', username=user.username))
 
         changeProfilePic = url_for("static", filename="images/" + user.image_file)
@@ -482,7 +533,7 @@ def account(username):
         elif user is None:
             return redirect(url_for("home", eventBatchPage=1))
 
-@app.route("/<username>/accountevents")
+@app.route("/<username>/accountevents", methods=['GET', 'POST'])
 @login_required
 def account_events(username):
     if current_user.numberOfLogins == 0:
@@ -534,8 +585,13 @@ def account_events(username):
             picture_file_sm = ""
 
             if formOne.profilePic.data is not None:
+                oldProfPic = db.session.query(Users.image_file).filter(Users.userId==user.userId).first()
+
                 picture_file = save_picture(formOne.profilePic.data, 1000)
                 picture_file_sm = save_picture(formOne.profilePic.data, 500)
+
+                if oldProfPic != picture_file:
+                    flash("Profile picture updated.", "success")
 
                 setattr(user, 'image_file', picture_file)
                 setattr(user, 'image_file_sm', picture_file_sm)
@@ -543,7 +599,7 @@ def account_events(username):
             db.session.commit()
 
             flash("Profile picture updated.", "success")
-            return redirect(url_for('account', username=user.username))
+            return redirect(url_for('account_events', username=user.username))
 
         changeProfilePic = url_for("static", filename="images/" + user.image_file)
 
@@ -593,7 +649,7 @@ def account_events(username):
         elif user is None:
             return redirect(url_for("home", eventBatchPage=1))
 
-@app.route("/<username>/joinedevents")
+@app.route("/<username>/joinedevents", methods=['GET', 'POST'])
 @login_required
 def joined_events(username):
     if current_user.numberOfLogins == 0:
@@ -634,15 +690,24 @@ def joined_events(username):
             if joined:
                 event["joined"] = "True"
 
-                formOne = ChangeProfilePic()
+        interestsCount = db.session.query(userhasinterest_rel_table).filter(userhasinterest_rel_table.c.user_id==user.userId).count()
+        createdEventsCount = Events.query.filter_by(user_id=current_user.userId).count()
+        joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).count()
+
+        formOne = ChangeProfilePic()
 
         if formOne.validate_on_submit():
             picture_file = ""
             picture_file_sm = ""
 
             if formOne.profilePic.data is not None:
+                oldProfPic = db.session.query(Users.image_file).filter(Users.userId==user.userId).first()
+
                 picture_file = save_picture(formOne.profilePic.data, 1000)
                 picture_file_sm = save_picture(formOne.profilePic.data, 500)
+
+                if oldProfPic != picture_file:
+                    flash("Profile picture updated.", "success")
 
                 setattr(user, 'image_file', picture_file)
                 setattr(user, 'image_file_sm', picture_file_sm)
@@ -650,13 +715,9 @@ def joined_events(username):
             db.session.commit()
 
             flash("Profile picture updated.", "success")
-            return redirect(url_for('account', username=user.username))
+            return redirect(url_for('joined_events', username=user.username))
 
         changeProfilePic = url_for("static", filename="images/" + user.image_file)
-
-        interestsCount = db.session.query(userhasinterest_rel_table).filter(userhasinterest_rel_table.c.user_id==user.userId).count()
-        createdEventsCount = Events.query.filter_by(user_id=current_user.userId).count()
-        joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).count()
         
         return render_template("account.html", title="Account", user=user, formOne=formOne, changeProfilePic=changeProfilePic, display=display, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, interestsCount=interestsCount, navbarJoinedEventsUnderline="2px #FFC000 solid;", userInterests=userInterests)
     else:
@@ -665,7 +726,7 @@ def joined_events(username):
             userInterests = db.session.query(Categories.categoryName).filter(userhasinterest_rel_table.c.user_id==user.userId).filter(userhasinterest_rel_table.c.category_id==Categories.catId).all()
             profilePic = url_for("static", filename="images/" + user.image_file_sm)
             
-            userInterests = db.session.query(Categories.categoryName).filter(userhasinterest_rel_table.c.user_id==user.userId).filter(userhasinterest_rel_table.c.category_id==Categories.catId).all()
+            joinedEvents = db.session.query(Events.eventId, Events.eventName, Events.eventDate, Events.eventStartTime, Events.eventEndTime, Events.eventDescription, Events.location, Events.image_file_sm).filter(join_rel_table.c.user_id==user.userId).filter(join_rel_table.c.event_id==Events.eventId).order_by(join_rel_table.c.dateJoined.desc()).all()
             display = []
 
             for c, event in enumerate(joinedEvents):
@@ -704,7 +765,7 @@ def joined_events(username):
         elif user is None:
             return redirect(url_for("home", eventBatchPage=1))
 
-@app.route("/<username>/interests")
+@app.route("/<username>/interests", methods=['GET', 'POST'])
 @login_required
 def account_interests(username):
     if current_user.numberOfLogins == 0:
@@ -713,6 +774,16 @@ def account_interests(username):
     if username == current_user.username:
         user = current_user
 
+        userInterests = db.session.query(Categories.categoryName).filter(userhasinterest_rel_table.c.user_id==user.userId).filter(userhasinterest_rel_table.c.category_id==Categories.catId).all()
+        profilePic = url_for("static", filename="images/" + current_user.image_file_sm)
+        events = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).order_by(Events.dateCreated.desc())
+        interestsCount = db.session.query(userhasinterest_rel_table).filter(userhasinterest_rel_table.c.user_id==user.userId).count()
+        createdEventsCount = Events.query.filter_by(user_id=current_user.userId).count()
+        joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).count()
+
+        display = db.session.query(Categories.catId, Categories.categoryName, userhasinterest_rel_table.c.user_id).filter(Categories.catId==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==user.userId).order_by(Categories.catId.asc()).all()
+        interestsBlock = "ITS LIT"
+
         formOne = ChangeProfilePic()
 
         if formOne.validate_on_submit():
@@ -720,26 +791,24 @@ def account_interests(username):
             picture_file_sm = ""
 
             if formOne.profilePic.data is not None:
+                oldProfPic = db.session.query(Users.image_file).filter(Users.userId==user.userId).first()
+
                 picture_file = save_picture(formOne.profilePic.data, 1000)
                 picture_file_sm = save_picture(formOne.profilePic.data, 500)
+
+                if oldProfPic != picture_file:
+                    flash("Profile picture updated.", "success")
 
                 setattr(user, 'image_file', picture_file)
                 setattr(user, 'image_file_sm', picture_file_sm)
 
             db.session.commit()
 
-            flash("Profile picture updated.", "success")
-            return redirect(url_for('account', username=user.username))
+            return redirect(url_for('account_interests', username=user.username))
 
         changeProfilePic = url_for("static", filename="images/" + user.image_file)
 
-        userInterests = db.session.query(Categories.categoryName).filter(userhasinterest_rel_table.c.user_id==user.userId).filter(userhasinterest_rel_table.c.category_id==Categories.catId).all()
-        profilePic = url_for("static", filename="images/" + current_user.image_file_sm)
-        events = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).order_by(Events.dateCreated.desc())
-        interestsCount = db.session.query(userhasinterest_rel_table).filter(userhasinterest_rel_table.c.user_id==user.userId).count()
-        createdEventsCount = Events.query.filter_by(user_id=current_user.userId).count()
-        joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=current_user.userId)).count()
-        return render_template("account.html", title="Account", user=user, formOne=formOne, changeProfilePic=changeProfilePic, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, interestsCount=interestsCount, navbarInterestsUnderline="2px #FFC000 solid;", userInterests=userInterests)
+        return render_template("account.html", title="Account", user=user, formOne=formOne, changeProfilePic=changeProfilePic, display=display, interestsBlock=interestsBlock, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="#FFC000", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, interestsCount=interestsCount, navbarInterestsUnderline="2px #FFC000 solid;", userInterests=userInterests)
     else:
         user = Users.query.filter_by(username=username).first()
         if user:
@@ -749,8 +818,11 @@ def account_interests(username):
             interestsCount = db.session.query(userhasinterest_rel_table).filter(userhasinterest_rel_table.c.user_id==user.userId).count()
             createdEventsCount = Events.query.filter_by(user_id=user.userId).count()
             joinedEventsCount = Events.query.filter(Events.joinrel.any(userId=user.userId)).count()
-            
-            return render_template("account.html", title="Account", user=user, events=events, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, interestsCount=interestsCount, navbarInterestsUnderline="2px #FFC000 solid;", userInterests=userInterests)
+
+            display = db.session.query(Categories.catId, Categories.categoryName, userhasinterest_rel_table.c.user_id).filter(Categories.catId==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==user.userId).order_by(Categories.catId.asc()).all()
+            interestsBlock = "ITS LIT"
+
+            return render_template("account.html", title="Account", user=user, events=events, display=display, interestsBlock=interestsBlock, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", profilePic=profilePic, createdEventsCount=createdEventsCount, joinedEventsCount=joinedEventsCount, interestsCount=interestsCount, navbarInterestsUnderline="2px #FFC000 solid;", userInterests=userInterests)
 
         elif user is None:
             return redirect(url_for("home", eventBatchPage=1))
