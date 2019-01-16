@@ -1,3 +1,4 @@
+gunicorn==19.9.0
 amqp==1.4.9
 anyjson==0.3.3
 astroid==1.6.5
