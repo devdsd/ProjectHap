@@ -1,1 +1,1 @@
-web: gunicorn run:app
+web: gunicorn /hap/__init__:app
