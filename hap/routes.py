@@ -858,7 +858,7 @@ def acc_info_settings():
         formOne.username.data = current_user.username
         formOne.email.data = current_user.email
 
-    leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['key.svg','security_settings','Security'],['controls.svg','interest_pref_settings','Interest Preferences']]
+    leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['controls.svg','interest_pref_settings','Interest Preferences']]
     profilePic = url_for("static", filename="images/" + current_user.image_file)
     return render_template("settings1.html", title="Settings", formOne=formOne, leftPanelItems=leftPanelItems, profilePic=profilePic, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
 
@@ -868,7 +868,7 @@ def security_settings():
     if current_user.numberOfLogins == 0:
         return redirect(url_for("setup_acc"))
 
-    leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['key.svg','security_settings','Security'],['controls.svg','interest_pref_settings','Interest Preferences']]
+    leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['controls.svg','interest_pref_settings','Interest Preferences']]
 
     return render_template("settings2.html", title="Settings", leftPanelItems=leftPanelItems, homeNavbarLogoBorderBottom="white", profileNavbarLogoBorderBottom="white", itemUnderline="underline;")
 
@@ -878,7 +878,7 @@ def interest_pref_settings():
     if current_user.numberOfLogins == 0:
         return redirect(url_for("setup_acc"))
 
-    leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['key.svg','security_settings','Security'],['controls.svg','interest_pref_settings','Interest Preferences']]
+    leftPanelItems = [['user.svg','acc_info_settings','Account Information'],['controls.svg','interest_pref_settings','Interest Preferences']]
     
     userInterests = db.session.query(Categories.catId, Categories.categoryName, userhasinterest_rel_table.c.user_id).filter(Categories.catId==userhasinterest_rel_table.c.category_id).filter(userhasinterest_rel_table.c.user_id==current_user.userId).order_by(Categories.catId.asc()).all()
     categories = Categories.query.all()
@@ -942,8 +942,6 @@ def event(event_id, bottomBlock):
     if current_user.numberOfLogins == 0:
         return redirect(url_for("setup_acc"))
 
-    # eventPage = request.args.get('page', 1, type=int)
-    # event = Events.query.get_or_404(event_id).paginate(page=eventPage, per_page=5)
     event = Events.query.get_or_404(event_id)
     eventCategory = Categories.query.filter(Categories.eventhascategory.any(eventId=event_id)).first()
 
