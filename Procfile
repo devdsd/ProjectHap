@@ -1,1 +1,1 @@
-web: gunicorn /hap/__init__.py:app
+web: gunicorn hap:app
