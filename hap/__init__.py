@@ -4,12 +4,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_heroku import Heroku
 
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '2BB80D537B1DA3E38BD30361AA855686BDE0EACD7162FEF6A25FE97BF527A25B'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/hap'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost/hap'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/hap'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
@@ -26,5 +29,6 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = '6d4a7e8b79b139'
 app.config['MAIL_PASSWORD'] = '87183f92a8e9f1'
 mail = Mail(app)
+heroku = Heroku(app)
 
 from hap import routes
