@@ -1,1 +1,1 @@
-web: gunicorn hap/:app
+web: gunicorn run:app
